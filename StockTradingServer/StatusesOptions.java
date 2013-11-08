@@ -1,0 +1,31 @@
+package StockTradingServer;
+
+import java.io.Serializable;
+
+public class StatusesOptions implements Serializable {
+	private int id;
+	private String name;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String toString() {
+		String out = "id: " + this.getId();
+		out += " name: " + this.getName();
+		
+		return out;		
+	}
+}
