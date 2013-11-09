@@ -25,6 +25,7 @@ public class BrokerFirmController implements Initializable {
     
     @FXML private TextField BrokerageFirmName;    
     @FXML private TextField BrokerageFirmLicenseNumber;    
+    @FXML private TextField SupervisorEmail;  
     @FXML private TextField AddressStreet;        
     @FXML private TextField AddressState;        
     @FXML private TextField AddressCity;            
@@ -46,10 +47,12 @@ public class BrokerFirmController implements Initializable {
         
         brokerageFirm.setName(BrokerageFirmName.getText());
         brokerageFirm.setLicenceNumber(BrokerageFirmLicenseNumber.getText());
+        brokerageFirm.setSupervisorEmail(SupervisorEmail.getText());
         brokerageFirm.setAddressStreet(AddressStreet.getText());
         brokerageFirm.setAddressCity(AddressCity.getText());
         brokerageFirm.setAddressState(AddressState.getText());
         brokerageFirm.setAddressZip(AddressZip.getText());
+        
         
         if(StatusChoiceBox.getValue().getKey() != null)
         {
@@ -78,10 +81,13 @@ public class BrokerFirmController implements Initializable {
         brokerageFirm.setId(Integer.parseInt(keyValueBrokerageFirmSelected.getKey()));
         brokerageFirm.setName(BrokerageFirmName.getText());
         brokerageFirm.setLicenceNumber(BrokerageFirmLicenseNumber.getText());
+        brokerageFirm.setSupervisorEmail(SupervisorEmail.getText());
         brokerageFirm.setAddressStreet(AddressStreet.getText());
         brokerageFirm.setAddressCity(AddressCity.getText());
         brokerageFirm.setAddressState(AddressState.getText());
         brokerageFirm.setAddressZip(AddressZip.getText());
+        
+        
         if(StatusChoiceBox.getValue().getKey() != null)
         {
             brokerageFirm.setStatus( Integer.parseInt(StatusChoiceBox.getValue().getKey()));
@@ -152,6 +158,7 @@ public class BrokerFirmController implements Initializable {
         
         BrokerageFirmName.setText(brokerageFirm.getName());    
         BrokerageFirmLicenseNumber.setText(brokerageFirm.getLicenceNumber());   
+        SupervisorEmail.setText(brokerageFirm.getSupervisorEmail());
         AddressStreet.setText(brokerageFirm.getAddressStreet());        
         AddressState.setText(brokerageFirm.getAddressState());        
         AddressCity.setText(brokerageFirm.getAddressCity()); 

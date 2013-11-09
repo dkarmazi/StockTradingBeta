@@ -162,6 +162,7 @@ public class DatabaseConnector {
 			String addressZip = res.getString(6);
 			String licenceNumber = res.getString(7);
 			int status = res.getInt(8);
+                        String supervisorEmail = res.getString(9);
 
 			brokerageFirm.setId(id);
 			brokerageFirm.setName(name);
@@ -171,6 +172,7 @@ public class DatabaseConnector {
 			brokerageFirm.setAddressZip(addressZip);
 			brokerageFirm.setLicenceNumber(licenceNumber);
 			brokerageFirm.setStatus(status);
+                        brokerageFirm.setSupervisorEmail(supervisorEmail);
 
 		} catch (SQLException ex) {
 			// Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
@@ -193,7 +195,9 @@ public class DatabaseConnector {
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "INSERT INTO BROKERAGE_FIRM_INFO (NAME, ADDRESSSTREET, ADDRESSCITY, ADDRESSSTATE, ADDRESSZIP, LICENCENUMBER, STATUSID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO BROKERAGE_FIRM_INFO "
+                        + " (NAME, ADDRESSSTREET, ADDRESSCITY, ADDRESSSTATE, ADDRESSZIP, LICENCENUMBER, STATUSID, SUPER_EMAIL)"
+                        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 
@@ -206,7 +210,8 @@ public class DatabaseConnector {
 			st.setString(5, newFirm.getAddressZip());
 			st.setString(6, newFirm.getLicenceNumber());
 			st.setInt(7, newFirm.getStatus());
-
+                        st.setString(8, newFirm.getSupervisorEmail());
+                        
 			int affectedRows = st.executeUpdate();
 
 			StockTradingServer.Logger logger = new StockTradingServer.Logger();
@@ -258,7 +263,17 @@ public class DatabaseConnector {
 
 		PreparedStatement st = null;
 
-		String query = "UPDATE BROKERAGE_FIRM_INFO SET NAME = ?, ADDRESSSTREET = ?, ADDRESSCITY = ?, ADDRESSSTATE = ?, ADDRESSZIP = ?, LICENCENUMBER = ?, STATUSID = ? WHERE ID = ?;";
+		String query = "UPDATE BROKERAGE_FIRM_INFO "
+                        + " SET "
+                        + " NAME = ?"
+                        + ", ADDRESSSTREET = ?"
+                        + ", ADDRESSCITY = ?"
+                        + ", ADDRESSSTATE = ?"
+                        + ", ADDRESSZIP = ?"
+                        + ", LICENCENUMBER = ?"
+                        + ", STATUSID = ? "
+                        + ", SUPER_EMAIL = ? "
+                        + " WHERE ID = ?;";
 
 		try {
 
@@ -272,8 +287,10 @@ public class DatabaseConnector {
 			st.setString(5, firmToUpdate.getAddressZip());
 			st.setString(6, firmToUpdate.getLicenceNumber());
 			st.setInt(7, firmToUpdate.getStatus());
-			st.setInt(8, idToUpdate);
-
+                        st.setString(8, firmToUpdate.getSupervisorEmail());
+			st.setInt(9, idToUpdate);
+                        
+                        
 			int affectedRows = st.executeUpdate();
 
 			StockTradingServer.Logger logger = new StockTradingServer.Logger();

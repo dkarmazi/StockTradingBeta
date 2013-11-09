@@ -14,6 +14,7 @@ public class BrokerageFirm implements Serializable {
 	private String addressState;
 	private String addressZip;
 	private String licenceNumber;
+        private String supervisorEmail;
 	private int status;
 
 	public int getId() {
@@ -72,6 +73,14 @@ public class BrokerageFirm implements Serializable {
 		this.licenceNumber = licenceNumber;
 	}
 
+        public String getSupervisorEmail() {
+        return supervisorEmail;
+    }
+
+        public void setSupervisorEmail(String supervisorEmail) {
+        this.supervisorEmail = supervisorEmail;
+    }
+    
 	public int getStatus() {
 		return status;
 	}
@@ -104,7 +113,8 @@ public class BrokerageFirm implements Serializable {
 
 		InputValidation iv = new InputValidation();
 		Validator vResult = new Validator();
-		Validator vName, vAddressStreet, vAddressCity, vAddressState, vAddressZip, vLicenceNumber, vStatus;
+		Validator vName, vAddressStreet, vAddressCity, vAddressState, 
+                        vAddressZip, vLicenceNumber, vStatus, vSupervisorEmail;
 
 		Boolean verified = true;
 		String status = "";
@@ -146,7 +156,12 @@ public class BrokerageFirm implements Serializable {
 		vStatus = iv.validateInt(this.getStatus(), "Status");
 		verified &= vStatus.isVerified();
 		status += vStatus.getStatus();
-
+                
+		// 8. email
+		vSupervisorEmail = iv.validateEmail(this.getSupervisorEmail(), "Email");
+		verified &= vSupervisorEmail.isVerified();
+		status += vSupervisorEmail.getStatus();
+                
 		vResult.setVerified(verified);
 		vResult.setStatus(status);
 
