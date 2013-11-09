@@ -4,6 +4,7 @@
  */
 package StockTradingClient;
 
+import StockTradingCommon.Enumeration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -11,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -24,6 +26,20 @@ import javafx.stage.StageStyle;
  * @author Sulochane
  */
 public class MainController implements Initializable {
+    
+    // Only for Admin
+    @FXML private Button BrokerageFirm;
+    @FXML private Button Broker;
+    @FXML private Button Stock;    
+    
+    // Only for Broker
+    @FXML private Button Customer;
+    @FXML private Button SellOrder;
+    @FXML private Button BuyOrder;
+    
+    // Common to all users
+    @FXML private Button ChangePassword;    
+    @FXML private ToggleButton HackMode;
     
     @FXML
     private void handleButtonAction_btnAddBrokerageFirm(ActionEvent event) throws IOException{
@@ -113,8 +129,95 @@ public class MainController implements Initializable {
         stage.show();
     }
     
+    @FXML
+    private void handleButtonAction_btnHackMode(ActionEvent event) throws IOException
+    {
+        if (HackMode.isSelected())
+        {
+            HackMode.setText("Hack Mode On");
+            SetScreenForHackerDemo();
+        }
+        else
+        {
+            HackMode.setText("Hack Mode Off");
+            SetScreenForUserRole();
+        }
+    }
+    
+    @FXML
+    private void handleButtonAction_btnChangePassword(ActionEvent event)  throws IOException
+    {
+        ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
+        
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(
+            MainController.class.getResource("PasswordChange.fxml"));
+ 
+        stage.setScene(new Scene(root));
+        stage.setResizable(false);
+        stage.setTitle("Change Password");
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
+        stage.show();
+        
+        
+    } 
+    
+    private void SetScreenForAdmin()
+    {      
+        // Show
+        BrokerageFirm.setVisible(true);
+        Broker.setVisible(true);
+        Stock.setVisible(true);
+
+        // Hide
+        Customer.setVisible(false);
+        BuyOrder.setVisible(false);
+        SellOrder.setVisible(false);        
+    }
+    
+    private void SetScreenForBroker()
+    {      
+        // Hide
+        BrokerageFirm.setVisible(false);
+        Broker.setVisible(false);
+        Stock.setVisible(false);
+
+        // Show
+        Customer.setVisible(true);
+        BuyOrder.setVisible(true);
+        SellOrder.setVisible(true);        
+    }
+    
+    private void SetScreenForHackerDemo()
+    {        
+        // Hide
+        BrokerageFirm.setVisible(true);
+        Broker.setVisible(true);
+        Stock.setVisible(true);
+
+        Customer.setVisible(true);
+        BuyOrder.setVisible(true);
+        SellOrder.setVisible(true);   
+    }
+    
+    private void SetScreenForUserRole()
+    {
+        if (Utility.getCurrentUserRole() == Enumeration.UserRole.USER_ROLE_ADMIN)
+        {
+            SetScreenForAdmin();                    
+        }
+        else if (Utility.getCurrentUserRole() == Enumeration.UserRole.USER_ROLE_BROKER)
+        {
+            SetScreenForBroker();
+        }
+    }
+    
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+    public void initialize(URL url, ResourceBundle rb) 
+    {
+        SetScreenForUserRole();         
+    }
+    
+    
 }

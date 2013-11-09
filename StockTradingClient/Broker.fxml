@@ -42,32 +42,33 @@
               <children>
                 <TextField fx:id="BrokerSSN" alignment="CENTER_LEFT" prefWidth="375.0" promptText="SSN Number of the Broker" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label text="Social Security Number (SSN) :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <Label text="Broker Name :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label disable="false" text="Broker Name :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <Label text="Broker Account:" GridPane.columnIndex="0" GridPane.rowIndex="4">
                   <font>
                     <Font name="System Bold" size="12.0" />
                   </font>
                 </Label>
                 <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                <HBox id="HBox" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefWidth="-1.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                <HBox id="HBox" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefWidth="-1.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="11">
                   <children>
                     <Button fx:id="btnSave" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefWidth="80.0" rotate="0.0" text="Save" />
                     <Button fx:id="btnAdd" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddButtonAction" prefWidth="80.0" rotate="0.0" text="Add" />
                     <Button fx:id="btnClear" cancelButton="true" contentDisplay="LEFT" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClearButtonAction" prefWidth="80.0" text="Clear" />
                   </children>
                 </HBox>
-                <ChoiceBox fx:id="StatusChoiceBox" mouseTransparent="false" pickOnBounds="false" prefWidth="146.49990844726562" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                <ChoiceBox fx:id="StatusChoiceBox" mouseTransparent="false" pickOnBounds="false" prefWidth="146.49990844726562" GridPane.columnIndex="1" GridPane.rowIndex="9">
                   <items>
                     <FXCollections fx:factory="observableArrayList" />
                   </items>
                 </ChoiceBox>
-                <Label text="Status :" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                <Label text="Status :" GridPane.columnIndex="0" GridPane.rowIndex="9" />
                 <TextField fx:id="Email" prefWidth="200.0" promptText="Email address of the broker. This will be the user name of the Broker." GridPane.columnIndex="1" GridPane.rowIndex="5" />
                 <Label fx:id="Password" text="Password :" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                 <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                   <children>
                     <PasswordField fx:id="Password1" maxWidth="-Infinity" prefWidth="150.0" promptText="Password" />
                     <PasswordField fx:id="Password2" maxWidth="-Infinity" prefWidth="150.0" promptText="Confirm Password" />
+                    <Button fx:id="btnRandomPassword" alignment="CENTER" contentDisplay="LEFT" maxWidth="100.0" mnemonicParsing="false" onAction="#handleRandomPasswordAction" prefWidth="90.0" text="Set Random" textAlignment="CENTER" />
                   </children>
                 </HBox>
                 <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -76,12 +77,23 @@
                     <TextField fx:id="BrokerLastName" prefWidth="247.0" promptText="Last Name" />
                   </children>
                 </HBox>
+                <Button mnemonicParsing="false" onAction="#handlePasswordClassification" text="Button" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                <Label fx:id="PasswordClassification" maxWidth="1.7976931348623157E308" prefWidth="153.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                  <children>
+                    <Label fx:id="PasswordGradeVeryWeek" alignment="CENTER" contentDisplay="CENTER" disable="false" maxWidth="-Infinity" prefWidth="80.0" style="-fx-background-color: #FF0000;&#10;-fx-border-color:#000000;&#10;" text="Very Weak" textAlignment="LEFT" />
+                    <Label fx:id="PasswordGradeWeek" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity" prefWidth="80.0" style="-fx-background-color: #FF6666;&#10;-fx-border-color:#000000;&#10;" text="Weak" textAlignment="LEFT" />
+                    <Label fx:id="PasswordGradeGood" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity" prefWidth="80.0" style="-fx-background-color: #FF6600;&#10;-fx-border-color:#000000;&#10;" text="Good" textAlignment="LEFT" />
+                    <Label fx:id="PasswordGradeStrong" alignment="CENTER" contentDisplay="CENTER" maxWidth="-Infinity" prefWidth="80.0" style="-fx-background-color: #669900;&#10;-fx-border-color:#000000;" text="Strong" textAlignment="LEFT" />
+                  </children>
+                </HBox>
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="199.0" minWidth="169.0" prefWidth="178.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="444.0" minWidth="10.0" prefWidth="435.0" />
               </columnConstraints>
               <rowConstraints>
+                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />

@@ -33,11 +33,18 @@ public class BrokerController implements Initializable {
     
     @FXML private Label Message;
     @FXML private Label Password;
+    @FXML private Label PasswordClassification;
+    @FXML private Label PasswordGradeVeryWeek;
+    @FXML private Label PasswordGradeWeek;
+    @FXML private Label PasswordGradeGood;
+    @FXML private Label PasswordGradeStrong;
     
     @FXML private Button btnAdd;
     @FXML private Button btnSave;
     @FXML private Button btnClear;
+    @FXML private Button btnRandomPassword;    
     
+    PasswordClassifier passwordClassifier;
     @FXML
     private void handleClearButtonAction(ActionEvent event) {
         
@@ -60,6 +67,8 @@ public class BrokerController implements Initializable {
         Password2.clear();
         
         Message.setText(null);
+        
+        SetPasswordBarometerDefaultColor();
     }
     
     @FXML 
@@ -97,6 +106,7 @@ public class BrokerController implements Initializable {
         {
             Message.setText(validator.getStatus());
         } 
+        BrokersListView.getSelectionModel().select(keyValue);
     }
     
     @FXML 
@@ -134,8 +144,68 @@ public class BrokerController implements Initializable {
         }         
     }
     
+    @FXML 
+    private void handleRandomPasswordAction(ActionEvent event) 
+    {
+        Security security = new Security();
+        Password1.setText(security.CreateRandomPassword());
+        Password2.setText( Password1.getText());
+        //Email.setText( Password1.getText());
+    }
+    
+    @FXML
+    private void handlePasswordClassification(ActionEvent event)
+    { 
+        SetPasswordBarometerDefaultColor();
+        String activeGrade = "-fx-border-color:#000000;";
+        if (
+                Password1.getText().equals( Password2.getText()) &&
+                !Password2.getText().trim().equals("")
+            )
+        {
+            switch  (passwordClassifier.GradePassword(Password2.getText()))
+            {
+                case Enumeration.PasswordGrade.PASSWORD_STRENGTH_VERYWEAK:
+                    activeGrade += "-fx-background-color: #FF0000;";
+                    PasswordGradeVeryWeek.setStyle(activeGrade);
+                    break;
+                case Enumeration.PasswordGrade.PASSWORD_STRENGTH_WEAK:
+                    activeGrade += "-fx-background-color: #FF6666;";
+                    PasswordGradeWeek.setStyle(activeGrade);
+                    break;
+                    
+                case Enumeration.PasswordGrade.PASSWORD_STRENGTH_GOOD:
+                    activeGrade += "-fx-background-color: #FF6600;";
+                    PasswordGradeGood.setStyle(activeGrade);
+                    break;
+                case Enumeration.PasswordGrade.PASSWORD_STRENGTH_STRONG:
+                    activeGrade += "-fx-background-color: #669900;";
+                    PasswordGradeStrong.setStyle(activeGrade);
+                    break;
+                /*case Enumeration.PasswordGrade.PASSWORD_STRENGTH_VERYSTRONG:
+                    activeGrade += "-fx-background-color: #FF0000;";
+                    PasswordGrade??.setStyle(activeGrade);
+                    break; */   
+                    
+                    
+            }
+            //PasswordClassification.setText("Password Strength is : " + passwordClassifier.GradePassword(Password2.getText()));
+        }
+    }
+    
+    private void SetPasswordBarometerDefaultColor()
+    {
+        String defultBackground = "-fx-background-color: #B2B2B2; -fx-border-color: #8E8E8E;";
+        PasswordGradeVeryWeek.setStyle(defultBackground);
+        PasswordGradeWeek.setStyle(defultBackground);
+        PasswordGradeGood.setStyle(defultBackground);
+        PasswordGradeStrong.setStyle(defultBackground);
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        passwordClassifier = new PasswordClassifier();
+        SetPasswordBarometerDefaultColor();
+        
         Utility.PopulateStatus(StatusChoiceBox);
         Utility.PopulateBrokerageFirms(brokerageFirmComboBox);
         PopulateBrokers();
@@ -178,8 +248,7 @@ public class BrokerController implements Initializable {
     public void handleShowBrokers(ActionEvent event)
     {
         PopulateBrokers();
-    }
-    
+    }    
 
     public void PopulateBrokers()
     {

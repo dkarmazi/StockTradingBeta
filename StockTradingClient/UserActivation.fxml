@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="223.0" prefWidth="450.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.UserActivationController">
+  <children>
+    <VBox id="VBox" alignment="CENTER" layoutX="82.0" layoutY="5.0" prefHeight="180.0" spacing="5.0">
+      <children>
+        <Text fontSmoothingType="GRAY" stroke="RED" strokeLineCap="ROUND" strokeType="INSIDE" strokeWidth="0.4" text="Stock Trading System" textAlignment="CENTER">
+          <font>
+            <Font name="Candara Bold" size="24.0" />
+          </font>
+        </Text>
+        <Label text="User Account Activation">
+          <font>
+            <Font name="System Bold" size="12.0" />
+          </font>
+        </Label>
+        <Label alignment="CENTER_LEFT" contentDisplay="LEFT" maxHeight="-1.0" maxWidth="1.7976931348623157E308" prefWidth="-1.0" text="You account has been locked. Unlock your account. " />
+        <GridPane prefWidth="310.0">
+          <children>
+            <Label fx:id="UserEmail" text="hirosh@brokerage.firm" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <PasswordField fx:id="Password" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="ActivationCode" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label text="Password :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="Activation Code :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+              <children>
+                <Button cancelButton="false" defaultButton="true" mnemonicParsing="false" onAction="#ActivateAccount" prefWidth="150.0" text="Activate Account" />
+              </children>
+            </HBox>
+          </children>
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="74.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="200.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+        </GridPane>
+      </children>
+    </VBox>
+    <Label fx:id="Message" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="185.0" mouseTransparent="true" prefHeight="30.0" prefWidth="422.9999000000025" text="" textAlignment="CENTER" textFill="RED" underline="false" wrapText="true" />
+  </children>
+</AnchorPane>

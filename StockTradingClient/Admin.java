@@ -33,28 +33,9 @@ public class Admin extends Application {
 	public static ServerInterface serverInterface;
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// Button btn = new Button();
-		// btn.setText("Say 'Hello World'");
-		// btn.setOnAction(new EventHandler<ActionEvent>() {
-		// @Override
-		// public void handle(ActionEvent event) {
-		// System.out.println("Hello World!");
-		// }
-		// });
-		//
-		// StackPane root = new StackPane();
-		// root.getChildren().add(btn);
-		//
-		// Scene scene = new Scene(root, 300, 250);
+	public void start(Stage primaryStage) throws Exception 
+        {
 
-		// primaryStage.setTitle("Hello World!");
-		// primaryStage.setScene(scene);
-		// primaryStage.show();
-
-		// TODO Capture the proper user ids
-		Utility.setBrokerID(1);
-		Utility.setBrokerageFirmID(11);
 		if(serverInterface != null) {
 			Utility.setServerInterface(serverInterface);
 		} else {
@@ -63,10 +44,13 @@ public class Admin extends Application {
 
 		stage = primaryStage;
 
-		Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
 		// Resource resource = getClass().getResource("Broker.fxml");
 		Scene scene = new Scene(root);
 		stage.setTitle("Stock Trading Platform");
+                stage.setResizable(false);
+                stage.centerOnScreen();
+                
 		stage.setScene(scene);
 		stage.show();
 	}
@@ -85,7 +69,7 @@ public class Admin extends Application {
 		try {
 			// Make reference to SSL-based registry
 			String host = (args.length < 1) ? "127.0.0.1" : args[0];
-
+   //                        host = "128.164.92.161";
 			Registry registry = LocateRegistry.getRegistry(InetAddress
 					.getByName(host).getHostName(), PORT,
 					new RMISSLClientSocketFactory());
@@ -97,13 +81,13 @@ public class Admin extends Application {
 			serverInterface = (ServerInterface) registry
 					.lookup("TradingServer");
 
-			System.out.println(serverInterface.selectBrokersAll(1).toString());
+			//System.out.println(serverInterface.selectBrokersAll(1).toString());
 
 			//StockTradingServer.BrokerageFirm message = serverInterface.getHello();
 			
 			
 			//ArrayList<StockTradingServer.BrokerageFirm> c =  serverInterface.selectBrokerageFirmsAll();
-			 //System.out.println(c.toString());
+			//System.out.println(c.toString());
 			 
 			//System.out.println(mess	age.toString() + "\n");
 			launch(args);

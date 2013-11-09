@@ -25,28 +25,56 @@ import javafx.scene.control.*;
  */
 public class  Utility 
 {
-    private static int brokerageFirmID = -1;     // when a broker logs in his Brokerage Firm id should be here
+   // private static int brokerageFirmID = -1;     // when a broker logs in his Brokerage Firm id should be here
     private static int brokerID = -1;            // when a broker logs in his id should be here
+    private static User currentUser = new User();                  // when a user logs in, current user details set here 
+    
     private static ServerInterface serverInterface = null;
     private static DatabaseConnector dbConnector = new DatabaseConnector();
-
+    
     public static void setServerInterface(ServerInterface _serverInterface) {
     	Utility.serverInterface = _serverInterface;
     }
     
-    public static int getBrokerID() {
+    /*public static int getBrokerID() {
         return brokerID;
     }
 
     public static void setBrokerID(int brokerID) {
         Utility.brokerID = brokerID;
+    }*/
+    public static int getCurrentUserID()
+    {
+        return currentUser.getId();
     }
-    public static int getBrokerageFirmID() {
-        return brokerageFirmID;
+    public static int getCurrentUserFirmID() {
+        return currentUser.getBrokerFirmId();
     }
 
-    public static void setBrokerageFirmID(int brokerageFirmID) {
-        Utility.brokerageFirmID = brokerageFirmID;
+    //public static void setBrokerageFirmID(int brokerageFirmID) {
+    //    Utility.brokerageFirmID = brokerageFirmID;
+    //}
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+    public static int getCurrentUserRole() {
+        return currentUser.getRoleId();
+    }
+    //public static void setCurrentUserRole(int currentUserRole) {
+    //    currentUser.setRoleId(currentUserRole);
+    //}
+    public static String getCurrentUserEmail()
+    {
+        return currentUser.getEmail();
+    }
+    /*public static int getCurrentUser_BrokerID() {
+        return currentUser.get;
+    }*/
+    public static int getCurrentUser_BrokerageFirmID() {
+        return currentUser.getBrokerFirmId();
     }
     
     public  Utility()
@@ -80,7 +108,10 @@ public class  Utility
             return isValid;
         } 
     }
-    
+    public static boolean isNumber(String number)
+    {
+        return number.matches("\\d+(\\.\\d+)?"); 
+    }
     public static String FormatNumber(String number)
     {
         DecimalFormat df = new DecimalFormat("#,##0.00");
@@ -99,8 +130,6 @@ public class  Utility
         
     public static void PopulateStatus(ChoiceBox choiceBox)
     {
-    	
-    	
         //StockTradingServer.DatabaseConnector dbConnector = new StockTradingServer.DatabaseConnector();     
         
         ArrayList<StatusesOptions> statuses = null;
@@ -120,7 +149,26 @@ public class  Utility
         }
         choiceBox.getSelectionModel().selectFirst();
     }
-    
+    public static void SelectKey(ComboBox<KeyValuePair> comboBox, String key)
+    {
+        for (KeyValuePair item : comboBox.getItems()) 
+        {
+            if (item.getKey() != null)
+            {
+                if (item.getKey().equals(key))
+                {
+                    //comboBox.getSelectionModel().select(item);
+                    comboBox.setValue(item);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void SelectKey(ComboBox<KeyValuePair> comboBox, int key)
+    {
+        SelectKey(comboBox, Integer.toString(key));
+    }
 
     
     // Stock
@@ -246,10 +294,20 @@ public class  Utility
     {
         return dbConnector.selectCustomerInfo(customerId);
     }    
+    public static Validator AddCustomer(CustomerInfo customer)
+    {
+        customer.setFirmId(getCurrentUser_BrokerageFirmID());
+        return dbConnector.insertNewCustomerInfo(customer);
+    }
+    public static Validator UpdateCustomer(CustomerInfo customer)
+    {
+        customer.setFirmId(getCurrentUser_BrokerageFirmID());
+        return dbConnector.updateCustomerInfo(customer.getId(), customer);        
+    }
     public static void PopulateCustomers(ComboBox comboBox)
     {
         ArrayList<CustomerInfo> statuses = dbConnector.selectCustomerInfoAll();        
-        
+        comboBox.getItems().clear();
         comboBox.getItems().add(new KeyValuePair("-1", "[Select Customer]"));
 
         for(CustomerInfo s : statuses)
@@ -258,30 +316,39 @@ public class  Utility
         }
         comboBox.getSelectionModel().selectFirst();
     }
-    public static void PopulateCustomers(ComboBox comboBox, int brokerageFirmID)
+    public static void PopulateCustomers(ListView listView, int brokerageFirmID)
     {
-        ArrayList<CustomerInfo> statuses = dbConnector.selectCustomerInfoAll();        
+        ArrayList<CustomerInfo> statuses = dbConnector.selectCustomersByFirm(brokerageFirmID);        
+        listView.getItems().clear();
         
+        for(CustomerInfo s : statuses)
+        {
+            listView.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getFirstName() + " " + s.getLastName()));
+        }
+    } 
+    public static void PopulateCustomersOfFirm(ComboBox comboBox)
+    {
+        ArrayList<CustomerInfo> statuses = dbConnector.selectCustomersByFirm(getCurrentUser_BrokerageFirmID());        
+        comboBox.getItems().clear();
         comboBox.getItems().add(new KeyValuePair(null, "[Select Customer]"));
-
+        
         for(CustomerInfo s : statuses)
         {
             comboBox.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getFirstName() + " " + s.getLastName()));
         }
         comboBox.getSelectionModel().selectFirst();
     }
-        
     // Buying Order
     public static Validator AddBuyingOrder(Order order)
     {
         order.setTypeId(Enumeration.OrderType.BUYING_ORDER);
-        order.setBrokerId(getBrokerID());
+        order.setBrokerId(getCurrentUserID());
         return dbConnector.insertNewOrder(order);
     }
     public static Validator UpdateBuyingOrder(Order order)
     {
         order.setTypeId(Enumeration.OrderType.BUYING_ORDER);
-        order.setBrokerId(getBrokerID());
+        order.setBrokerId(getCurrentUserID());
         return dbConnector.updateOrder(order.getOrderId(), order);
     }
     public static Order GetBuyingOrder(int orderID)
@@ -291,12 +358,16 @@ public class  Utility
     public static void PopulateBuyingOrdersByBrokerageFirm(ListView listView)
     {
         listView.getItems().clear();
-        //TODO
-        //ArrayList<Order> records = dbConnector.selectBuyingOrdersActiveOnly(getBrokerageFirmID);        
-//        for(Order s : records)
-//        {
-//            listView.getItems().add(new KeyValuePair(Integer.toString(s.getOrderId()),Integer.toString(s.getOrderId()) ));
-//        }
+        ArrayList<Order> records = dbConnector.selectOrdersByFirmByType(
+                                                    getCurrentUser_BrokerageFirmID()
+                                                    , Enumeration.OrderType.BUYING_ORDER);            
+        for(Order s : records)
+        {
+            listView.getItems().add(    new KeyValuePair(
+                                                    Integer.toString(s.getOrderId())
+                                                    , s.getDisplaySummary()  )
+                                    );
+        }
     }
     public static void PopulateBuyingOrders(ListView listView)
     {
@@ -313,13 +384,13 @@ public class  Utility
     public static Validator AddSellingOrder(Order order)
     {
         order.setTypeId(Enumeration.OrderType.SELLING_ORDER);
-        order.setBrokerId(getBrokerID());
+        order.setBrokerId(getCurrentUserID());
         return dbConnector.insertNewOrder(order);
     }
     public static Validator UpdateSellingOrder(Order order)
     {
         order.setTypeId(Enumeration.OrderType.SELLING_ORDER);
-        order.setBrokerId(getBrokerID());
+        order.setBrokerId(getCurrentUserID());
         return dbConnector.updateOrder(order.getOrderId(), order);
     }
     public static Order GetSellingOrder(int orderID)
@@ -328,13 +399,17 @@ public class  Utility
     }
     public static void PopulateSellingOrdersByBrokerageFirm(ListView listView)
     {
-        //TODO
-//        listView.getItems().clear();
-//        ArrayList<Order> records = dbConnector.selectSellingOrdersActiveOnly(getBrokerageFirmID());        
-//        for(Order s : records)
-//        {
-//            listView.getItems().add(new KeyValuePair(Integer.toString(s.getOrderId()),Integer.toString(s.getOrderId()) ));
-//        }
+        listView.getItems().clear();
+        ArrayList<Order> records = dbConnector.selectOrdersByFirmByType(
+                                                    getCurrentUser_BrokerageFirmID()
+                                                    , Enumeration.OrderType.SELLING_ORDER);        
+        for(Order s : records)
+        {
+            listView.getItems().add(    new KeyValuePair(
+                                         Integer.toString(s.getOrderId())
+                                         , s.getDisplaySummary()  )
+                                    );
+        }
     }
     public static void PopulateSellingOrders(ListView listView)
     {
@@ -345,5 +420,49 @@ public class  Utility
 //        {
 //            listView.getItems().add(new KeyValuePair(Integer.toString(s.getOrderId()),Integer.toString(s.getOrderId()) ));
 //        }
+    }
+    
+    //User
+    public static Validator AuthenticateUser(String userName, String password)
+    {
+        Validator status = new Validator();
+        status.setVerified(false);
+        if ( (userName.equalsIgnoreCase("admin")) && (password.equalsIgnoreCase("admin")) )
+        {
+            status.setVerified(true);
+            setCurrentUser( GetUser("admin"));
+        }
+        else if ( (userName.equalsIgnoreCase("broker")) && (password.equalsIgnoreCase("broker")) )
+        {
+            status.setVerified(true);
+            setCurrentUser(GetUser("broker" ));
+        }
+        return status;
+    }
+    public static User GetUser(String userEmail)
+    {
+        //TODO :Get the user info
+        User user = new User();
+        user.setId(44);
+        if (userEmail.trim().equalsIgnoreCase("admin"))
+        {
+            user.setBrokerFirmId(-1);
+            user.setRoleId(Enumeration.UserRole.USER_ROLE_ADMIN);
+
+            user.setFirstName("Admin");
+            user.setLastName("Administrator");
+            user.setEmail("admin@admin.com");
+        }
+        else if (userEmail.trim().equalsIgnoreCase("broker"))
+        {
+            user.setBrokerFirmId(11);
+            user.setRoleId(Enumeration.UserRole.USER_ROLE_BROKER);
+
+            user.setFirstName("Brook");
+            user.setLastName("Broker");
+            user.setEmail("brook@broker.com");            
+        }
+                
+        return user;
     }
 }
