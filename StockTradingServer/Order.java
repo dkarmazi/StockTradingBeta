@@ -18,7 +18,8 @@ public class Order implements Serializable {
 	private Timestamp dateIssued;
 	private Timestamp dateExpiration;
 	private int statusId;
-
+        private String displaySummary;
+        
 	public int getOrderId() {
 		return orderId;
 	}
@@ -91,6 +92,14 @@ public class Order implements Serializable {
 		this.dateExpiration = dateExpiration;
 	}
 
+        public String getDisplaySummary() {
+            return displaySummary;
+        }
+
+        public void setDisplaySummary(String displaySummary) {
+            this.displaySummary = displaySummary;
+        }
+        
 	public int getStatusId() {
 		return statusId;
 	}

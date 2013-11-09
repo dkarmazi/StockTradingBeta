@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import StockTradingCommon.Enumeration;
+import java.text.DecimalFormat;
 
 /*
  * Dmitriy Karmazin
@@ -860,6 +861,71 @@ public class DatabaseConnector {
 		return ordersAll;
 	}
 
+        /*
+	 * This functions returns an array list of all the orders belongs to a particular firm
+	 */
+	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) {
+		ArrayList<Order> ordersAll = new ArrayList<Order>();
+		Statement st = null;
+		ResultSet rs = null;
+                String query = "SELECT O.*, S.NAME, C.FIRSTNAME, C.LASTNAME "
+                                + " FROM ORDERS O "
+                                + " INNER JOIN HAS_FIRM_BROKERS HFB"
+                                + " ON (O.BROKERID = HFB.BROKERID)"
+                                + " INNER JOIN STOCKS S"
+                                + " ON (O.STOCKID = S.ID)"
+                                + " INNER JOIN CUSTOMER_INFO C"
+                                + " ON (O.CUSTOMERID = C.ID)"
+                                + " WHERE HFB.FIRMID = " + firmId
+                               // + " AND O.STATUSID = 1"
+                                + " AND O.TYPEID = " + orderType
+                        ;
+
+		try {
+			st = this.con.createStatement();
+			ResultSet res = st.executeQuery(query);
+
+			while (res.next()) {
+				int orderId = res.getInt(1);
+				int typeId = res.getInt(2);
+				int brokerId = res.getInt(3);
+				int customerId = res.getInt(4);
+				int stockId = res.getInt(5);
+				int amount = res.getInt(6);
+				double price = res.getDouble(7);
+				Timestamp dateIssued = res.getTimestamp(8);
+				Timestamp dateExpiration = res.getTimestamp(9);
+				int statusId = res.getInt(10);
+                                String stockName = res.getString("NAME");
+                                String customer = res.getString("FIRSTNAME") + " " + res.getString("LASTNAME");
+                                String displaySummary = stockName + "["
+                                        + new DecimalFormat("#,##0").format(amount) + " @ "
+                                        + new DecimalFormat("#,##0.00").format(price) + "] ::"
+                                        + customer;
+                                
+				Order order = new Order();
+				order.setOrderId(orderId);
+				order.setTypeId(typeId);
+				order.setBrokerId(brokerId);
+				order.setCustomerId(customerId);
+				order.setStockId(stockId);
+				order.setAmount(amount);
+				order.setPrice(price);
+				order.setDateIssued(dateIssued);
+				order.setDateExpiration(dateExpiration);
+				order.setStatusId(statusId);
+                                order.setDisplaySummary(displaySummary);
+                                
+				ordersAll.add(order);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return ordersAll;
+	}
+        
 	/*
 	 * This function returns a particular order
 	 */
@@ -1008,6 +1074,51 @@ public class DatabaseConnector {
 		return v;
 	}
 
+        /*
+	 * This function returns an array list of all active customers of a given brokerage firm
+	 */
+	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId) {
+		ArrayList<CustomerInfo> customersOfFirm = new ArrayList<CustomerInfo>();
+		Statement st = null;
+		//ResultSet rs = null;
+
+                String query = "SELECT * FROM CUSTOMER_INFO C ";
+                        query += " INNER JOIN HAS_FIRM_CUSTOMERS HFC";
+                        query += " ON (HFC.CUSTOMERID = C.ID)";
+                        query += " WHERE HFC.FIRMID = " + firmId;
+                        query += ";";
+		try {
+			st = this.con.createStatement();
+			ResultSet res = st.executeQuery(query);
+
+			while (res.next()) {
+
+				int id = res.getInt(1);
+				String firstName = res.getString(2);
+				String lastName = res.getString(3);
+				String email = res.getString(4);
+				String phone = res.getString(5);
+				int statusId = res.getInt(6);
+
+				CustomerInfo customer = new CustomerInfo();
+				customer.setId(id);
+				customer.setFirstName(firstName);
+				customer.setLastName(lastName);
+				customer.setEmail(email);
+				customer.setPhone(phone);
+				customer.setStatusId(statusId);
+
+				customersOfFirm.add(customer);
+
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return customersOfFirm;
+	}
+        
 	/*
 	 * This function returns an array list of all active customers
 	 */
