@@ -55,4 +55,24 @@ public class Enumeration {
 		public final static int USER_MAX_LOGIN_ATTEMPTS = 3;
 
 	}
+        
+        public static class Security
+        {
+            public final static int PASSWORD_MIN_LENGTH = 8;
+            public final static int PASSWORD_DEFAULT_LENGTH = 12;
+            public final static int PASSWORD_MIN_LOWER = 2;
+            public final static int PASSWORD_MIN_UPPER = 2;
+            public final static int PASSWORD_MIN_DIGIT = 2;
+            public final static int PASSWORD_MIN_SPECL = 0;
+            
+        }
+        
+        public static class PasswordGrade
+        {
+            public final static int PASSWORD_STRENGTH_VERYWEAK = 1;
+            public final static int PASSWORD_STRENGTH_WEAK = 2;
+            public final static int PASSWORD_STRENGTH_GOOD = 3;
+            public final static int PASSWORD_STRENGTH_STRONG = 4;
+            public final static int PASSWORD_STRENGTH_VERYSTRONG = 5;
+        }        
 }
