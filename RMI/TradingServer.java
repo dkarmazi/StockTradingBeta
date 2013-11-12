@@ -17,6 +17,7 @@ import StockTradingServer.Stock;
 import StockTradingServer.User;
 import StockTradingServer.Validator;
 
+
 public class TradingServer extends UnicastRemoteObject implements
 		ServerInterface {
 	private static final int PORT = 2019;

@@ -30,7 +30,7 @@ public class  Utility
     private static User currentUser = new User();                  // when a user logs in, current user details set here 
     
     private static ServerInterface serverInterface = null;
-   // private static DatabaseConnector dbConnector = new DatabaseConnector();
+   //  private static DatabaseConnector dbConnector = new DatabaseConnector(); 
     
     public static void setServerInterface(ServerInterface _serverInterface) {
     	Utility.serverInterface = _serverInterface;
