@@ -29,14 +29,14 @@ public class DatabaseConnector {
 	// connect to DB
 	public DatabaseConnector() {
 		// Basic configuration - to be moved to config file
-		String url = "jdbc:mysql://192.30.164.204:3306/repo6545";
-		String user = "repo6545";
-		String password = "MF4@2163G!8d2L4";
-
+        String url = "jdbc:mysql://192.30.164.204:3306/repo6545";
+        String user = "repo6545";
+        String password = "MF4@2163G!8d2L4";
 		try {
+			
 			Connection con = DriverManager.getConnection(url, user, password);
 			setCon(con);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}
@@ -1472,6 +1472,23 @@ public class DatabaseConnector {
 		}
 
 		return v;
+	}
+	
+	public int getUserIDByEmail (String Email){
+		int userID = -1;
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+		    st = con.createStatement();
+	        st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
+	        rs = st.getResultSet();
+	        if (rs.next()){
+	        	userID = rs.getInt("ID");
+	        }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return userID;
 	}
 
 }
