@@ -83,5 +83,14 @@ public interface ServerInterface extends Remote {
 
 	public ArrayList<StatusesOptions> selectAllStatuses()
 			throws RemoteException;
+	
+	
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass) throws RemoteException;
+
+	public Validator checkIfUsernamePasswordActivationCodeMatch(String email, String plainPass, String plainCode) throws RemoteException;
+
+	public Validator checkIfUsernameTempPasswordActivationCodeMatch(String email, String plainTempPass, String plainCode) throws RemoteException;
+
+	public Validator forgotPassword(String email) throws RemoteException;
         
 }
