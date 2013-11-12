@@ -16,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 /**
  * This class helps to send out email notifications to the users
  * 
+ * 
  * @author Sulochane, edited by Dmitriy Karmazin
  */
 public class SendEmail {
