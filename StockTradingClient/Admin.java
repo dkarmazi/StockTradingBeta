@@ -23,11 +23,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 
-/**
- * 
- * @author Sulochane
- */
 public class Admin extends Application {
+	
+	public static String clientSessionID = null;
+	
 	private static final int PORT = 2019;
 	private Stage stage;
 	public static ServerInterface serverInterface;
@@ -80,7 +79,7 @@ public class Admin extends Application {
 			serverInterface = (ServerInterface) registry
 					.lookup("TradingServer");
 
-			//System.out.println(serverInterface.selectBrokersAll(1).toString());
+			System.out.println(serverInterface.selectBrokersAll(1, clientSessionID).toString());
 
 			//StockTradingServer.BrokerageFirm message = serverInterface.getHello();
 			

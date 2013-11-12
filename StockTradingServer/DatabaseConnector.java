@@ -1466,22 +1466,6 @@ public class DatabaseConnector {
 		return v;
 	}
 	
-	public int getUserIDByEmail (String Email){
-		int userID = -1;
-		Statement st = null;
-		ResultSet rs = null;
-		try{
-		    st = con.createStatement();
-	        st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
-	        rs = st.getResultSet();
-	        if (rs.next()){
-	        	userID = rs.getInt("ID");
-	        }
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return userID;
-	}
 
 	/**
 	 * This method sets an activation code for this user

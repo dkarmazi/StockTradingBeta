@@ -20,77 +20,80 @@ public interface ServerInterface extends Remote {
 	
 	public BrokerageFirm getHello() throws RemoteException;
 
-	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll()
+	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String clientSessionID)
 			throws RemoteException;
 
-	public BrokerageFirm selectBrokerageFirm(int idToSelect)
+	public BrokerageFirm selectBrokerageFirm(int idToSelect, String clientSessionID)
 			throws RemoteException;
 
-	public Validator insertNewBrokerageFirm(BrokerageFirm newFirm)
+	public Validator insertNewBrokerageFirm(BrokerageFirm newFirm, String clientSessionID)
 			throws RemoteException;
 
 	public Validator updateBrokerageFirm(int idToUpdate,
-			BrokerageFirm firmToUpdate) throws RemoteException;
+			BrokerageFirm firmToUpdate, String clientSessionID) throws RemoteException;
 
-	public ArrayList<User> selectBrokersAll(int pStatusId)
+	public ArrayList<User> selectBrokersAll(int pStatusId, String clientSessionID)
 			throws RemoteException;
 
-	public ArrayList<User> selectBrokersAllbyFirm(int pFirmId)
+	public ArrayList<User> selectBrokersAllbyFirm(int pFirmId, String clientSessionID)
 			throws RemoteException;
 
-	public User selectBrokerUser(int idToSelect) throws RemoteException;
+	public User selectBrokerUser(int idToSelect, String clientSessionID) throws RemoteException;
 
-	public Validator insertNewBroker(User newUser) throws RemoteException;
+	public Validator insertNewBroker(User newUser, String clientSessionID) throws RemoteException;
 
-	public Validator updateBroker(int idToUpdate, User user)
+	public Validator updateBroker(int idToUpdate, User user, String clientSessionID)
 			throws RemoteException;
 
-	public ArrayList<Stock> selectStockAll() throws RemoteException;
+	public ArrayList<Stock> selectStockAll(String clientSessionID) throws RemoteException;
 
-	public Stock selectStock(int idToSelect) throws RemoteException;
+	public Stock selectStock(int idToSelect, String clientSessionID) throws RemoteException;
 
-	public Validator insertNewStock(Stock newStock) throws RemoteException;
+	public Validator insertNewStock(Stock newStock, String clientSessionID) throws RemoteException;
 
-	public Validator updateStock(int idToUpdate, Stock stock)
+	public Validator updateStock(int idToUpdate, Stock stock, String clientSessionID)
 			throws RemoteException;
 
-	public ArrayList<Order> selectOrdersAll() throws RemoteException;
+	public ArrayList<Order> selectOrdersAll(String clientSessionID) throws RemoteException;
 
-        public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) 
+        public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType, String clientSessionID) 
                         throws RemoteException;
                 
-	public Order selectOrder(int idToSelect) throws RemoteException;
+	public Order selectOrder(int idToSelect, String clientSessionID) throws RemoteException;
 
-	public Validator insertNewOrder(Order newOrder) throws RemoteException;
+	public Validator insertNewOrder(Order newOrder, String clientSessionID) throws RemoteException;
 
-	public Validator updateOrder(int idToUpdate, Order order)
+	public Validator updateOrder(int idToUpdate, Order order, String clientSessionID)
 			throws RemoteException;
 
-	public ArrayList<CustomerInfo> selectCustomerInfoAll()
+	public ArrayList<CustomerInfo> selectCustomerInfoAll(String clientSessionID)
 			throws RemoteException;
 
-        public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId)
+	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId, String clientSessionID)
 			throws RemoteException;
                 
-	public CustomerInfo selectCustomerInfo(int idToSelect)
+	public CustomerInfo selectCustomerInfo(int idToSelect, String clientSessionID)
 			throws RemoteException;
 
-	public Validator insertNewCustomerInfo(CustomerInfo newCustomer)
+	public Validator insertNewCustomerInfo(CustomerInfo newCustomer, String clientSessionID)
 			throws RemoteException;
 
 	public Validator updateCustomerInfo(int idToUpdate,
-			CustomerInfo customerToUpdate) throws RemoteException;
+			CustomerInfo customerToUpdate, String clientSessionID) throws RemoteException;
 
-	public ArrayList<StatusesOptions> selectAllStatuses()
+	public ArrayList<StatusesOptions> selectAllStatuses(String clientSessionID)
 			throws RemoteException;
 	
 	
-	public Validator checkIfUsernamePasswordMatch(String email, String plainPass) throws RemoteException;
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass, String clientSessionID)
+			throws RemoteException;
 
-	public Validator checkIfUsernamePasswordActivationCodeMatch(String email, String plainPass, String plainCode) throws RemoteException;
+	public Validator checkIfUsernamePasswordActivationCodeMatch(String email, String plainPass, String plainCode, String clientSessionID) 
+			throws RemoteException;
 
-	public Validator checkIfUsernameTempPasswordActivationCodeMatch(String email, String plainTempPass, String plainCode) throws RemoteException;
+	public Validator checkIfUsernameTempPasswordActivationCodeMatch(String email, String plainTempPass, String plainCode, String clientSessionID) 
+			throws RemoteException;
 
-	public Validator forgotPassword(String email) throws RemoteException;
+	public Validator forgotPassword(String email, String clientSessionID) throws RemoteException;
         
 }

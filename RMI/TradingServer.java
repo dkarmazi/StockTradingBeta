@@ -41,161 +41,162 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
 
 	@Override
-	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll() {
+	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String sessionID) {
+		
 		return this.dbCon.selectBrokerageFirmsAll();
 	}
 
 	@Override
-	public BrokerageFirm selectBrokerageFirm(int idToSelect) {
+	public BrokerageFirm selectBrokerageFirm(int idToSelect, String sessionID) {
 		return this.dbCon.selectBrokerageFirm(idToSelect);
 	}
 
 	@Override
-	public Validator insertNewBrokerageFirm(BrokerageFirm newFirm) {
+	public Validator insertNewBrokerageFirm(BrokerageFirm newFirm, String sessionID) {
 		return this.dbCon.insertNewBrokerageFirm(newFirm);
 	}
 
 	@Override
 	public Validator updateBrokerageFirm(int idToUpdate,
-			BrokerageFirm firmToUpdate) throws RemoteException {
+			BrokerageFirm firmToUpdate, String sessionID) throws RemoteException {
 		return this.dbCon.updateBrokerageFirm(idToUpdate, firmToUpdate);
 	}
 
 	@Override
-	public ArrayList<User> selectBrokersAll(int pStatusId)
+	public ArrayList<User> selectBrokersAll(int pStatusId, String sessionID)
 			throws RemoteException {
 		return this.dbCon.selectBrokersAll(pStatusId);
 	}
 
 	@Override
-	public ArrayList<User> selectBrokersAllbyFirm(int pFirmId)
+	public ArrayList<User> selectBrokersAllbyFirm(int pFirmId, String sessionID)
 			throws RemoteException {
 		return this.dbCon.selectBrokersAllbyFirm(pFirmId);
 	}
 
 	@Override
-	public User selectBrokerUser(int idToSelect) throws RemoteException {
+	public User selectBrokerUser(int idToSelect, String sessionID) throws RemoteException {
 		return this.dbCon.selectBrokerUser(idToSelect);
 	}
 
 	@Override
-	public Validator insertNewBroker(User newUser) throws RemoteException {
+	public Validator insertNewBroker(User newUser, String sessionID) throws RemoteException {
 		return this.dbCon.insertNewBroker(newUser);
 	}
 
 	@Override
-	public Validator updateBroker(int idToUpdate, User user)
+	public Validator updateBroker(int idToUpdate, User user, String sessionID)
 			throws RemoteException {
 		return this.dbCon.updateBroker(idToUpdate, user);
 	}
 
 	@Override
-	public ArrayList<Stock> selectStockAll() throws RemoteException {
+	public ArrayList<Stock> selectStockAll(String sessionID) throws RemoteException {
 		return this.dbCon.selectStockAll();
 	}
 
 	@Override
-	public Stock selectStock(int idToSelect) throws RemoteException {
+	public Stock selectStock(int idToSelect, String sessionID) throws RemoteException {
 		return this.dbCon.selectStock(idToSelect);
 	}
 
 	@Override
-	public Validator insertNewStock(Stock newStock) throws RemoteException {
+	public Validator insertNewStock(Stock newStock, String sessionID) throws RemoteException {
 		return this.dbCon.insertNewStock(newStock);
 	}
 
 	@Override
-	public Validator updateStock(int idToUpdate, Stock stock)
+	public Validator updateStock(int idToUpdate, Stock stock, String sessionID)
 			throws RemoteException {
 		return this.dbCon.updateStock(idToUpdate, stock);
 	}
 
 	@Override
-	public ArrayList<Order> selectOrdersAll() throws RemoteException {
+	public ArrayList<Order> selectOrdersAll(String sessionID) throws RemoteException {
 		return this.dbCon.selectOrdersAll();
 	}
 
 	@Override
-	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType)
+	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType, String sessionID)
 			throws RemoteException {
 		return this.dbCon.selectOrdersByFirmByType(firmId, orderType);
 	}
 
 	@Override
-	public Order selectOrder(int idToSelect) throws RemoteException {
+	public Order selectOrder(int idToSelect, String sessionID) throws RemoteException {
 		return this.dbCon.selectOrder(idToSelect);
 	}
 
 	@Override
-	public Validator insertNewOrder(Order newOrder) throws RemoteException {
+	public Validator insertNewOrder(Order newOrder, String sessionID) throws RemoteException {
 		return this.dbCon.insertNewOrder(newOrder);
 	}
 
 	@Override
-	public Validator updateOrder(int idToUpdate, Order order)
+	public Validator updateOrder(int idToUpdate, Order order, String sessionID)
 			throws RemoteException {
 		return this.dbCon.updateOrder(idToUpdate, order);
 	}
 
 	@Override
-	public ArrayList<CustomerInfo> selectCustomerInfoAll()
+	public ArrayList<CustomerInfo> selectCustomerInfoAll(String sessionID)
 			throws RemoteException {
 		return this.dbCon.selectCustomerInfoAll();
 	}
 
 	@Override
-	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId)
+	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId, String sessionID)
 			throws RemoteException {
 		return this.dbCon.selectCustomersByFirm(firmId);
 	}
 
 	@Override
-	public CustomerInfo selectCustomerInfo(int idToSelect)
+	public CustomerInfo selectCustomerInfo(int idToSelect, String sessionID)
 			throws RemoteException {
 		return this.dbCon.selectCustomerInfo(idToSelect);
 	}
 
 	@Override
-	public Validator insertNewCustomerInfo(CustomerInfo newCustomer)
+	public Validator insertNewCustomerInfo(CustomerInfo newCustomer, String sessionID)
 			throws RemoteException {
 		return this.dbCon.insertNewCustomerInfo(newCustomer);
 	}
 
 	@Override
 	public Validator updateCustomerInfo(int idToUpdate,
-			CustomerInfo customerToUpdate) throws RemoteException {
+			CustomerInfo customerToUpdate, String sessionID) throws RemoteException {
 		return this.dbCon.updateCustomerInfo(idToUpdate, customerToUpdate);
 	}
 
 	@Override
-	public ArrayList<StatusesOptions> selectAllStatuses()
+	public ArrayList<StatusesOptions> selectAllStatuses(String sessionID)
 			throws RemoteException {
 		return this.dbCon.selectAllStatuses();
 	}
 
 	@Override
-	public Validator checkIfUsernamePasswordMatch(String email, String plainPass)
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass, String sessionID)
 			throws RemoteException {
 		return this.dbCon.checkIfUsernamePasswordMatch(email, plainPass);
 	}
 
 	@Override
 	public Validator checkIfUsernamePasswordActivationCodeMatch(String email,
-			String plainPass, String plainCode) throws RemoteException {
+			String plainPass, String plainCode, String sessionID) throws RemoteException {
 		return this.dbCon.checkIfUsernamePasswordActivationCodeMatch(email,
 				plainPass, plainCode);
 	}
 
 	@Override
 	public Validator checkIfUsernameTempPasswordActivationCodeMatch(
-			String email, String plainTempPass, String plainCode)
+			String email, String plainTempPass, String plainCode, String sessionID)
 			throws RemoteException {
 		return this.dbCon.checkIfUsernameTempPasswordActivationCodeMatch(email,
 				plainTempPass, plainCode);
 	}
 
 	@Override
-	public Validator forgotPassword(String email) throws RemoteException {
+	public Validator forgotPassword(String email, String sessionID) throws RemoteException {
 		return this.dbCon.forgotPassword(email);
 	}
 
