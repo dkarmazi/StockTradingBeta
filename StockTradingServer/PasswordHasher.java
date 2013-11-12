@@ -40,4 +40,19 @@ public class PasswordHasher implements Serializable {
 		}
 	}
 
+	public static String generateRandomString() {
+		SecureRandom random = new SecureRandom();
+
+		String randPass = new BigInteger(48, random).toString(32);
+
+		return randPass;
+	}
+	
+	
+	
+	
+	
+	
+	
+
 }

@@ -14,6 +14,10 @@ public class User implements Serializable {
 	private int statusId;
 	private int brokerFirmId;
 	private int falseLogins;
+	private String acticationCode;
+	private String activationCodeSalt;
+	private String tempPassword;
+	private String tempPasswordSalt;
 
 	public String getSsn() {
 		return ssn;
@@ -103,6 +107,38 @@ public class User implements Serializable {
 		this.falseLogins = falseLogins;
 	}
 
+	public String getActicationCode() {
+		return acticationCode;
+	}
+
+	public void setActicationCode(String acticationCode) {
+		this.acticationCode = acticationCode;
+	}
+
+	public String getActivationCodeSalt() {
+		return activationCodeSalt;
+	}
+
+	public void setActivationCodeSalt(String activationCodeSalt) {
+		this.activationCodeSalt = activationCodeSalt;
+	}
+
+	public String getTempPassword() {
+		return tempPassword;
+	}
+
+	public void setTempPassword(String tempPassword) {
+		this.tempPassword = tempPassword;
+	}
+
+	public String getTempPasswordSalt() {
+		return tempPasswordSalt;
+	}
+
+	public void setTempPasswordSalt(String tempPasswordSalt) {
+		this.tempPasswordSalt = tempPasswordSalt;
+	}
+
 	public Validator validate() {
 
 		InputValidation iv = new InputValidation();
@@ -170,7 +206,11 @@ public class User implements Serializable {
 		out += "StatusId: " + this.getStatusId() + delimiter;
 		out += "FirmId: " + this.getBrokerFirmId() + delimiter;
 		out += "FalseLogins: " + this.getFalseLogins() + delimiter;
-
+		out += "acticationCode: " + this.getActicationCode() + delimiter;
+		out += "activationCodeSalt: " + this.getActivationCodeSalt() + delimiter;
+		out += "tempPassword: " + this.getTempPassword() + delimiter;
+		out += "tempPasswordSalt: " + this.getTempPasswordSalt() + delimiter;
+		
 		out += endOfString;
 
 		return out;

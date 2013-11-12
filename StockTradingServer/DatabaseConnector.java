@@ -1473,5 +1473,163 @@ public class DatabaseConnector {
 
 		return v;
 	}
+	
+	/**
+	 * This method sets an activation code for this user
+	 * 
+	 * @param userId
+	 */
+	public void setActivationCode(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = ?, ACTIVATIONCODESALT = ? WHERE ID = ?";
+
+		try {
+			PasswordHasher ph = new PasswordHasher();
+
+			// generate activation code with salt
+			String aSalt = ph.generateSalt();
+
+			// generate temporary password with salt
+			String activationCode = ph.generateRandomString();
+
+			// email the activation code
+			System.out.println("Activation code: " + activationCode);
+
+			// hashing
+			String activationCodeHashed = ph.sha512(activationCode, aSalt);
+
+			// store information to db
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setString(1, activationCodeHashed);
+			st.setString(2, aSalt);
+			st.setInt(3, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
+	/**
+	 * This function unsets the activation code
+	 * 
+	 * @param userId
+	 */
+	public void unsetActivationCode(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = \"\", ACTIVATIONCODESALT = \"\" WHERE ID = ?";
+
+		try {
+
+			// store information to db
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setInt(1, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
+	/**
+	 * This function generates and stores temporary and activation codes to the
+	 * database.
+	 * 
+	 * @param userId
+	 */
+	public void setActivationCodeAndTempPassword(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = ?, ACTIVATIONCODESALT = ?, TEMPPASSWORD = ?, TEMPPASSWORDSALT = ? WHERE ID = ?";
+
+		try {
+			PasswordHasher ph = new PasswordHasher();
+
+			// generate activation code with salt
+			String aSalt = ph.generateSalt();
+			String tSalt = ph.generateSalt();
+
+			// generate temporary password with salt
+			String activationCode = ph.generateRandomString();
+			String tempPassword = ph.generateRandomString();
+
+			System.out.println("Activation code: " + activationCode);
+			System.out.println("TempPassword: " + tempPassword);
+
+			// hashing
+			String activationCodeHashed = ph.sha512(activationCode, aSalt);
+			String tempPasswordHashed = ph.sha512(tempPassword, tSalt);
+
+			// store information to db
+
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setString(1, activationCodeHashed);
+			st.setString(2, aSalt);
+			st.setString(3, tempPasswordHashed);
+			st.setString(4, tSalt);
+			st.setInt(5, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
+	public void unsetActivationCodeAndTempPassword(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = \"\", ACTIVATIONCODESALT = \"\", TEMPPASSWORD = \"\", TEMPPASSWORDSALT = \"\" WHERE ID = ?";
+
+		try {
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
 
 }
