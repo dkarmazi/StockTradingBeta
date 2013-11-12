@@ -56,6 +56,9 @@ public interface ServerInterface extends Remote {
 
 	public ArrayList<Order> selectOrdersAll() throws RemoteException;
 
+        public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) 
+                        throws RemoteException;
+                
 	public Order selectOrder(int idToSelect) throws RemoteException;
 
 	public Validator insertNewOrder(Order newOrder) throws RemoteException;
@@ -66,6 +69,9 @@ public interface ServerInterface extends Remote {
 	public ArrayList<CustomerInfo> selectCustomerInfoAll()
 			throws RemoteException;
 
+        public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId)
+			throws RemoteException;
+                
 	public CustomerInfo selectCustomerInfo(int idToSelect)
 			throws RemoteException;
 

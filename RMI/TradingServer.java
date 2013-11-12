@@ -114,8 +114,13 @@ public class TradingServer extends UnicastRemoteObject implements
 	public ArrayList<Order> selectOrdersAll() throws RemoteException {
 		return this.dbCon.selectOrdersAll();
 	}
-
-	@Override
+        
+        @Override
+	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) throws RemoteException {
+		return this.dbCon.selectOrdersByFirmByType(firmId,  orderType);
+	}
+	
+        @Override
 	public Order selectOrder(int idToSelect) throws RemoteException {
 		return this.dbCon.selectOrder(idToSelect);
 	}
@@ -137,6 +142,12 @@ public class TradingServer extends UnicastRemoteObject implements
 		return this.dbCon.selectCustomerInfoAll();
 	}
 
+        @Override
+	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId)
+			throws RemoteException {
+		return this.dbCon.selectCustomersByFirm(firmId);
+	}
+        
 	@Override
 	public CustomerInfo selectCustomerInfo(int idToSelect)
 			throws RemoteException {
