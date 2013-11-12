@@ -84,4 +84,5 @@ public interface ServerInterface extends Remote {
 	public ArrayList<StatusesOptions> selectAllStatuses()
 			throws RemoteException;
 
+        
 }

@@ -79,7 +79,7 @@ public class  Utility
     
     public  Utility()
     {
-        //dbConnector = new StockTradingServer.DatabaseConnector();
+        //  dbConnector = new StockTradingServer.DatabaseConnector();
     }
     
     public static boolean isValidDate(String date)

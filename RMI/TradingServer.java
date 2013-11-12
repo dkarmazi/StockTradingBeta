@@ -116,7 +116,8 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
         
         @Override
-	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) throws RemoteException {
+	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) 
+                        throws RemoteException {
 		return this.dbCon.selectOrdersByFirmByType(firmId,  orderType);
 	}
 	
