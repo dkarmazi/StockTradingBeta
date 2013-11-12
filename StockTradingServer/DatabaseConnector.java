@@ -1889,8 +1889,7 @@ public class DatabaseConnector {
 			return v;
 		}
 
-		Authenticator auth = new Authenticator();
-		db.setActivationCodeAndTempPassword(u.getId());
+		setActivationCodeAndTempPassword(u.getId());
 
 		v.setVerified(true);
 		v.setStatus("Activation code and temporary passwod had been sent to your mail box");
