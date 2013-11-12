@@ -116,6 +116,12 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
 
 	@Override
+	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType)
+			throws RemoteException {
+		return this.dbCon.selectOrdersByFirmByType(firmId, orderType);
+	}
+
+	@Override
 	public Order selectOrder(int idToSelect) throws RemoteException {
 		return this.dbCon.selectOrder(idToSelect);
 	}
@@ -135,6 +141,12 @@ public class TradingServer extends UnicastRemoteObject implements
 	public ArrayList<CustomerInfo> selectCustomerInfoAll()
 			throws RemoteException {
 		return this.dbCon.selectCustomerInfoAll();
+	}
+
+	@Override
+	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId)
+			throws RemoteException {
+		return this.dbCon.selectCustomersByFirm(firmId);
 	}
 
 	@Override
@@ -159,6 +171,32 @@ public class TradingServer extends UnicastRemoteObject implements
 	public ArrayList<StatusesOptions> selectAllStatuses()
 			throws RemoteException {
 		return this.dbCon.selectAllStatuses();
+	}
+
+	@Override
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass)
+			throws RemoteException {
+		return this.dbCon.checkIfUsernamePasswordMatch(email, plainPass);
+	}
+
+	@Override
+	public Validator checkIfUsernamePasswordActivationCodeMatch(String email,
+			String plainPass, String plainCode) throws RemoteException {
+		return this.dbCon.checkIfUsernamePasswordActivationCodeMatch(email,
+				plainPass, plainCode);
+	}
+
+	@Override
+	public Validator checkIfUsernameTempPasswordActivationCodeMatch(
+			String email, String plainTempPass, String plainCode)
+			throws RemoteException {
+		return this.dbCon.checkIfUsernameTempPasswordActivationCodeMatch(email,
+				plainTempPass, plainCode);
+	}
+
+	@Override
+	public Validator forgotPassword(String email) throws RemoteException {
+		return this.dbCon.forgotPassword(email);
 	}
 
 	public static void main(String args[]) {

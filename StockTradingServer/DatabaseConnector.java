@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import StockTradingCommon.Enumeration;
+
 import java.text.DecimalFormat;
 
 /*
@@ -25,7 +26,7 @@ import java.text.DecimalFormat;
 
 public class DatabaseConnector {
 	private Connection con = null;
-	
+
 	// connect to DB
 	public DatabaseConnector() {
 		// Basic configuration - to be moved to config file
@@ -41,13 +42,13 @@ public class DatabaseConnector {
 			// e.printStackTrace();
 		}
 	}
-		
+
 	public BrokerageFirm getHello() {
 
 		BrokerageFirm brokerageFirm = new BrokerageFirm();
 
 		try {
-			
+
 			PreparedStatement st = null;
 			String query = "SELECT * FROM BROKERAGE_FIRM_INFO WHERE ID = ?;";
 
@@ -162,7 +163,7 @@ public class DatabaseConnector {
 			String addressZip = res.getString(6);
 			String licenceNumber = res.getString(7);
 			int status = res.getInt(8);
-                        String supervisorEmail = res.getString(9);
+			String supervisorEmail = res.getString(9);
 
 			brokerageFirm.setId(id);
 			brokerageFirm.setName(name);
@@ -172,7 +173,7 @@ public class DatabaseConnector {
 			brokerageFirm.setAddressZip(addressZip);
 			brokerageFirm.setLicenceNumber(licenceNumber);
 			brokerageFirm.setStatus(status);
-                        brokerageFirm.setSupervisorEmail(supervisorEmail);
+			brokerageFirm.setSupervisorEmail(supervisorEmail);
 
 		} catch (SQLException ex) {
 			// Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
@@ -196,8 +197,8 @@ public class DatabaseConnector {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "INSERT INTO BROKERAGE_FIRM_INFO "
-                        + " (NAME, ADDRESSSTREET, ADDRESSCITY, ADDRESSSTATE, ADDRESSZIP, LICENCENUMBER, STATUSID, SUPER_EMAIL)"
-                        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				+ " (NAME, ADDRESSSTREET, ADDRESSCITY, ADDRESSSTATE, ADDRESSZIP, LICENCENUMBER, STATUSID, SUPER_EMAIL)"
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 
@@ -210,8 +211,8 @@ public class DatabaseConnector {
 			st.setString(5, newFirm.getAddressZip());
 			st.setString(6, newFirm.getLicenceNumber());
 			st.setInt(7, newFirm.getStatus());
-                        st.setString(8, newFirm.getSupervisorEmail());
-                        
+			st.setString(8, newFirm.getSupervisorEmail());
+
 			int affectedRows = st.executeUpdate();
 
 			StockTradingServer.Logger logger = new StockTradingServer.Logger();
@@ -263,17 +264,11 @@ public class DatabaseConnector {
 
 		PreparedStatement st = null;
 
-		String query = "UPDATE BROKERAGE_FIRM_INFO "
-                        + " SET "
-                        + " NAME = ?"
-                        + ", ADDRESSSTREET = ?"
-                        + ", ADDRESSCITY = ?"
-                        + ", ADDRESSSTATE = ?"
-                        + ", ADDRESSZIP = ?"
-                        + ", LICENCENUMBER = ?"
-                        + ", STATUSID = ? "
-                        + ", SUPER_EMAIL = ? "
-                        + " WHERE ID = ?;";
+		String query = "UPDATE BROKERAGE_FIRM_INFO " + " SET " + " NAME = ?"
+				+ ", ADDRESSSTREET = ?" + ", ADDRESSCITY = ?"
+				+ ", ADDRESSSTATE = ?" + ", ADDRESSZIP = ?"
+				+ ", LICENCENUMBER = ?" + ", STATUSID = ? "
+				+ ", SUPER_EMAIL = ? " + " WHERE ID = ?;";
 
 		try {
 
@@ -287,10 +282,9 @@ public class DatabaseConnector {
 			st.setString(5, firmToUpdate.getAddressZip());
 			st.setString(6, firmToUpdate.getLicenceNumber());
 			st.setInt(7, firmToUpdate.getStatus());
-                        st.setString(8, firmToUpdate.getSupervisorEmail());
+			st.setString(8, firmToUpdate.getSupervisorEmail());
 			st.setInt(9, idToUpdate);
-                        
-                        
+
 			int affectedRows = st.executeUpdate();
 
 			StockTradingServer.Logger logger = new StockTradingServer.Logger();
@@ -878,25 +872,21 @@ public class DatabaseConnector {
 		return ordersAll;
 	}
 
-        /*
-	 * This functions returns an array list of all the orders belongs to a particular firm
+	/*
+	 * This functions returns an array list of all the orders belongs to a
+	 * particular firm
 	 */
 	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) {
 		ArrayList<Order> ordersAll = new ArrayList<Order>();
 		Statement st = null;
 		ResultSet rs = null;
-                String query = "SELECT O.*, S.NAME, C.FIRSTNAME, C.LASTNAME "
-                                + " FROM ORDERS O "
-                                + " INNER JOIN HAS_FIRM_BROKERS HFB"
-                                + " ON (O.BROKERID = HFB.BROKERID)"
-                                + " INNER JOIN STOCKS S"
-                                + " ON (O.STOCKID = S.ID)"
-                                + " INNER JOIN CUSTOMER_INFO C"
-                                + " ON (O.CUSTOMERID = C.ID)"
-                                + " WHERE HFB.FIRMID = " + firmId
-                               // + " AND O.STATUSID = 1"
-                                + " AND O.TYPEID = " + orderType
-                        ;
+		String query = "SELECT O.*, S.NAME, C.FIRSTNAME, C.LASTNAME "
+				+ " FROM ORDERS O " + " INNER JOIN HAS_FIRM_BROKERS HFB"
+				+ " ON (O.BROKERID = HFB.BROKERID)" + " INNER JOIN STOCKS S"
+				+ " ON (O.STOCKID = S.ID)" + " INNER JOIN CUSTOMER_INFO C"
+				+ " ON (O.CUSTOMERID = C.ID)" + " WHERE HFB.FIRMID = " + firmId
+				// + " AND O.STATUSID = 1"
+				+ " AND O.TYPEID = " + orderType;
 
 		try {
 			st = this.con.createStatement();
@@ -913,13 +903,14 @@ public class DatabaseConnector {
 				Timestamp dateIssued = res.getTimestamp(8);
 				Timestamp dateExpiration = res.getTimestamp(9);
 				int statusId = res.getInt(10);
-                                String stockName = res.getString("NAME");
-                                String customer = res.getString("FIRSTNAME") + " " + res.getString("LASTNAME");
-                                String displaySummary = stockName + "["
-                                        + new DecimalFormat("#,##0").format(amount) + " @ "
-                                        + new DecimalFormat("#,##0.00").format(price) + "] ::"
-                                        + customer;
-                                
+				String stockName = res.getString("NAME");
+				String customer = res.getString("FIRSTNAME") + " "
+						+ res.getString("LASTNAME");
+				String displaySummary = stockName + "["
+						+ new DecimalFormat("#,##0").format(amount) + " @ "
+						+ new DecimalFormat("#,##0.00").format(price) + "] ::"
+						+ customer;
+
 				Order order = new Order();
 				order.setOrderId(orderId);
 				order.setTypeId(typeId);
@@ -931,8 +922,8 @@ public class DatabaseConnector {
 				order.setDateIssued(dateIssued);
 				order.setDateExpiration(dateExpiration);
 				order.setStatusId(statusId);
-                                order.setDisplaySummary(displaySummary);
-                                
+				order.setDisplaySummary(displaySummary);
+
 				ordersAll.add(order);
 			}
 		} catch (SQLException ex) {
@@ -942,7 +933,7 @@ public class DatabaseConnector {
 
 		return ordersAll;
 	}
-        
+
 	/*
 	 * This function returns a particular order
 	 */
@@ -1091,19 +1082,20 @@ public class DatabaseConnector {
 		return v;
 	}
 
-        /*
-	 * This function returns an array list of all active customers of a given brokerage firm
+	/*
+	 * This function returns an array list of all active customers of a given
+	 * brokerage firm
 	 */
 	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId) {
 		ArrayList<CustomerInfo> customersOfFirm = new ArrayList<CustomerInfo>();
 		Statement st = null;
-		//ResultSet rs = null;
+		// ResultSet rs = null;
 
-                String query = "SELECT * FROM CUSTOMER_INFO C ";
-                        query += " INNER JOIN HAS_FIRM_CUSTOMERS HFC";
-                        query += " ON (HFC.CUSTOMERID = C.ID)";
-                        query += " WHERE HFC.FIRMID = " + firmId;
-                        query += ";";
+		String query = "SELECT * FROM CUSTOMER_INFO C ";
+		query += " INNER JOIN HAS_FIRM_CUSTOMERS HFC";
+		query += " ON (HFC.CUSTOMERID = C.ID)";
+		query += " WHERE HFC.FIRMID = " + firmId;
+		query += ";";
 		try {
 			st = this.con.createStatement();
 			ResultSet res = st.executeQuery(query);
@@ -1135,7 +1127,7 @@ public class DatabaseConnector {
 
 		return customersOfFirm;
 	}
-        
+
 	/*
 	 * This function returns an array list of all active customers
 	 */
@@ -1491,4 +1483,455 @@ public class DatabaseConnector {
 		return userID;
 	}
 
+	/**
+	 * This method sets an activation code for this user
+	 * 
+	 * @param userId
+	 */
+	public void setActivationCode(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = ?, ACTIVATIONCODESALT = ? WHERE ID = ?";
+
+		try {
+			PasswordHasher ph = new PasswordHasher();
+
+			// generate activation code with salt
+			String aSalt = ph.generateSalt();
+
+			// generate temporary password with salt
+			String activationCode = ph.generateRandomString();
+
+			// email the activation code
+			System.out.println("Activation code: " + activationCode);
+
+			// hashing
+			String activationCodeHashed = ph.sha512(activationCode, aSalt);
+
+			// store information to db
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setString(1, activationCodeHashed);
+			st.setString(2, aSalt);
+			st.setInt(3, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
+	/**
+	 * This function unsets the activation code
+	 * 
+	 * @param userId
+	 */
+	public void unsetActivationCode(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = \"\", ACTIVATIONCODESALT = \"\" WHERE ID = ?";
+
+		try {
+
+			// store information to db
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setInt(1, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
+	/**
+	 * This function generates and stores temporary and activation codes to the
+	 * database.
+	 * 
+	 * @param userId
+	 */
+	public void setActivationCodeAndTempPassword(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = ?, ACTIVATIONCODESALT = ?, TEMPPASSWORD = ?, TEMPPASSWORDSALT = ? WHERE ID = ?";
+
+		try {
+			PasswordHasher ph = new PasswordHasher();
+
+			// generate activation code with salt
+			String aSalt = ph.generateSalt();
+			String tSalt = ph.generateSalt();
+
+			// generate temporary password with salt
+			String activationCode = ph.generateRandomString();
+			String tempPassword = ph.generateRandomString();
+
+			System.out.println("Activation code: " + activationCode);
+			System.out.println("TempPassword: " + tempPassword);
+
+			// hashing
+			String activationCodeHashed = ph.sha512(activationCode, aSalt);
+			String tempPasswordHashed = ph.sha512(tempPassword, tSalt);
+
+			// store information to db
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setString(1, activationCodeHashed);
+			st.setString(2, aSalt);
+			st.setString(3, tempPasswordHashed);
+			st.setString(4, tSalt);
+			st.setInt(5, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			User u = selectBrokerUser(userId);
+
+			// send activation code to the broker supervisor
+			String messageBroker = "The temporary password is: "
+					+ tempPasswordHashed;
+			String messageBrokerSupervisor = "Broker " + u.getFirstName() + " "
+					+ u.getLastName()
+					+ " has his password forgotten. The activation code is: "
+					+ tempPasswordHashed;
+
+			// send temp password to the broker
+			SendEmail.sendEmailNotification(u.getEmail(), "Forgotten Password",
+					messageBroker);
+
+			// send activation code to the supervisor
+			SendEmail.sendEmailNotification(u.getEmail(), "Forgotten Password",
+					messageBrokerSupervisor);
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
+	public void unsetActivationCodeAndTempPassword(int userId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET ACTIVATIONCODE = \"\", ACTIVATIONCODESALT = \"\", TEMPPASSWORD = \"\", TEMPPASSWORDSALT = \"\" WHERE ID = ?";
+
+		try {
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			// if (affectedRows == 0) {}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	}
+
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass) {
+		// validate input
+		Validator result = validateEmailAndPlainInput(email, plainPass);
+		if (!result.isVerified()) {
+			return result;
+		}
+
+		DatabaseConnector db = new DatabaseConnector();
+
+		// validate email
+		result = db.verifyUserEmail(email);
+		if (!result.isVerified()) {
+			return result;
+		}
+
+		InputValidation iv = new InputValidation();
+		PasswordHasher hasher = new PasswordHasher();
+
+		// get this user limited info from the database
+		User user = db.selectUserByEmailLimited(email);
+
+		String dbHash = user.getPassword();
+		String dbSalt = user.getSalt();
+		int statusId = user.getStatusId();
+		int falseLogins = user.getFalseLogins();
+		int id = user.getId();
+
+		// 1. check if this user is active
+		if (statusId != Enumeration.User.USER_STATUSID_ACTIVE) {
+			result.setVerified(false);
+			result.setStatus("Error, cannot login, this user account has been locked");
+			return result;
+		}
+
+		String plainHash = hasher.sha512(plainPass, dbSalt);
+
+		// 2. if entered password is correct, return true with welcome message
+		if (plainHash.equals(dbHash)) {
+
+			db.updateDatabaseIntField("USERS", "ID", "FALSELOGINS", id, 0);
+			db.unsetActivationCodeAndTempPassword(id);
+			result.setVerified(true);
+			result.setStatus("Welcome to Stocks Trading System");
+
+			return result;
+		} else {
+			// 3. else record the failed login attempt
+			int newFalseLogins = falseLogins + 1;
+			db.updateDatabaseIntField("USERS", "ID", "FALSELOGINS", id,
+					newFalseLogins);
+
+			// if we reached the max of failed logins, lock the account, sent an
+			// email
+			if (newFalseLogins == Enumeration.User.USER_MAX_LOGIN_ATTEMPTS) {
+				// lock
+				db.updateDatabaseIntField("USERS", "ID", "STATUSID", id,
+						Enumeration.User.USER_STATUSID_LOCKED);
+
+				// Code goes here
+				db.setActivationCode(id);
+
+				// generate activation code, send an email
+
+				result.setVerified(false);
+				result.setStatus("Error, exceeded the maximum number of login attempts, this user account has been locked");
+				return result;
+			} else {
+				result.setVerified(false);
+				result.setStatus("Error, the system could not resolve the provided combination of username and password.");
+				return result;
+			}
+		}
+
+	}
+
+	public Validator validateEmailAndPlainInput(String email, String plainPass) {
+		InputValidation iv = new InputValidation();
+		Validator vResult = new Validator();
+		Validator vEmail, vPlain;
+		Boolean verified = true;
+		String status = "";
+
+		// 1. email
+		vEmail = iv.validateEmail(email, "Email");
+		verified &= vEmail.isVerified();
+		status += vEmail.getStatus();
+
+		// 2. plain
+		vPlain = iv.validateString(plainPass, "Password");
+		verified &= vPlain.isVerified();
+		status += vPlain.getStatus();
+
+		vResult.setVerified(verified);
+		vResult.setStatus(status);
+
+		return vResult;
+	}
+
+	public Validator validateEmailPasswordCodeInput(String email,
+			String plainPass, String plainCode) {
+		InputValidation iv = new InputValidation();
+		Validator vResult = new Validator();
+		Validator vEmail, vPlain, vCode;
+		Boolean verified = true;
+		String status = "";
+
+		// 1. email
+		vEmail = iv.validateEmail(email, "Email");
+		verified &= vEmail.isVerified();
+		status += vEmail.getStatus();
+
+		// 2. plain
+		vPlain = iv.validateString(plainPass, "Password");
+		verified &= vPlain.isVerified();
+		status += vPlain.getStatus();
+
+		// 2. code
+		vPlain = iv.validateString(plainCode, "Activation Code");
+		verified &= vPlain.isVerified();
+		status += vPlain.getStatus();
+
+		vResult.setVerified(verified);
+		vResult.setStatus(status);
+
+		return vResult;
+	}
+
+	// activation of locked account
+	public Validator checkIfUsernamePasswordActivationCodeMatch(String email,
+			String plainPass, String plainCode) {
+		// validate input
+		Validator result = validateEmailPasswordCodeInput(email, plainPass,
+				plainCode);
+		if (!result.isVerified()) {
+			return result;
+		}
+
+		DatabaseConnector db = new DatabaseConnector();
+
+		// validate email
+		result = db.verifyUserEmail(email);
+		if (!result.isVerified()) {
+			return result;
+		}
+
+		PasswordHasher hasher = new PasswordHasher();
+		User u = db.selectUserByEmailLimited(email);
+		String plainPassHashed = hasher.sha512(plainPass, u.getSalt());
+		String plainCodeHashed = hasher.sha512(plainCode,
+				u.getActivationCodeSalt());
+
+		if (plainPassHashed.equals(u.getPassword())
+				&& plainCodeHashed.equals(u.getActicationCode())) {
+			// clean the codes
+			db.unsetActivationCodeAndTempPassword(u.getId());
+
+			// reset false logins
+			db.updateDatabaseIntField("USERS", "ID", "FALSELOGINS", u.getId(),
+					0);
+
+			// unlock the user
+			db.updateDatabaseIntField("USERS", "ID", "STATUSID", u.getId(),
+					Enumeration.User.USER_STATUSID_ACTIVE);
+
+			result.setVerified(true);
+			result.setStatus("Account unlocked");
+			return result;
+		} else {
+			result.setVerified(false);
+			result.setStatus("Authentication failed");
+			return result;
+		}
+	}
+
+	// forgotten password
+	public Validator checkIfUsernameTempPasswordActivationCodeMatch(
+			String email, String plainTempPass, String plainCode) {
+		// validate input
+		Validator result = validateEmailPasswordCodeInput(email, plainTempPass,
+				plainCode);
+		if (!result.isVerified()) {
+			return result;
+		}
+
+		DatabaseConnector db = new DatabaseConnector();
+
+		// validate email
+		result = db.verifyUserEmail(email);
+		if (!result.isVerified()) {
+			return result;
+		}
+
+		PasswordHasher hasher = new PasswordHasher();
+		User u = db.selectUserByEmailLimited(email);
+		String plainTempPassHashed = hasher.sha512(plainTempPass,
+				u.getTempPasswordSalt());
+		String plainCodeHashed = hasher.sha512(plainCode,
+				u.getActivationCodeSalt());
+
+		if (plainTempPassHashed.equals(u.getTempPassword())
+				&& plainCodeHashed.equals(u.getActicationCode())) {
+			// clean the codes
+			db.unsetActivationCodeAndTempPassword(u.getId());
+
+			// unlock
+			db.updateDatabaseIntField("USERS", "ID", "STATUSID", u.getId(),
+					Enumeration.User.USER_STATUSID_ACTIVE);
+
+			// reset false logins
+			db.updateDatabaseIntField("USERS", "ID", "FALSELOGINS", u.getId(),
+					0);
+
+			result.setVerified(true);
+			result.setStatus("Account unlocked");
+			return result;
+		} else {
+			result.setVerified(false);
+			result.setStatus("Authentication failed");
+			return result;
+		}
+	}
+
+	public Validator forgotPassword(String email) {
+		Validator v = new Validator();
+		InputValidation iv = new InputValidation();
+
+		// check input
+		v = iv.validateEmail(email, "Email");
+
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		// validate email
+		DatabaseConnector db = new DatabaseConnector();
+		v = db.verifyUserEmail(email);
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		// check user status
+		User u = db.selectUserByEmailLimited(email);
+
+		if (u.getStatusId() != Enumeration.User.USER_STATUSID_ACTIVE) {
+			v.setVerified(false);
+			v.setStatus("Error, this user account has been locked");
+			return v;
+		}
+
+		setActivationCodeAndTempPassword(u.getId());
+
+		v.setVerified(true);
+		v.setStatus("Activation code and temporary passwod had been sent to your mail box");
+
+		return v;
+	}
+
+        public int getUserIDByEmail (String Email){
+            int userID = -1;
+            Statement st = null;
+            ResultSet rs = null;
+            try
+            {
+                st = con.createStatement();
+                st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
+                rs = st.getResultSet();
+                if (rs.next())
+                {
+                    userID = rs.getInt("ID");
+                }
+            }
+            catch (Exception e) 
+            {
+                e.printStackTrace();
+            }
+                return userID;
+            }
 }

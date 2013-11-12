@@ -30,7 +30,7 @@ public class  Utility
     private static User currentUser = new User();                  // when a user logs in, current user details set here 
     
     private static ServerInterface serverInterface = null;
-    private static DatabaseConnector dbConnector = new DatabaseConnector();
+   //  private static DatabaseConnector dbConnector = new DatabaseConnector(); 
     
     public static void setServerInterface(ServerInterface _serverInterface) {
     	Utility.serverInterface = _serverInterface;
@@ -79,7 +79,7 @@ public class  Utility
     
     public  Utility()
     {
-        //dbConnector = new StockTradingServer.DatabaseConnector();
+        //  dbConnector = new StockTradingServer.DatabaseConnector();
     }
     
     public static boolean isValidDate(String date)
@@ -135,7 +135,7 @@ public class  Utility
         ArrayList<StatusesOptions> statuses = null;
 		try {
 			statuses = serverInterface.selectAllStatuses();
-			System.out.println("asdasds" + statuses.toString());
+			//System.out.println("asdasds" + statuses.toString());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -174,18 +174,45 @@ public class  Utility
     // Stock
     public static Validator AddStock(Stock stock)
     {
-        return dbConnector.insertNewStock(stock);        
+        //return dbConnector.insertNewStock(stock);     
+        Validator validator = null;
+        try
+        {
+            validator = serverInterface.insertNewStock(stock);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        return validator;
     }
     public static Validator UpdateStock(Stock stock)
     {
-        return dbConnector.updateStock(stock.getId(), stock);        
+        //return dbConnector.updateStock(stock.getId(), stock);    
+        Validator validator = null;
+        try
+        {
+            validator = serverInterface.insertNewStock(stock);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }  
+        return validator;
     }
     public static void PopulateStocks(ComboBox comboBox)
     {
         comboBox.getItems().clear();
         
-        ArrayList<Stock> records = dbConnector.selectStockAll();        
-        
+        ArrayList<Stock> records = null;        
+        try
+        {
+            records = serverInterface.selectStockAll();
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }  
         comboBox.getItems().add(new KeyValuePair("-1", "[Select Stock]"));
 
         for(Stock s : records)
@@ -198,7 +225,16 @@ public class  Utility
     public static void PopulateStocks(ListView listView)
     {
         listView.getItems().clear();
-        ArrayList<Stock> records = dbConnector.selectStockAll();
+        ArrayList<Stock> records = null;
+        try
+        {
+            records = serverInterface.selectStockAll();
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        
         for(Stock s : records)
         {
             listView.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getName() ));
@@ -207,17 +243,46 @@ public class  Utility
     }
     public static Stock GetStockInfo(int stockId)
     {
-        return dbConnector.selectStock(stockId);
+        Stock stock = null;
+        try
+        {
+            stock = serverInterface.selectStock(stockId);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return stock;
     }
     
     // Broker
     public static Validator AddBroker(User broker)
     {
-        return dbConnector.insertNewBroker(broker);
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.insertNewBroker(broker);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }
     public static Validator UpdateBroker(User broker)
     {
-        return dbConnector.updateBroker(broker.getId(), broker);        
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.updateBroker(broker.getId(), broker); 
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }
     public static void PopulateBrokers(int brokerageFirm, ListView listView)
     {        
@@ -226,11 +291,26 @@ public class  Utility
         if (brokerageFirm ==0)
         {
             int statusID = 0;
-            records = dbConnector.selectBrokersAll(statusID)  ;   
+
+            try
+            {
+                records = serverInterface.selectBrokersAll(statusID)  ;   
+            }
+            catch (RemoteException e)
+            {
+                e.printStackTrace();
+            }
         }
         else
         {
-            records = dbConnector.selectBrokersAllbyFirm(brokerageFirm);
+            try
+            {
+                records = serverInterface.selectBrokersAllbyFirm(brokerageFirm);
+            }
+            catch (RemoteException e)
+            {
+                e.printStackTrace();
+            }
         }
         for (User s : records)
         {
@@ -239,38 +319,60 @@ public class  Utility
     } 
     public static User GetBrokerInfo(int brokerId)
     {
-        return dbConnector.selectBrokerUser(brokerId);
+        User user = null;
+     
+        try
+        {
+            user = serverInterface.selectBrokerUser(brokerId);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return user;
     }
     
     // Brokerage Firm
     public static Validator AddBrokerageFirm(BrokerageFirm brokerageFirm)
     {
-        return dbConnector.insertNewBrokerageFirm(brokerageFirm);
-        /*Validator validator = brokerageFirm.validate();
-        if (validator.isVerified())
+        Validator validator = null;        
+        try
         {
-            boolean status = dbConnector.insertNewBrokerageFirm(brokerageFirm);   
-            validator.setVerified(status);
-            if (status)
-            {
-                validator.setStatus(Enumeration.Database.DB_INSERT_SUCCESS);
-            }
-            else
-            {
-                validator.setStatus(Enumeration.Database.DB_INSERT_FAILURE);
-            }
+            validator = serverInterface.insertNewBrokerageFirm(brokerageFirm);
         }
-        return validator;*/
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }
     public static Validator UpdateBrokerageFirm(BrokerageFirm brokerageFirm)
     {
-        return dbConnector.updateBrokerageFirm(brokerageFirm.getId(), brokerageFirm);        
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.updateBrokerageFirm(brokerageFirm.getId(), brokerageFirm); 
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }    
     public static void PopulateBrokerageFirms(ComboBox comboBox)
     {
         comboBox.getItems().clear();
-        ArrayList<BrokerageFirm> records = dbConnector.selectBrokerageFirmsAll();        
-        
+          
+        ArrayList<BrokerageFirm> records = null;
+        try
+        {
+            records = serverInterface.selectBrokerageFirmsAll();
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
         comboBox.getItems().add(new KeyValuePair(null, "[All Brokerage Firms]"));
 
         for(BrokerageFirm s : records)
@@ -282,7 +384,16 @@ public class  Utility
     public static void PopulateBrokerageFirms(ListView listView)
     {
         listView.getItems().clear();
-        ArrayList<BrokerageFirm> records = dbConnector.selectBrokerageFirmsAll();        
+        ArrayList<BrokerageFirm> records = null;       
+                
+        try
+        {
+            records = serverInterface.selectBrokerageFirmsAll();
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
         for(BrokerageFirm s : records)
         {
             listView.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getName() ));
@@ -292,25 +403,65 @@ public class  Utility
     // Customer
     public static CustomerInfo GetCustomerInfo(int customerId)
     {
-        return dbConnector.selectCustomerInfo(customerId);
+        CustomerInfo customerInfo = null;
+        
+        try
+        {
+            customerInfo = serverInterface.selectCustomerInfo(customerId);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return customerInfo;
     }    
     public static Validator AddCustomer(CustomerInfo customer)
     {
         customer.setFirmId(getCurrentUser_BrokerageFirmID());
-        return dbConnector.insertNewCustomerInfo(customer);
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.insertNewCustomerInfo(customer);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }
     public static Validator UpdateCustomer(CustomerInfo customer)
     {
         customer.setFirmId(getCurrentUser_BrokerageFirmID());
-        return dbConnector.updateCustomerInfo(customer.getId(), customer);        
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.updateCustomerInfo(customer.getId(), customer);  
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }
     public static void PopulateCustomers(ComboBox comboBox)
     {
-        ArrayList<CustomerInfo> statuses = dbConnector.selectCustomerInfoAll();        
+        ArrayList<CustomerInfo> records = null;
+        
+         try
+        {
+            records = serverInterface.selectCustomerInfoAll();   
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+                
         comboBox.getItems().clear();
         comboBox.getItems().add(new KeyValuePair("-1", "[Select Customer]"));
 
-        for(CustomerInfo s : statuses)
+        for(CustomerInfo s : records)
         {
             comboBox.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getFirstName() + " " + s.getLastName()));
         }
@@ -318,21 +469,38 @@ public class  Utility
     }
     public static void PopulateCustomers(ListView listView, int brokerageFirmID)
     {
-        ArrayList<CustomerInfo> statuses = dbConnector.selectCustomersByFirm(brokerageFirmID);        
+        ArrayList<CustomerInfo> records = null;        
+        try
+        {
+            records = serverInterface.selectCustomersByFirm(brokerageFirmID);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
         listView.getItems().clear();
         
-        for(CustomerInfo s : statuses)
+        for(CustomerInfo s : records)
         {
             listView.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getFirstName() + " " + s.getLastName()));
         }
     } 
     public static void PopulateCustomersOfFirm(ComboBox comboBox)
     {
-        ArrayList<CustomerInfo> statuses = dbConnector.selectCustomersByFirm(getCurrentUser_BrokerageFirmID());        
+        ArrayList<CustomerInfo> records = null;
+        try
+        {
+            records = serverInterface.selectCustomersByFirm(getCurrentUser_BrokerageFirmID()); 
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        
         comboBox.getItems().clear();
         comboBox.getItems().add(new KeyValuePair(null, "[Select Customer]"));
         
-        for(CustomerInfo s : statuses)
+        for(CustomerInfo s : records)
         {
             comboBox.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getFirstName() + " " + s.getLastName()));
         }
@@ -343,24 +511,64 @@ public class  Utility
     {
         order.setTypeId(Enumeration.OrderType.BUYING_ORDER);
         order.setBrokerId(getCurrentUserID());
-        return dbConnector.insertNewOrder(order);
+        
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.insertNewOrder(order);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;        
     }
     public static Validator UpdateBuyingOrder(Order order)
     {
         order.setTypeId(Enumeration.OrderType.BUYING_ORDER);
         order.setBrokerId(getCurrentUserID());
-        return dbConnector.updateOrder(order.getOrderId(), order);
+        
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.updateOrder(order.getOrderId(), order);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }
     public static Order GetBuyingOrder(int orderID)
     {
-        return dbConnector.selectOrder(orderID);
+        Order order = null;
+        
+        try
+        {
+            order = serverInterface.selectOrder(orderID);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return order;
     }
     public static void PopulateBuyingOrdersByBrokerageFirm(ListView listView)
     {
         listView.getItems().clear();
-        ArrayList<Order> records = dbConnector.selectOrdersByFirmByType(
+        ArrayList<Order> records = null; 
+        try
+        {
+            records = serverInterface.selectOrdersByFirmByType(
                                                     getCurrentUser_BrokerageFirmID()
-                                                    , Enumeration.OrderType.BUYING_ORDER);            
+                                                    , Enumeration.OrderType.BUYING_ORDER); 
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
         for(Order s : records)
         {
             listView.getItems().add(    new KeyValuePair(
@@ -385,24 +593,68 @@ public class  Utility
     {
         order.setTypeId(Enumeration.OrderType.SELLING_ORDER);
         order.setBrokerId(getCurrentUserID());
-        return dbConnector.insertNewOrder(order);
+        
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.insertNewOrder(order);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
     }
     public static Validator UpdateSellingOrder(Order order)
     {
         order.setTypeId(Enumeration.OrderType.SELLING_ORDER);
         order.setBrokerId(getCurrentUserID());
-        return dbConnector.updateOrder(order.getOrderId(), order);
+        Validator validator = null;
+        
+        try
+        {
+            validator = serverInterface.updateOrder(order.getOrderId(), order);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;        
     }
     public static Order GetSellingOrder(int orderID)
-    {
-        return dbConnector.selectOrder(orderID);
+    {        
+        Order order = null;
+        
+        try
+        {
+            order = serverInterface.selectOrder(orderID);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return order;
+        
     }
     public static void PopulateSellingOrdersByBrokerageFirm(ListView listView)
     {
         listView.getItems().clear();
-        ArrayList<Order> records = dbConnector.selectOrdersByFirmByType(
+        ArrayList<Order> records =  null;
+
+        
+        try
+        {
+            records = serverInterface.selectOrdersByFirmByType(
                                                     getCurrentUser_BrokerageFirmID()
-                                                    , Enumeration.OrderType.SELLING_ORDER);        
+                                                    , Enumeration.OrderType.SELLING_ORDER);    
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+
+        
         for(Order s : records)
         {
             listView.getItems().add(    new KeyValuePair(

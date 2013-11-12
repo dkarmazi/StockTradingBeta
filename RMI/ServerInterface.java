@@ -56,6 +56,9 @@ public interface ServerInterface extends Remote {
 
 	public ArrayList<Order> selectOrdersAll() throws RemoteException;
 
+        public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) 
+                        throws RemoteException;
+                
 	public Order selectOrder(int idToSelect) throws RemoteException;
 
 	public Validator insertNewOrder(Order newOrder) throws RemoteException;
@@ -66,6 +69,9 @@ public interface ServerInterface extends Remote {
 	public ArrayList<CustomerInfo> selectCustomerInfoAll()
 			throws RemoteException;
 
+        public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId)
+			throws RemoteException;
+                
 	public CustomerInfo selectCustomerInfo(int idToSelect)
 			throws RemoteException;
 
@@ -77,5 +83,14 @@ public interface ServerInterface extends Remote {
 
 	public ArrayList<StatusesOptions> selectAllStatuses()
 			throws RemoteException;
+	
+	
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass) throws RemoteException;
 
+	public Validator checkIfUsernamePasswordActivationCodeMatch(String email, String plainPass, String plainCode) throws RemoteException;
+
+	public Validator checkIfUsernameTempPasswordActivationCodeMatch(String email, String plainTempPass, String plainCode) throws RemoteException;
+
+	public Validator forgotPassword(String email) throws RemoteException;
+        
 }
