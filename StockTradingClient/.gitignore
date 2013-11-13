@@ -9,3 +9,9 @@
 /SellOrderController.class
 /StockController.class
 /Utility.class
+/LoginController$1.class
+/LoginController.class
+/PasswordChangeController$1.class
+/PasswordChangeController$2.class
+/PasswordChangeController.class
+/UserActivationController.class

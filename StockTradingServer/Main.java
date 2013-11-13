@@ -15,15 +15,12 @@ public class Main {
 		String email = "dkarmazi@gwu.edu";
 		String plainPass = "1234";
 
-		Authenticator auth = new Authenticator();
-		Validator v = auth.checkIfUsernamePasswordMatch(email, plainPass);
+		//System.out.println(dc.checkIfUsernamePasswordMatch(email, plainPass));
+		//dc.unsetActivationCodeAndTempPassword(49);
+
+		dc.forgotPassword(email);
+		//System.out.println(dc.checkIfUsernameTempPasswordActivationCodeMatch(email, "6vvv6ajnq1", "5dct0ktbvv").toString());
 		
-		System.out.println(v.toString());
-		
-		
-		
-		
-		// System.out.println(dc.selectBrokersAllbyFirm(11).toString());
 		// Logger log = new Logger();
 		// log.logDatabaseActivity("dkarmazi", "Select * From Users");
 	}

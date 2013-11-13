@@ -6,6 +6,7 @@ public class Validator implements Serializable {
 
 	private boolean verified = false;
 	private String status = "";
+	private String session = "";
 
 	public boolean isVerified() {
 		return verified;
@@ -21,6 +22,14 @@ public class Validator implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getSession() {
+		return session;
+	}
+
+	public void setSession(String session) {
+		this.session = session;
 	}
 
 	public String toString() {
