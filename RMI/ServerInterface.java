@@ -20,6 +20,9 @@ public interface ServerInterface extends Remote {
 	
 	public BrokerageFirm getHello() throws RemoteException;
 
+	
+	public User selectUserByEmailLimited(String emailToSelect) throws RemoteException;
+
 	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String clientSessionID)
 			throws RemoteException;
 

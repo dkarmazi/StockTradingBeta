@@ -253,4 +253,10 @@ public class TradingServer extends UnicastRemoteObject implements
 		}
 	}
 
+	@Override
+	public User selectUserByEmailLimited(String emailToSelect)
+			throws RemoteException {
+		return this.dbCon.selectUserByEmailLimited(emailToSelect);
+	}
+
 }
