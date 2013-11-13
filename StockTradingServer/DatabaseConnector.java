@@ -30,11 +30,11 @@ public class DatabaseConnector {
 	// connect to DB
 	public DatabaseConnector() {
 		// Basic configuration - to be moved to config file
-        String url = "jdbc:mysql://192.30.164.204:3306/repo6545";
-        String user = "repo6545";
-        String password = "MF4@2163G!8d2L4";
+		String url = "jdbc:mysql://192.30.164.204:3306/repo6545";
+		String user = "repo6545";
+		String password = "MF4@2163G!8d2L4";
 		try {
-			
+
 			Connection con = DriverManager.getConnection(url, user, password);
 			setCon(con);
 		} catch (Exception e) {
@@ -1375,7 +1375,7 @@ public class DatabaseConnector {
 		User user = new User();
 
 		PreparedStatement st = null;
-		String query = "SELECT PASSWORD, SALT, STATUSID, FALSELOGINS, ID FROM USERS WHERE EMAIL = ?";
+		String query = "SELECT PASSWORD, SALT, STATUSID, FALSELOGINS, ID, ACTIVATIONCODE, ACTIVATIONCODESALT, TEMPPASSWORD, TEMPPASSWORDSALT FROM USERS WHERE EMAIL = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
@@ -1384,17 +1384,25 @@ public class DatabaseConnector {
 			ResultSet res = st.executeQuery();
 
 			if (res.next()) {
-
 				String password = res.getString(1);
 				String salt = res.getString(2);
 				int statusId = res.getInt(3);
 				int falseLogins = res.getInt(4);
 				int id = res.getInt(5);
+				String acticationCode = res.getString(6);
+				String activationCodeSalt = res.getString(7);
+				String tempPassword = res.getString(8);
+				String tempPasswordSalt = res.getString(9);
 
 				user.setPassword(password);
 				user.setSalt(salt);
 				user.setStatusId(statusId);
 				user.setFalseLogins(falseLogins);
+				user.setActicationCode(acticationCode);
+				user.setActivationCodeSalt(activationCodeSalt);
+				user.setTempPassword(tempPassword);
+				user.setTempPasswordSalt(tempPasswordSalt);
+
 				user.setId(id);
 			} else {
 
@@ -1465,14 +1473,14 @@ public class DatabaseConnector {
 
 		return v;
 	}
-	
 
 	/**
 	 * This method sets an activation code for this user
 	 * 
 	 * @param userId
 	 */
-	public void setActivationCode(int userId) {
+	public String setActivationCode(int userId) {
+		String out = "";
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "UPDATE USERS SET ACTIVATIONCODE = ?, ACTIVATIONCODESALT = ? WHERE ID = ?";
@@ -1485,6 +1493,7 @@ public class DatabaseConnector {
 
 			// generate temporary password with salt
 			String activationCode = ph.generateRandomString();
+			out = activationCode;
 
 			// email the activation code
 			System.out.println("Activation code: " + activationCode);
@@ -1512,6 +1521,8 @@ public class DatabaseConnector {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
+
+		return out;
 	}
 
 	/**
@@ -1589,21 +1600,29 @@ public class DatabaseConnector {
 
 			User u = selectBrokerUser(userId);
 
-			// send activation code to the broker supervisor
-			String messageBroker = "The temporary password is: "
-					+ tempPasswordHashed;
-			String messageBrokerSupervisor = "Broker " + u.getFirstName() + " "
+			// send activation code to the supervisor
+			String superSubject = Enumeration.Strings.ACCOUNT_FRGTN_SUPER_SUBJECT;
+			String superMessage = "Broker "
+					+ u.getFirstName()
+					+ " "
 					+ u.getLastName()
-					+ " has his password forgotten. The activation code is: "
-					+ tempPasswordHashed;
+					+ " requested password recovery. Please provide him/her with with the following activation code: "
+					+ activationCode;
+
+			SendEmail.sendEmailNotification(u.getEmail(), superSubject,
+					superMessage);
 
 			// send temp password to the broker
-			SendEmail.sendEmailNotification(u.getEmail(), "Forgotten Password",
-					messageBroker);
-
-			// send activation code to the supervisor
-			SendEmail.sendEmailNotification(u.getEmail(), "Forgotten Password",
-					messageBrokerSupervisor);
+			String brokerSubject = Enumeration.Strings.ACCOUNT_FRGTN_BROKER_SUBJECT;
+			String brokerMessage = "Dear "
+					+ u.getFirstName()
+					+ " "
+					+ u.getLastName()
+					+ ", your temporary password is: "
+					+ tempPassword
+					+ "\n\nIn order to access your account, you will need an activation code which had been sent to your supervisor.";
+			SendEmail.sendEmailNotification(u.getEmail(), brokerSubject,
+					brokerMessage);
 
 			// log to DB
 			StockTradingServer.Logger logger = new StockTradingServer.Logger();
@@ -1642,7 +1661,7 @@ public class DatabaseConnector {
 	}
 
 	public Validator checkIfUsernamePasswordMatch(String email, String plainPass) {
-		// validate input
+		// 1. validate input
 		Validator result = validateEmailAndPlainInput(email, plainPass);
 		if (!result.isVerified()) {
 			return result;
@@ -1650,7 +1669,7 @@ public class DatabaseConnector {
 
 		DatabaseConnector db = new DatabaseConnector();
 
-		// validate email
+		// 2. validate email
 		result = db.verifyUserEmail(email);
 		if (!result.isVerified()) {
 			return result;
@@ -1668,7 +1687,7 @@ public class DatabaseConnector {
 		int falseLogins = user.getFalseLogins();
 		int id = user.getId();
 
-		// 1. check if this user is active
+		// 3. check if this user is active
 		if (statusId != Enumeration.User.USER_STATUSID_ACTIVE) {
 			result.setVerified(false);
 			result.setStatus("Error, cannot login, this user account has been locked");
@@ -1677,7 +1696,7 @@ public class DatabaseConnector {
 
 		String plainHash = hasher.sha512(plainPass, dbSalt);
 
-		// 2. if entered password is correct, return true with welcome message
+		// 4. if entered password is correct, return true with welcome message
 		if (plainHash.equals(dbHash)) {
 
 			db.updateDatabaseIntField("USERS", "ID", "FALSELOGINS", id, 0);
@@ -1687,7 +1706,7 @@ public class DatabaseConnector {
 
 			return result;
 		} else {
-			// 3. else record the failed login attempt
+			// 5. else record the failed login attempt
 			int newFalseLogins = falseLogins + 1;
 			db.updateDatabaseIntField("USERS", "ID", "FALSELOGINS", id,
 					newFalseLogins);
@@ -1699,10 +1718,14 @@ public class DatabaseConnector {
 				db.updateDatabaseIntField("USERS", "ID", "STATUSID", id,
 						Enumeration.User.USER_STATUSID_LOCKED);
 
-				// Code goes here
-				db.setActivationCode(id);
+				// generate activation code
+				String activationCode = db.setActivationCode(id);
 
-				// generate activation code, send an email
+				// send email with activation code
+				SendEmail.sendEmailNotification(email,
+						Enumeration.Strings.ACCOUNT_LOCKED_SUBJECT,
+						Enumeration.Strings.ACCOUNT_LOCKED_MESSAGE
+								+ activationCode);
 
 				result.setVerified(false);
 				result.setStatus("Error, exceeded the maximum number of login attempts, this user account has been locked");
@@ -1881,14 +1904,7 @@ public class DatabaseConnector {
 			return v;
 		}
 
-		// check user status
 		User u = db.selectUserByEmailLimited(email);
-
-		if (u.getStatusId() != Enumeration.User.USER_STATUSID_ACTIVE) {
-			v.setVerified(false);
-			v.setStatus("Error, this user account has been locked");
-			return v;
-		}
 
 		setActivationCodeAndTempPassword(u.getId());
 
@@ -1898,24 +1914,20 @@ public class DatabaseConnector {
 		return v;
 	}
 
-        public int getUserIDByEmail (String Email){
-            int userID = -1;
-            Statement st = null;
-            ResultSet rs = null;
-            try
-            {
-                st = con.createStatement();
-                st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
-                rs = st.getResultSet();
-                if (rs.next())
-                {
-                    userID = rs.getInt("ID");
-                }
-            }
-            catch (Exception e) 
-            {
-                e.printStackTrace();
-            }
-                return userID;
-            }
+	public int getUserIDByEmail(String Email) {
+		int userID = -1;
+		Statement st = null;
+		ResultSet rs = null;
+		try {
+			st = con.createStatement();
+			st.executeQuery("select ID from USERS where EMAIL='" + Email + "'");
+			rs = st.getResultSet();
+			if (rs.next()) {
+				userID = rs.getInt("ID");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return userID;
+	}
 }
