@@ -1702,7 +1702,7 @@ public class DatabaseConnector {
 			unsetActivationCodeAndTempPassword(id);
 			result.setVerified(true);
 			result.setStatus("Welcome to Stocks Trading System");
-			
+
 			LoggerCustom.logLoginActivity(email, "Login Successful");
 
 			return result;
@@ -1729,7 +1729,7 @@ public class DatabaseConnector {
 								+ activationCode);
 
 				LoggerCustom.logLoginActivity(email, "Account locked");
-				
+
 				result.setVerified(false);
 				result.setStatus("Error, exceeded the maximum number of login attempts, this user account has been locked");
 				return result;
@@ -1829,8 +1829,7 @@ public class DatabaseConnector {
 					Enumeration.User.USER_STATUSID_ACTIVE);
 
 			LoggerCustom.logLoginActivity(email, "Account unlocked");
-			
-			
+
 			result.setVerified(true);
 			result.setStatus("Account unlocked");
 			return result;
@@ -1878,10 +1877,10 @@ public class DatabaseConnector {
 
 			result.setVerified(true);
 			result.setStatus("Account unlocked");
-			
-			LoggerCustom.logLoginActivity(email, "Forgotten password recovery check passed");
 
-			
+			LoggerCustom.logLoginActivity(email,
+					"Forgotten password recovery check passed");
+
 			return result;
 		} else {
 			result.setVerified(false);
@@ -1909,7 +1908,7 @@ public class DatabaseConnector {
 		}
 
 		LoggerCustom.logLoginActivity(email, "User forgot password");
-		
+
 		User u = selectUserByEmailLimited(email);
 
 		setActivationCodeAndTempPassword(u.getId());
@@ -1969,17 +1968,21 @@ public class DatabaseConnector {
 
 	public boolean passwordHasBeenAlreadyUsed(int userID, String newPassword,
 			int numberOfPasswordsToLookUp) {
+
 		boolean result = false;
 		Statement st = null;
 		ResultSet rs = null;
 		try {
-			st = con.createStatement();
+			st = this.con.createStatement();
 			st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID="
 					+ userID + " order by SETON DESC");
 			rs = st.getResultSet();
 			for (int count = 0; count < numberOfPasswordsToLookUp; count++) {
 				if (rs.next()) {
-					if (newPassword.equals(rs.getString("PASSWORD"))) {
+					PasswordHasher ph = new PasswordHasher();
+					String salt = rs.getString("SALT");
+					String passwordHashed = ph.sha512(newPassword, salt);
+					if (passwordHashed.equals(rs.getString("PASSWORD"))) {
 						return true;
 					}
 				}
@@ -2074,15 +2077,13 @@ public class DatabaseConnector {
 		if (!v.isVerified()) {
 			return v;
 		}
-		
-		
+
 		// check if the password is recent
-		if(passwordHasBeenAlreadyUsed(userId, plainPass, 3)) {
+		if (passwordHasBeenAlreadyUsed(userId, plainPass, 3)) {
 			v.setVerified(false);
 			v.setStatus("Our recordsd indicate that this password had alerady been used in the recent past");
 			return v;
 		}
-		
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -2103,18 +2104,21 @@ public class DatabaseConnector {
 			st.setInt(3, userId);
 
 			int affectedRows = st.executeUpdate();
-			
+
 			User u = selectBrokerUser(userId);
 
 			// log to DB
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 			LoggerCustom.logLoginActivity(u.getEmail(), "password update");
-			
+
 			// email notification
-			String messageBody = "Dear " + u.getFirstName() + " " + u.getLastName() + "\n\nYour password had been recently changed.";
-			SendEmail.sendEmailNotification(u.getEmail(), "Password changed", messageBody);
-			
+			String messageBody = "Dear " + u.getFirstName() + " "
+					+ u.getLastName()
+					+ "\n\nYour password had been recently changed.";
+			SendEmail.sendEmailNotification(u.getEmail(), "Password changed",
+					messageBody);
+
 			if (affectedRows == 0) {
 				v.setVerified(false);
 				v.setStatus("Could not update the table");
@@ -2131,6 +2135,5 @@ public class DatabaseConnector {
 
 		return v;
 	}
-
 
 }
