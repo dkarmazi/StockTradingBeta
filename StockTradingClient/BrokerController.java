@@ -41,7 +41,7 @@ public class BrokerController implements Initializable {
     @FXML private Button btnClear;
     @FXML private Button btnRandomPassword;    
     
-    PasswordClassifier passwordClassifier = null;
+    //PasswordClassifier passwordClassifier = null;
     @FXML
     private void handleClearButtonAction(ActionEvent event) {
         
@@ -161,7 +161,7 @@ public class BrokerController implements Initializable {
                 !Password2.getText().trim().equals("")
             )
         {
-            switch  (passwordClassifier.GradePassword(Password2.getText()))
+            switch  (Utility.GradePassword(Password2.getText()))
             {
                 case Enumeration.PasswordGrade.PASSWORD_STRENGTH_VERYWEAK:
                     activeGrade += "-fx-background-color: #FF0000;";
@@ -189,8 +189,39 @@ public class BrokerController implements Initializable {
             }
             //PasswordClassification.setText("Password Strength is : " + passwordClassifier.GradePassword(Password2.getText()));
         }
+        else
+        {
+            Message.setText("Check your password. Password should be non-empty and the confirmation should be matched.");
+            
+        }
     }
     
+    @FXML
+    private void handleResetPassword(ActionEvent event)
+    {
+        if (BrokersListView.getItems().isEmpty() || BrokersListView.getSelectionModel().getSelectedItem() == null)
+        {
+            return;
+        }
+        
+       /* if (
+                Password1.getText().equals( Password2.getText()) &&
+                !Password2.getText().trim().equals("")
+            )
+        {*/
+            KeyValuePair keyValue = BrokersListView.getSelectionModel().getSelectedItem();       
+
+            int brokerId = Integer.parseInt( keyValue.getKey());
+            Validator validator =Utility.ChangePassword(brokerId, Password1.getText(), Password2.getText());
+            Message.setText(validator.getStatus());
+
+                    
+        /*}
+        else
+        {
+            Message.setText("Check your password. Password should be non-empty and the confirmation should be matched.");
+        }*/
+    }
     private void SetPasswordBarometerDefaultColor()
     {
         String defultBackground = "-fx-background-color: #B2B2B2; -fx-border-color: #8E8E8E;";
@@ -201,7 +232,7 @@ public class BrokerController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        passwordClassifier = new PasswordClassifier();
+        //passwordClassifier = new PasswordClassifier();
         SetPasswordBarometerDefaultColor();
         
         Utility.PopulateStatus(StatusChoiceBox);
@@ -224,7 +255,7 @@ public class BrokerController implements Initializable {
         // Hide passwords
         Password1.visibleProperty().setValue(false);
         Password2.visibleProperty().setValue(false);
-        Password.visibleProperty().setValue(false);
+        //Password.visibleProperty().setValue(false);
         
         KeyValuePair keyValue = BrokersListView.getSelectionModel().getSelectedItem();       
        

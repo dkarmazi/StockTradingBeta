@@ -110,5 +110,6 @@ public interface ServerInterface extends Remote {
 
 	public Validator updateUserPassword(int userId, String plainPass,
 			String plainPassConfirm) throws RemoteException;
-	
+        
+	public int GradePassword(String password) throws RemoteException;
 }

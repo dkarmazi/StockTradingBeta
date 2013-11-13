@@ -14,6 +14,7 @@ import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
 import StockTradingServer.DatabaseConnector;
 import StockTradingServer.Order;
+import StockTradingServer.PasswordClassifier;
 import StockTradingServer.Sessions;
 import StockTradingServer.StatusesOptions;
 import StockTradingServer.Stock;
@@ -30,7 +31,8 @@ public class TradingServer extends UnicastRemoteObject implements
 	// we will be reusing this class throughout all the methors
 	// while this TradingServer is alive
 	public DatabaseConnector dbCon = new DatabaseConnector();
-
+        public PasswordClassifier passwordClassifier = new PasswordClassifier();
+        
 	private TradingServer() throws Exception {
 		super(PORT, new RMISSLClientSocketFactory(),
 				new RMISSLServerSocketFactory());
@@ -286,5 +288,10 @@ public class TradingServer extends UnicastRemoteObject implements
 			String plainPassConfirm) throws RemoteException {
 		return this.dbCon.updateUserPassword(userId, plainPass, plainPassConfirm);
 	}
-
+        
+        @Override
+        public int GradePassword(String password) throws RemoteException
+        {
+            return this.passwordClassifier.GradePassword(password);
+        }
 }

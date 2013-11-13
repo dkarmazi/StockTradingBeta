@@ -81,4 +81,8 @@ public class Enumeration {
 		public final static String ACCOUNT_FRGTN_BROKER_SUBJECT = "Stocks Trading Account Password Recovery";
 
 	}
+        
+        public static class Password        {
+            public final static int PASSWORD_HISTORY_COUNT = 3;
+        }
 }

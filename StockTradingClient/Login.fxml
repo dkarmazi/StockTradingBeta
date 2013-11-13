@@ -44,7 +44,7 @@
     <HBox id="HBox" alignment="CENTER" layoutX="14.0" maxWidth="1.7976931348623157E308" prefWidth="428.0" spacing="50.0" AnchorPane.bottomAnchor="4.96">
       <children>
         <Button id="ActivateAccount" mnemonicParsing="false" onAction="#ActivateAccountHandler" prefWidth="120.0" text="Activate Account" />
-        <Button id="RecoverPassword" mnemonicParsing="false" onAction="#RecoverPasswordHandler" text="Recover Password" />
+        <Button id="RecoverPassword" mnemonicParsing="false" onAction="#RecoverPasswordHandler" prefWidth="120.0" text="Recover Password" />
       </children>
     </HBox>
   </children>

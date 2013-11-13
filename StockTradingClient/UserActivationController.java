@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -47,15 +48,35 @@ public class UserActivationController implements Initializable {
         if (validator.isVerified())
         {
             // Account activate - show the main window
+            
+            Utility.setCurrentSessionId(validator.getSession());
+            Utility.SetCurrentUser(UserEmail.getText().trim());
+            
             Stage stage = new Stage();
-            Parent root =FXMLLoader.load(
-            MainController.class.getResource("Main.fxml"));
+            Parent root = null;
+            if (Utility.IsPasswordExpired(Utility.getCurrentUserID()))
+            {
+                root = FXMLLoader.load(
+                            MainController.class.getResource("PasswordChange.fxml")
+                        );
 
-            stage.setScene(new Scene(root));
-            stage.setTitle("Stock Trading Platform");
-            //stage.initModality(Modality.NONE);
-            //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
-            stage.show(); 
+                stage.setScene(new Scene(root));
+                stage.setTitle("Stock Trading Platform");
+                stage.initModality(Modality.WINDOW_MODAL);
+                
+                stage.show(); 
+            }
+            else
+            {
+                root = FXMLLoader.load(
+                            MainController.class.getResource("Main.fxml")
+                        );
+
+                stage.setScene(new Scene(root));
+                stage.setTitle("Stock Trading Platform");
+    
+                stage.show();
+            }                        
 
             ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
         }

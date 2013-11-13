@@ -40,12 +40,16 @@ public class UserPasswordRecover implements Initializable {
     {
         // TODO
         //if the account activation successful, redirect to the main screen.
-        Validator validator = Utility.RecoverPassword(UserEmail.getText().trim()
+        Validator validator = Utility.RecoverPasswordRequest(UserEmail.getText().trim()
                                                     , Password.getText()
                                                     , ActivationCode.getText());
         if (validator.isVerified())
         {
             // Password activation success
+            
+            Utility.setCurrentSessionId(validator.getSession());
+            Utility.SetCurrentUser(UserEmail.getText().trim());
+            
             Stage stage = new Stage();
             Parent root =FXMLLoader.load(
             MainController.class.getResource("PasswordChange.fxml"));

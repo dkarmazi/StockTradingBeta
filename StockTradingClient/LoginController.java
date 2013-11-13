@@ -1,7 +1,6 @@
 
 package StockTradingClient;
 
-import StockTradingCommon.Enumeration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,11 +14,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import StockTradingServer.Security;
-import StockTradingServer.User;
 import StockTradingServer.Validator;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.stage.Modality;
+import javafx.stage.WindowEvent;
 /**
  * FXML Controller class
  *
@@ -45,8 +44,8 @@ public class LoginController implements Initializable {
                     }
                 }
                 );
-        UserEmail.setText("hirosh@gwmail.gwu.edu");
-        Password.setText("admin");
+        //UserEmail.setText("hirosh@gwmail.gwu.edu");
+        //Password.setText("admin");
     }   
     @FXML
     public void Login(ActionEvent event) throws IOException
@@ -60,59 +59,44 @@ public class LoginController implements Initializable {
 
             System.out.println(loginStatus.getSession());
             Utility.setCurrentSessionId(loginStatus.getSession());
-            Utility.SetCurrentUser(UserEmail.getText().trim());
-                    
-            // TODO 
-            // Check the status to see whether the user account has been locked.
-            int userStatus = 0;
+            Utility.SetCurrentUser(UserEmail.getText().trim());              
+
             
             Stage stage = new Stage();
             Parent root = null;
-            switch (userStatus)
+            if (Utility.IsPasswordExpired(Utility.getCurrentUserID()))
             {
-                case 0: // active user  
-                    
-        
-                    root = FXMLLoader.load(
-                                MainController.class.getResource("Main.fxml")
-                            );
+                root = FXMLLoader.load(
+                            MainController.class.getResource("PasswordChange.fxml")
+                        );
 
-                    stage.setScene(new Scene(root));
-                    stage.setTitle("Stock Trading Platform");
-                    //stage.initModality(Modality.NONE);
-                    //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
-                    stage.show(); 
-                    
-                    break;
-                    
-                case 1: // password expired
-                    
-                    root = FXMLLoader.load(
-                                MainController.class.getResource("PasswordChange.fxml")
-                            );
-
-                    stage.setScene(new Scene(root));
-                    stage.setTitle("Stock Trading Platform");
-                    stage.initModality(Modality.WINDOW_MODAL);
-                    //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
-                    stage.show(); 
-                    
-                    break ;
-                    
-              /*  case 2: // account locked
-                    
-                    root = FXMLLoader.load(
-                                MainController.class.getResource("UserActivation.fxml")
-                            );
-
-                    stage.setScene(new Scene(root));
-                    stage.setTitle("Stock Trading Platform");
-                    stage.initModality(Modality.WINDOW_MODAL);
-                    //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
-                    stage.show();                     
-                    break;*/
+                stage.setScene(new Scene(root));
+                stage.setTitle("Stock Trading Platform");
+                stage.setResizable(false);
+                stage.initModality(Modality.WINDOW_MODAL);
                 
-            }           
+                stage.show(); 
+            }
+            else
+            {
+                root = FXMLLoader.load(
+                            MainController.class.getResource("Main.fxml")
+                        );
+
+                stage.setScene(new Scene(root));
+                stage.setTitle("Stock Trading Platform");
+                
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+                {
+                    public void handle(WindowEvent we) 
+                    {
+                        System.out.println("TODO: Need to unset the session");
+                    }
+                });
+                
+                stage.show();
+            }
+                   
             
             ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
         }
@@ -139,6 +123,7 @@ public class LoginController implements Initializable {
 
         stage.setScene(new Scene(root));
         stage.setTitle("Stock Trading Platform");
+        stage.setResizable(false);
         stage.initModality(Modality.WINDOW_MODAL);
               
         stage.show();
@@ -156,6 +141,7 @@ public class LoginController implements Initializable {
 
         stage.setScene(new Scene(root));
         stage.setTitle("Stock Trading Platform");
+        stage.setResizable(false);
         stage.initModality(Modality.WINDOW_MODAL);
               
         stage.show();

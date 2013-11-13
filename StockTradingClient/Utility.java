@@ -67,6 +67,10 @@ public class  Utility
     public static void setCurrentSessionId(String currentSessionId) {
         Utility.currentSessionId = currentSessionId;
     }
+    public static void unSetCurrentSessionId()
+    {
+        
+    }
     //public static void setCurrentUserRole(int currentUserRole) {
     //    currentUser.setRoleId(currentUserRole);
     //}
@@ -726,25 +730,15 @@ public class  Utility
     {
         
         User user = GetUserLimited(userEmail);
+        user.setEmail(userEmail);
         Utility.SetCurrentUser(user);
-        /*if (user.getId() > 0)        {
 
-            user.setBrokerFirmId(-1);
-            user.setRoleId(Enumeration.UserRole.USER_ROLE_ADMIN);
-
-            user.setFirstName("Admin");
-            user.setLastName("Administrator");
-            user.setEmail("admin@admin.com");
-        }*/
     }
 
     public static User GetUserLimited(String userEmail)
     {
-        //TODO :Get the user info
         User user = new User();
-        // TODO: remove databaseConnector
-        //DatabaseConnector db = new DatabaseConnector();
-        //user = db.selectUserByEmailLimited(userEmail);
+
         try
         {
             user = serverInterface.selectUserByEmailLimited(userEmail);               
@@ -777,8 +771,8 @@ public class  Utility
                 
         return user;
     }
-    
-    public static Validator RecoverPassword(String email, String tempPassword, String activationCode)
+
+    public static Validator RecoverPasswordRequest(String email, String tempPassword, String activationCode)
     {
         Validator validator = new Validator();
         
@@ -819,5 +813,64 @@ public class  Utility
             e.printStackTrace();
         } 
         return validator;
+    }
+    
+    public static Validator ChangePassword(int userid, String newPassword1, String newPassword2)
+    {
+        Validator validator = new Validator();
+        try
+        {
+            validator = serverInterface.updateUserPassword(userid, newPassword1, newPassword2);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        return validator;
+    }
+    
+    public static boolean IsPasswordExpired(int userId)
+    {
+        boolean status = false;
+        try
+        {
+            status = serverInterface.isUserPasswordExpired(userId);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        
+        return status;
+    }
+    
+    public static int GradePassword(String password)
+    {
+        int passwordGrade = 0;
+        try
+        {
+            passwordGrade = serverInterface.GradePassword(password);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        return passwordGrade;
+    }
+    
+    public static boolean HasPasswordUsedBefore(int userId, String password)
+    {
+        boolean status = false;
+        try
+        {
+            status = serverInterface.passwordHasBeenAlreadyUsed(userId 
+                                                     , password
+                                                     , Enumeration.Password.PASSWORD_HISTORY_COUNT);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        return status;
     }
 }
