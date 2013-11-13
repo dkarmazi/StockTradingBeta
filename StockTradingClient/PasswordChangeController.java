@@ -152,10 +152,11 @@ public class PasswordChangeController implements Initializable {
                 !PasswordConfirm.getText().trim().equals("")
             )
         {
+            Validator validator;
             // Check whether the current password correct
-            Validator validator = Utility.AuthenticateUser(Utility.getCurrentUserEmail()
-                                        , PasswordOld.getText());
-            if (validator.isVerified())
+            //Validator validator = Utility.AuthenticateUser(Utility.getCurrentUserEmail()
+            //                            , PasswordOld.getText());
+            //if (validator.isVerified())
             {
                 // chec whether the curren password = new password
                 if (!PasswordOld.getText().equals(PasswordNew.getText()))
@@ -200,11 +201,11 @@ public class PasswordChangeController implements Initializable {
                 }
 
             }
-            else
+            /*else
             {
                 Message.setText("Check your current password. ");
                     
-            }
+            }*/
         }
         else
         {
