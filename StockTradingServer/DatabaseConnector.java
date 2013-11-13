@@ -1924,7 +1924,7 @@ public class DatabaseConnector {
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT ID from USERS WHERE EMAIL= ?";
+		String query = "SELECT ID from USERS WHERE EMAIL = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
@@ -1979,7 +1979,7 @@ public class DatabaseConnector {
 		boolean result = false;
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT * FROM USERPASSWORDHISTORY WHERE USERID=? ORDER BY SETON DESC";
+		String query = "SELECT * FROM USERPASSWORDHISTORY WHERE USERID = ? ORDER BY SETON DESC";
 
 		try {
 			st = this.con.prepareStatement(query);
