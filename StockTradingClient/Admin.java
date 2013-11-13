@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import RMI.*;
 import StockTradingCommon.Enumeration.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
-import StockTradingServer.DatabaseConnector;
 import StockTradingServer.User;
 import StockTradingServer.Validator;
 
@@ -26,8 +25,7 @@ import java.util.ArrayList;
 
 public class Admin extends Application {
 	
-	public static String clientSessionID = null;
-	
+
 	private static final int PORT = 2019;
 	private Stage stage;
 	public static ServerInterface serverInterface;
@@ -35,7 +33,7 @@ public class Admin extends Application {
 	public void start(Stage primaryStage) throws Exception 
         {
 
-		if(serverInterface != null) {
+            if(serverInterface != null) {
 			Utility.setServerInterface(serverInterface);
 		} else {
 			System.out.println("Server interface is not set");			
@@ -81,24 +79,6 @@ public class Admin extends Application {
 					.lookup("TradingServer");
 
 
-			String email = "dkarmazi@gwu.edu";
-			String plainPass = "1234";
-
-			Validator v = serverInterface.checkIfUsernamePasswordMatch(email, plainPass);
-			
-			
-//			//System.out.println(v.getSession());
-//			
-//			System.out.println()
-//			
-//			//System.out.println(serverInterface.selectBrokersAll(1, clientSessionID).toString());
-
-			
-			
-			//ArrayList<StockTradingServer.BrokerageFirm> c =  serverInterface.selectBrokerageFirmsAll();
-			//System.out.println(c.toString());
-			 
-			//System.out.println(mess	age.toString() + "\n");
 			launch(args);
 
 		} catch (Exception e) {
