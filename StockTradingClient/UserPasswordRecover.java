@@ -1,4 +1,3 @@
-
 package StockTradingClient;
 
 import java.io.IOException;

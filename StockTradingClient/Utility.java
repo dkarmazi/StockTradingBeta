@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 
 package StockTradingClient;
@@ -333,6 +329,19 @@ public class  Utility
     }
     
     // Brokerage Firm
+    public static BrokerageFirm GetBrokerageFirmInfo(int firmId)
+    {
+        BrokerageFirm brokerageFirm = null;
+        try
+        {
+            brokerageFirm = serverInterface.selectBrokerageFirm(firmId, Admin.clientSessionID);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return brokerageFirm;
+    }
     public static Validator AddBrokerageFirm(BrokerageFirm brokerageFirm)
     {
         Validator validator = null;        
@@ -692,9 +701,14 @@ public class  Utility
             validator.setVerified(true);
             setCurrentUser(GetUser("broker" ));
         }*/
-        
-        Authenticator authenticator = new Authenticator();
-        validator = authenticator.checkIfUsernamePasswordMatch(userName, password) ;
+        try
+        {
+            validator = serverInterface.checkIfUsernamePasswordMatch(userName, password, Admin.clientSessionID);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }        
 
         
         return validator;
@@ -702,7 +716,6 @@ public class  Utility
     
     public static void SetCurrentUser(String userEmail)
     {
-        DatabaseConnector db = new DatabaseConnector();
         
         User user = GetUserLimited(userEmail);
         Utility.SetCurrentUser(user);
@@ -722,12 +735,11 @@ public class  Utility
         //TODO :Get the user info
         User user = new User();
         // TODO: remove databaseConnector
-        DatabaseConnector db = new DatabaseConnector();
-        user = db.selectUserByEmailLimited(userEmail);
+        //DatabaseConnector db = new DatabaseConnector();
+        //user = db.selectUserByEmailLimited(userEmail);
         /*try
         {
-            //user = serverInterface.selectUserByEmailLimited(userEmail);    
-               
+           // user = serverInterface.selectUserByEmailLimited(userEmail,  Admin.clientSessionID);               
         }
         catch (RemoteException e)
         {
@@ -760,7 +772,16 @@ public class  Utility
     
     public static Validator RecoverPassword(String email, String tempPassword, String activationCode)
     {
-        Authenticator authenticator = new Authenticator();
-        return authenticator.checkIfUsernameTempPasswordActivationCodeMatch(email, tempPassword, activationCode);
+        Validator validator = new Validator();
+        
+        try
+        {
+            validator = serverInterface.checkIfUsernameTempPasswordActivationCodeMatch(email, tempPassword, activationCode, Admin.clientSessionID);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }  
+        return validator;
     }
 }

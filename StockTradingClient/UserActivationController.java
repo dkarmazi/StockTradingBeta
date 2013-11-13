@@ -1,3 +1,4 @@
+
 package StockTradingClient;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ import javafx.stage.Stage;
 /**
  * FXML Controller class
  *
- * @author Sulochane
+ * @author Hirosh Wickramasuriya
  */
 public class UserActivationController implements Initializable {
 

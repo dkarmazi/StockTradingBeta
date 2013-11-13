@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package StockTradingClient;
 
 import java.net.URL;
@@ -149,10 +146,8 @@ public class BrokerFirmController implements Initializable {
         }
         KeyValuePair brokerageFirmKeyValue = BrokerageFirmListView.getSelectionModel().getSelectedItem();
         	
-        StockTradingServer.DatabaseConnector dbConnector = new StockTradingServer.DatabaseConnector();
-        
        
-        BrokerageFirm brokerageFirm = dbConnector.selectBrokerageFirm(Integer.parseInt( brokerageFirmKeyValue.getKey()));
+        BrokerageFirm brokerageFirm = Utility.GetBrokerageFirmInfo(Integer.parseInt( brokerageFirmKeyValue.getKey()));
         
         //brokerageFirm.setBrokerageFirm(Integer.parseInt( brokerageFirm.getKey()));
         
