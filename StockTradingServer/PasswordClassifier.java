@@ -299,6 +299,7 @@ public class PasswordClassifier
         
         leetArray.add(new Leet("!", "I"));
         leetArray.add(new Leet("1", "I"));
+        leetArray.add(new Leet("|", "I"));
         
         leetArray.add(new Leet("_/", "J"));
         
@@ -335,6 +336,7 @@ public class PasswordClassifier
         leetArray.add(new Leet("7", "T"));
         
         leetArray.add(new Leet("\\/", "V"));
+        
         leetArray.add(new Leet("\\/\\/", "W"));
         leetArray.add(new Leet("VV", "W"));
         leetArray.add(new Leet("vv", "W"));
@@ -530,17 +532,28 @@ public class PasswordClassifier
     private  ArrayList<String> GetMultiwaySymbols()
     {
         ArrayList<String> multiWaySymbols = new ArrayList();
-        
+        boolean found = false;
         for(Leet leet1: leetArray)
         {
             for (Leet leet2: leetArray)
             {
-                if (leet2.getSymbol().equals(leet1.getSymbol()))
+                if (
+                        leet2.getSymbol().equals(leet1.getSymbol()) &&
+                        !leet2.getLetter().equals(leet1.getLetter())
+                   )
                 {                       
-                    if (!multiWaySymbols.equals(leet1.getSymbol()))
+                    found = false;
+                    for (String symbol : multiWaySymbols)
                     {
-                        // add the symbol to array, only if it is new to the array
-                        multiWaySymbols.add(leet1.getSymbol());
+                        if (symbol.equals(leet1.getSymbol()))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        multiWaySymbols.add(leet1.getSymbol());    
                     }
                 }
             }
