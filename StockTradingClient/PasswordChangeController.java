@@ -95,15 +95,15 @@ public class PasswordChangeController implements Initializable {
     public void CheckPasswordStrength(ActionEvent event) throws IOException
     {
         SetPasswordBarometerDefaultColor();
-        String activeGrade = "-fx-border-color:#000000;";
-        
-        PasswordClassifier passwordClassifier = new PasswordClassifier();
+        String activeGrade = "-fx-border-color:#000000;";       
 
         if (
                 PasswordNew.getText().equals( PasswordConfirm.getText()) &&
                 !PasswordConfirm.getText().trim().equals("")
             )
         {
+            PasswordClassifier passwordClassifier = new PasswordClassifier();
+            
             switch (passwordClassifier.GradePassword(PasswordConfirm.getText()))
             {
                 case Enumeration.PasswordGrade.PASSWORD_STRENGTH_VERYWEAK:

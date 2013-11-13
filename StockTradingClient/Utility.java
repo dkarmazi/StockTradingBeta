@@ -57,7 +57,7 @@ public class  Utility
     public static User getCurrentUser() {
         return currentUser;
     }
-    public static void setCurrentUser(User user) {
+    public static void SetCurrentUser(User user) {
         currentUser = user;
     }
     public static int getCurrentUserRole() {
@@ -679,25 +679,63 @@ public class  Utility
     //User
     public static Validator AuthenticateUser(String userName, String password)
     {
-        Validator status = new Validator();
-        status.setVerified(false);
+        Validator validator = new Validator();
+        
+        /*validator.setVerified(false);
         if ( (userName.equalsIgnoreCase("admin")) && (password.equalsIgnoreCase("admin")) )
         {
-            status.setVerified(true);
+            validator.setVerified(true);
             setCurrentUser( GetUser("admin"));
         }
         else if ( (userName.equalsIgnoreCase("broker")) && (password.equalsIgnoreCase("broker")) )
         {
-            status.setVerified(true);
+            validator.setVerified(true);
             setCurrentUser(GetUser("broker" ));
-        }
-        return status;
+        }*/
+        
+        Authenticator authenticator = new Authenticator();
+        validator = authenticator.checkIfUsernamePasswordMatch(userName, password) ;
+
+        
+        return validator;
     }
-    public static User GetUser(String userEmail)
+    
+    public static void SetCurrentUser(String userEmail)
+    {
+        DatabaseConnector db = new DatabaseConnector();
+        
+        User user = GetUserLimited(userEmail);
+        Utility.SetCurrentUser(user);
+        /*if (user.getId() > 0)        {
+
+            user.setBrokerFirmId(-1);
+            user.setRoleId(Enumeration.UserRole.USER_ROLE_ADMIN);
+
+            user.setFirstName("Admin");
+            user.setLastName("Administrator");
+            user.setEmail("admin@admin.com");
+        }*/
+    }
+
+    public static User GetUserLimited(String userEmail)
     {
         //TODO :Get the user info
         User user = new User();
-        user.setId(44);
+        // TODO: remove databaseConnector
+        DatabaseConnector db = new DatabaseConnector();
+        user = db.selectUserByEmailLimited(userEmail);
+        /*try
+        {
+            //user = serverInterface.selectUserByEmailLimited(userEmail);    
+               
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }*/
+        
+        
+        /*user.setId(44);
         if (userEmail.trim().equalsIgnoreCase("admin"))
         {
             user.setBrokerFirmId(-1);
@@ -715,8 +753,14 @@ public class  Utility
             user.setFirstName("Brook");
             user.setLastName("Broker");
             user.setEmail("brook@broker.com");            
-        }
+        }*/
                 
         return user;
+    }
+    
+    public static Validator RecoverPassword(String email, String tempPassword, String activationCode)
+    {
+        Authenticator authenticator = new Authenticator();
+        return authenticator.checkIfUsernameTempPasswordActivationCodeMatch(email, tempPassword, activationCode);
     }
 }

@@ -15,9 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import StockTradingServer.Security;
@@ -37,6 +35,8 @@ public class LoginController implements Initializable {
     @FXML private PasswordField Password;
     @FXML private Label Message;
     
+    @FXML private Button RecoverPassword;
+    @FXML private Button ActivateAccount;
             
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -50,12 +50,14 @@ public class LoginController implements Initializable {
                     }
                 }
                 );
+        UserEmail.setText("hirosh@gwmail.gwu.edu");
+        Password.setText("admin");
     }   
     @FXML
     public void Login(ActionEvent event) throws IOException
     {
-        Security secure = new Security();
-        System.out.println(secure.CreateRandomPassword());
+        //Security secure = new Security();
+        //System.out.println(secure.CreateRandomPassword());
         Validator loginStatus = Utility.AuthenticateUser( UserEmail.getText().trim(), Password.getText().trim() );
         
         if (loginStatus.isVerified())
@@ -74,8 +76,9 @@ public class LoginController implements Initializable {
             }*/
             
             // TODO Capture the proper user ids
-            User currentUser = Utility.GetUser(UserEmail.getText().trim());
-            Utility.setCurrentUser(currentUser);
+            //User currentUser = Utility.GetUserLimited(UserEmail.getText().trim());
+            
+            Utility.SetCurrentUser(UserEmail.getText().trim());
                     
             // TODO 
             // Check the status to see whether the user account has been locked.
@@ -85,7 +88,7 @@ public class LoginController implements Initializable {
             Parent root = null;
             switch (userStatus)
             {
-                case 0: // active user        
+                case 0: // active user  
                     
         
                     root = FXMLLoader.load(
@@ -114,7 +117,7 @@ public class LoginController implements Initializable {
                     
                     break ;
                     
-                case 2: // account locked
+              /*  case 2: // account locked
                     
                     root = FXMLLoader.load(
                                 MainController.class.getResource("UserActivation.fxml")
@@ -125,7 +128,7 @@ public class LoginController implements Initializable {
                     stage.initModality(Modality.WINDOW_MODAL);
                     //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
                     stage.show();                     
-                    break;
+                    break;*/
                 
             }           
             
@@ -133,15 +136,47 @@ public class LoginController implements Initializable {
         }
         else
         {            
-            Message.setText("login attempt failed.");
-        }
-        
+            Message.setText(loginStatus.getStatus());
+        }        
     }
     
     @FXML
-    public void ResetPassword(ActionEvent event) throws IOException
+    public void ResetPasswordHandler(ActionEvent event) throws IOException
     {
         // TODO: Reset password
     }
     
+    @FXML
+    public void RecoverPasswordHandler(ActionEvent event) throws IOException
+    {
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(
+                                MainController.class.getResource("UserPasswordRecover.fxml")
+                            );
+
+        stage.setScene(new Scene(root));
+        stage.setTitle("Stock Trading Platform");
+        stage.initModality(Modality.WINDOW_MODAL);
+              
+        stage.show();
+        
+        ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window        
+    }
+    
+    @FXML
+    public void ActivateAccountHandler(ActionEvent event) throws IOException
+    {
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(
+                                MainController.class.getResource("UserActivation.fxml")
+                            );
+
+        stage.setScene(new Scene(root));
+        stage.setTitle("Stock Trading Platform");
+        stage.initModality(Modality.WINDOW_MODAL);
+              
+        stage.show();
+        
+        ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
+    }
 }

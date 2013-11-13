@@ -150,6 +150,7 @@ public class BrokerController implements Initializable {
         Security security = new Security();
         Password1.setText(security.CreateRandomPassword());
         Password2.setText( Password1.getText());
+        handlePasswordClassification(event);
         //Email.setText( Password1.getText());
     }
     

@@ -1,3 +1,4 @@
+
 package StockTradingClient;
 
 import java.io.IOException;
@@ -15,12 +16,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import StockTradingServer.Validator;
 /**
  * FXML Controller class
  *
- * @author Sulochane
+ * @author Hirosh Sulochane Wickramasuriya
  */
-public class UserActivationController implements Initializable {
+public class UserPasswordRecover implements Initializable {
 
     
     @FXML private PasswordField Password;
@@ -35,16 +37,19 @@ public class UserActivationController implements Initializable {
     }   
     
     @FXML
-    private void ActivateAccount(ActionEvent event) throws IOException
+    private void PasswordRecoveryHandle(ActionEvent event) throws IOException
     {
         // TODO
         //if the account activation successful, redirect to the main screen.
-        if (true)
+        Validator validator = Utility.RecoverPassword(UserEmail.getText().trim()
+                                                    , Password.getText()
+                                                    , ActivationCode.getText());
+        if (validator.isVerified())
         {
-            // Account activate - show the main window
+            // Password activation success
             Stage stage = new Stage();
             Parent root =FXMLLoader.load(
-            MainController.class.getResource("Main.fxml"));
+            MainController.class.getResource("PasswordChange.fxml"));
 
             stage.setScene(new Scene(root));
             stage.setTitle("Stock Trading Platform");
@@ -52,7 +57,11 @@ public class UserActivationController implements Initializable {
             //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
             stage.show(); 
 
-            ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
+            ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window*/
+        }
+        else
+        {
+            Message.setText(validator.getStatus());
         }
     }
 }
