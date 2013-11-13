@@ -2061,7 +2061,7 @@ public class DatabaseConnector {
 			String plainPassConfirm) {
 		Validator v = new Validator();
 
-		// validate input
+		// validate input step 1
 		if (!plainPass.equals(plainPassConfirm)) {
 			v.setVerified(false);
 			v.setStatus("Passwords don't match");
@@ -2074,6 +2074,15 @@ public class DatabaseConnector {
 		if (!v.isVerified()) {
 			return v;
 		}
+		
+		
+		// check if the password is recent
+		if(passwordHasBeenAlreadyUsed(userId, plainPass, 3)) {
+			v.setVerified(false);
+			v.setStatus("Our recordsd indicate that this password had alerady been used in the recent past");
+			return v;
+		}
+		
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -2122,5 +2131,6 @@ public class DatabaseConnector {
 
 		return v;
 	}
+
 
 }
