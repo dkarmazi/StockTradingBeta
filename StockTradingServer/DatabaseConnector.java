@@ -20,7 +20,7 @@ import StockTradingCommon.Enumeration;
 import java.text.DecimalFormat;
 
 /*
- * Dmitriy Karmazin
+ * Dmitriy Karmazin, Ahmad Kouraiem
  * CSCI-6545
  */
 
@@ -1898,24 +1898,139 @@ public class DatabaseConnector {
 		return v;
 	}
 
-        public int getUserIDByEmail (String Email){
-            int userID = -1;
-            Statement st = null;
-            ResultSet rs = null;
-            try
-            {
-                st = con.createStatement();
-                st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
-                rs = st.getResultSet();
-                if (rs.next())
-                {
-                    userID = rs.getInt("ID");
-                }
+    public int getUserIDByEmail (String Email){
+        int userID = -1;
+        Statement st = null;
+        ResultSet rs = null;
+        try
+        {
+            st = con.createStatement();
+            st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
+            rs = st.getResultSet();
+            if (rs.next()){
+                userID = rs.getInt("ID");
             }
-            catch (Exception e) 
-            {
-                e.printStackTrace();
-            }
-                return userID;
-            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+            return userID;
+	}
+    
+    public boolean isUserPasswordExpired (int UserID){
+		boolean result = false;
+		
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+		    st = con.createStatement();
+	        st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID=" + UserID + " order by SETON DESC");
+	        rs = st.getResultSet();
+	        if (rs.next()){
+	        	Timestamp setOnDate = rs.getTimestamp("SETON");
+	        	Timestamp expireOnDate = setOnDate;
+	        	java.util.Date date= new java.util.Date();
+	        	Timestamp currentDate = new Timestamp(date.getTime());
+	        	int setOnMonth = setOnDate.getMonth();
+	        	expireOnDate.setMonth(setOnMonth+3);
+	        	if (expireOnDate.before(currentDate)){
+	        		return true;	
+	        	}else{
+	        		return false;
+	        	}
+	        }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+    
+    public boolean passwordHasBeenAlreadyUsed( int userID, String newPassword, int numberOfPasswordsToLookUp ) {
+		boolean result = false;
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+		    st = con.createStatement();
+	        st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID=" + userID + " order by SETON DESC");
+	        rs = st.getResultSet();
+	        for (int count = 0; count < numberOfPasswordsToLookUp; count++){
+	        	if (rs.next()){
+	        		if (newPassword.equals(rs.getString("PASSWORD"))){
+	        			return true;
+	        		}
+	        	}
+	        }
+	    }catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+    
+    public boolean isFirstLoginEver (int UserID){
+
+		boolean result = false;
+		
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+		    st = con.createStatement();
+	        st.executeQuery("select count(*) from USERPASSWORDHISTORY where USERID =" + UserID);
+	        rs = st.getResultSet();
+	        if (rs.next()){
+	        	if (rs.getInt(1) == 1){
+	        		return true;
+	        	}
+	        }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+    
+    
+    public String getSuperEmail (int UserID){
+		String superEmail = null;
+				
+		int firmID;
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+		    st = con.createStatement();
+	        st.executeQuery("SELECT FIRMID FROM USERS where ID = " + UserID);
+	        rs = st.getResultSet();
+	        if (rs.next()){
+	        	firmID = rs.getInt("FIRMID");
+	        	
+	        	st = con.createStatement();
+		        st.executeQuery("SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = " + firmID);
+		        rs = st.getResultSet();
+	        	
+		        if (rs.next()){
+		        	superEmail = rs.getString("SUPER_EMAIL");
+		        }
+	        }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return superEmail;
+	}
+    
+	public boolean isUserExists (String Email){
+		boolean result = false;
+		Statement st = null;
+		ResultSet rs = null;
+		try{
+		    st = con.createStatement();
+	        st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
+	        rs = st.getResultSet();
+	        if (rs.next()){
+	        	result = true;
+	        }
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+    
 }
