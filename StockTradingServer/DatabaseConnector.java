@@ -2080,6 +2080,7 @@ public class DatabaseConnector {
 		return result;
 	}
 
+	
 	public Validator updateUserPassword(int userId, String plainPass,
 			String plainPassConfirm) {
 		Validator v = new Validator();
