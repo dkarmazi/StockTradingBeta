@@ -18,8 +18,8 @@ public class Main {
 		//System.out.println(dc.checkIfUsernamePasswordMatch(email, plainPass));
 		//dc.unsetActivationCodeAndTempPassword(49);
 
-		//dc.forgotPassword(email);
-		System.out.println(dc.checkIfUsernameTempPasswordActivationCodeMatch(email, "6vvv6ajnq1", "5dct0ktbvv").toString());
+		dc.forgotPassword(email);
+		//System.out.println(dc.checkIfUsernameTempPasswordActivationCodeMatch(email, "6vvv6ajnq1", "5dct0ktbvv").toString());
 		
 		// Logger log = new Logger();
 		// log.logDatabaseActivity("dkarmazi", "Select * From Users");

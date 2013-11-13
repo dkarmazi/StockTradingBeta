@@ -12,3 +12,10 @@
 /User.class
 /Validator.class
 /Authenticator.class
+/Leet.class
+/PasswordClassifier.class
+/Security.class
+/SendEmail.class
+/Sessions.class
+/SendEmail$1.class
+/DatabaseConnector.java
