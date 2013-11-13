@@ -259,4 +259,32 @@ public class TradingServer extends UnicastRemoteObject implements
 		return this.dbCon.selectUserByEmailLimited(emailToSelect);
 	}
 
+	@Override
+	public boolean isUserPasswordExpired(int UserID) throws RemoteException {
+		// TODO Auto-generated method stub
+		return this.dbCon.isUserPasswordExpired(UserID);
+	}
+
+	@Override
+	public boolean passwordHasBeenAlreadyUsed(int userID, String newPassword,
+			int numberOfPasswordsToLookUp) throws RemoteException {
+		return this.dbCon.passwordHasBeenAlreadyUsed(userID, newPassword, numberOfPasswordsToLookUp);
+	}
+
+	@Override
+	public boolean isFirstLoginEver(int UserID) throws RemoteException {
+		return this.dbCon.isFirstLoginEver(UserID);
+	}
+
+	@Override
+	public boolean isUserExists(String Email) throws RemoteException {
+		return this.dbCon.isUserExists(Email);
+	}
+
+	@Override
+	public Validator updateUserPassword(int userId, String plainPass,
+			String plainPassConfirm) throws RemoteException {
+		return this.dbCon.updateUserPassword(userId, plainPass, plainPassConfirm);
+	}
+
 }

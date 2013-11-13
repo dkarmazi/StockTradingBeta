@@ -98,5 +98,17 @@ public interface ServerInterface extends Remote {
 			throws RemoteException;
 
 	public Validator forgotPassword(String email) throws RemoteException;
-        
+
+	public boolean isUserPasswordExpired(int UserID) throws RemoteException;
+
+	public boolean passwordHasBeenAlreadyUsed(int userID, String newPassword,
+			int numberOfPasswordsToLookUp) throws RemoteException;
+
+	public boolean isFirstLoginEver(int UserID) throws RemoteException;
+
+	public boolean isUserExists(String Email) throws RemoteException;
+
+	public Validator updateUserPassword(int userId, String plainPass,
+			String plainPassConfirm) throws RemoteException;
+	
 }

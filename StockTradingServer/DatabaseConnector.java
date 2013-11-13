@@ -1391,12 +1391,11 @@ public class DatabaseConnector {
 				int statusId = res.getInt(3);
 				int falseLogins = res.getInt(4);
 				int id = res.getInt(5);
-                int roleId = res.getInt(6);
+				int roleId = res.getInt(6);
 				String acticationCode = res.getString(7);
 				String activationCodeSalt = res.getString(8);
 				String tempPassword = res.getString(9);
 				String tempPasswordSalt = res.getString(10);
-
 
 				user.setPassword(password);
 				user.setSalt(salt);
@@ -1408,7 +1407,7 @@ public class DatabaseConnector {
 				user.setTempPasswordSalt(tempPasswordSalt);
 
 				user.setId(id);
-                                user.setRoleId(roleId);
+				user.setRoleId(roleId);
 			} else {
 
 			}
@@ -1611,8 +1610,8 @@ public class DatabaseConnector {
 					+ " requested password recovery. Please provide him/her with with the following activation code: "
 					+ activationCode;
 
-			SendEmail.sendEmailNotification(getSuperEmail(u.getId()), superSubject,
-					superMessage);
+			SendEmail.sendEmailNotification(getSuperEmail(u.getId()),
+					superSubject, superMessage);
 
 			// send temp password to the broker
 			String brokerSubject = Enumeration.Strings.ACCOUNT_FRGTN_BROKER_SUBJECT;
@@ -1668,7 +1667,6 @@ public class DatabaseConnector {
 		if (!result.isVerified()) {
 			return result;
 		}
-
 
 		// 2. validate email
 		result = verifyUserEmail(email);
@@ -1802,7 +1800,6 @@ public class DatabaseConnector {
 			return result;
 		}
 
-
 		// validate email
 		result = verifyUserEmail(email);
 		if (!result.isVerified()) {
@@ -1821,8 +1818,7 @@ public class DatabaseConnector {
 			unsetActivationCodeAndTempPassword(u.getId());
 
 			// reset false logins
-			updateDatabaseIntField("USERS", "ID", "FALSELOGINS", u.getId(),
-					0);
+			updateDatabaseIntField("USERS", "ID", "FALSELOGINS", u.getId(), 0);
 
 			// unlock the user
 			updateDatabaseIntField("USERS", "ID", "STATUSID", u.getId(),
@@ -1848,7 +1844,6 @@ public class DatabaseConnector {
 			return result;
 		}
 
-
 		// validate email
 		result = verifyUserEmail(email);
 		if (!result.isVerified()) {
@@ -1872,8 +1867,7 @@ public class DatabaseConnector {
 					Enumeration.User.USER_STATUSID_ACTIVE);
 
 			// reset false logins
-			updateDatabaseIntField("USERS", "ID", "FALSELOGINS", u.getId(),
-					0);
+			updateDatabaseIntField("USERS", "ID", "FALSELOGINS", u.getId(), 0);
 
 			result.setVerified(true);
 			result.setStatus("Account unlocked");
@@ -1899,9 +1893,9 @@ public class DatabaseConnector {
 		// validate email
 		v = verifyUserEmail(email);
 		if (!v.isVerified()) {
-                        v.setStatus("Activation code and temporary password had been sent to your mail box");
-			return v;                   
-                }
+			v.setStatus("Activation code and temporary password had been sent to your mail box");
+			return v;
+		}
 
 		User u = selectUserByEmailLimited(email);
 
@@ -1913,138 +1907,200 @@ public class DatabaseConnector {
 		return v;
 	}
 
-    public int getUserIDByEmail (String Email){
-        int userID = -1;
-        Statement st = null;
-        ResultSet rs = null;
-        try
-        {
-            st = con.createStatement();
-            st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
-            rs = st.getResultSet();
-            if (rs.next()){
-                userID = rs.getInt("ID");
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-            return userID;
-	}
-    
-    @SuppressWarnings("deprecation")
-	public boolean isUserPasswordExpired (int UserID){
-		boolean result = false;
-		
+	public int getUserIDByEmail(String Email) {
+		int userID = -1;
 		Statement st = null;
 		ResultSet rs = null;
-		try{
-		    st = con.createStatement();
-	        st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID=" + UserID + " order by SETON DESC");
-	        rs = st.getResultSet();
-	        if (rs.next()){
-	        	Timestamp setOnDate = rs.getTimestamp("SETON");
-	        	Timestamp expireOnDate = setOnDate;
-	        	java.util.Date date= new java.util.Date();
-	        	Timestamp currentDate = new Timestamp(date.getTime());
-	        	int setOnMonth = setOnDate.getMonth();
-	        	expireOnDate.setMonth(setOnMonth+3);
-	        	if (expireOnDate.before(currentDate)){
-	        		return true;	
-	        	}else{
-	        		return false;
-	        	}
-	        }
-		}catch (Exception e) {
+		try {
+			st = con.createStatement();
+			st.executeQuery("select ID from USERS where EMAIL='" + Email + "'");
+			rs = st.getResultSet();
+			if (rs.next()) {
+				userID = rs.getInt("ID");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return userID;
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean isUserPasswordExpired(int UserID) {
+		boolean result = false;
+
+		Statement st = null;
+		ResultSet rs = null;
+		try {
+			st = con.createStatement();
+			st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID="
+					+ UserID + " order by SETON DESC");
+			rs = st.getResultSet();
+			if (rs.next()) {
+				Timestamp setOnDate = rs.getTimestamp("SETON");
+				Timestamp expireOnDate = setOnDate;
+				java.util.Date date = new java.util.Date();
+				Timestamp currentDate = new Timestamp(date.getTime());
+				int setOnMonth = setOnDate.getMonth();
+				expireOnDate.setMonth(setOnMonth + 3);
+				if (expireOnDate.before(currentDate)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-    
-    public boolean passwordHasBeenAlreadyUsed( int userID, String newPassword, int numberOfPasswordsToLookUp ) {
+
+	public boolean passwordHasBeenAlreadyUsed(int userID, String newPassword,
+			int numberOfPasswordsToLookUp) {
 		boolean result = false;
 		Statement st = null;
 		ResultSet rs = null;
-		try{
-		    st = con.createStatement();
-	        st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID=" + userID + " order by SETON DESC");
-	        rs = st.getResultSet();
-	        for (int count = 0; count < numberOfPasswordsToLookUp; count++){
-	        	if (rs.next()){
-	        		if (newPassword.equals(rs.getString("PASSWORD"))){
-	        			return true;
-	        		}
-	        	}
-	        }
-	    }catch (Exception e) {
+		try {
+			st = con.createStatement();
+			st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID="
+					+ userID + " order by SETON DESC");
+			rs = st.getResultSet();
+			for (int count = 0; count < numberOfPasswordsToLookUp; count++) {
+				if (rs.next()) {
+					if (newPassword.equals(rs.getString("PASSWORD"))) {
+						return true;
+					}
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-    
-    public boolean isFirstLoginEver (int UserID){
+
+	public boolean isFirstLoginEver(int UserID) {
 
 		boolean result = false;
-		
+
 		Statement st = null;
 		ResultSet rs = null;
-		try{
-		    st = con.createStatement();
-	        st.executeQuery("select count(*) from USERPASSWORDHISTORY where USERID =" + UserID);
-	        rs = st.getResultSet();
-	        if (rs.next()){
-	        	if (rs.getInt(1) == 1){
-	        		return true;
-	        	}
-	        }
-		}catch (Exception e) {
+		try {
+			st = con.createStatement();
+			st.executeQuery("select count(*) from USERPASSWORDHISTORY where USERID ="
+					+ UserID);
+			rs = st.getResultSet();
+			if (rs.next()) {
+				if (rs.getInt(1) == 1) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-    
-    
-    public String getSuperEmail (int UserID){
+
+	public String getSuperEmail(int UserID) {
 		String superEmail = null;
-				
+
 		int firmID;
 		Statement st = null;
 		ResultSet rs = null;
-		try{
-		    st = con.createStatement();
-	        st.executeQuery("SELECT FIRMID FROM USERS where ID = " + UserID);
-	        rs = st.getResultSet();
-	        if (rs.next()){
-	        	firmID = rs.getInt("FIRMID");
-	        	
-	        	st = con.createStatement();
-		        st.executeQuery("SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = " + firmID);
-		        rs = st.getResultSet();
-	        	
-		        if (rs.next()){
-		        	superEmail = rs.getString("SUPER_EMAIL");
-		        }
-	        }
-		}catch (Exception e) {
+		try {
+			st = con.createStatement();
+			st.executeQuery("SELECT FIRMID FROM USERS where ID = " + UserID);
+			rs = st.getResultSet();
+			if (rs.next()) {
+				firmID = rs.getInt("FIRMID");
+
+				st = con.createStatement();
+				st.executeQuery("SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = "
+						+ firmID);
+				rs = st.getResultSet();
+
+				if (rs.next()) {
+					superEmail = rs.getString("SUPER_EMAIL");
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return superEmail;
 	}
-    
-	public boolean isUserExists (String Email){
+
+	public boolean isUserExists(String Email) {
 		boolean result = false;
 		Statement st = null;
 		ResultSet rs = null;
-		try{
-		    st = con.createStatement();
-	        st.executeQuery("select ID from USERS where EMAIL='" + Email +"'");
-	        rs = st.getResultSet();
-	        if (rs.next()){
-	        	result = true;
-	        }
-		}catch (Exception e) {
+		try {
+			st = con.createStatement();
+			st.executeQuery("select ID from USERS where EMAIL='" + Email + "'");
+			rs = st.getResultSet();
+			if (rs.next()) {
+				result = true;
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
-	}    
+	}
+
+	public Validator updateUserPassword(int userId, String plainPass,
+			String plainPassConfirm) {
+		Validator v = new Validator();
+
+		// validate input
+		if (!plainPass.equals(plainPassConfirm)) {
+			v.setVerified(false);
+			v.setStatus("Passwords don't match");
+			return v;
+		}
+
+		// validate input
+		InputValidation iv = new InputValidation();
+		v = iv.validateString(plainPass, "Password");
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE USERS SET PASSWORD = ?, SALT = ? WHERE ID = ?";
+
+		try {
+
+			// Password hashing
+			PasswordHasher ph = new PasswordHasher();
+			String salt = ph.generateSalt();
+			String passwordHashed = ph.sha512(plainPass, salt);
+			// end password hashing
+
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setString(1, passwordHashed);
+			st.setString(2, salt);
+			st.setInt(3, userId);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			logger.logDatabaseActivity(st.toString());
+
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not update the table");
+				return v;
+			}
+
+			v.setVerified(true);
+			v.setStatus("Password updated");
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return v;
+	}
+
 }
