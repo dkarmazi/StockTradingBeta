@@ -216,7 +216,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -288,7 +288,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -564,7 +564,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -638,7 +638,7 @@ public class DatabaseConnector {
 			int affectedRows = st.executeUpdate();
 
 			// log to DB
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -762,7 +762,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -806,7 +806,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -1013,7 +1013,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -1063,7 +1063,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -1268,7 +1268,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -1317,7 +1317,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			if (affectedRows == 0) {
@@ -1441,7 +1441,7 @@ public class DatabaseConnector {
 
 			int affectedRows = st.executeUpdate();
 
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 		} catch (SQLException ex) {
@@ -1516,7 +1516,7 @@ public class DatabaseConnector {
 			int affectedRows = st.executeUpdate();
 
 			// log to DB
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			// if (affectedRows == 0) {}
@@ -1550,7 +1550,7 @@ public class DatabaseConnector {
 			int affectedRows = st.executeUpdate();
 
 			// log to DB
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			// if (affectedRows == 0) {}
@@ -1626,7 +1626,7 @@ public class DatabaseConnector {
 					brokerMessage);
 
 			// log to DB
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			// if (affectedRows == 0) {}
@@ -1650,7 +1650,7 @@ public class DatabaseConnector {
 			int affectedRows = st.executeUpdate();
 
 			// log to DB
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 			// if (affectedRows == 0) {}
@@ -2081,11 +2081,18 @@ public class DatabaseConnector {
 			st.setInt(3, userId);
 
 			int affectedRows = st.executeUpdate();
+			
+			User u = selectBrokerUser(userId);
 
 			// log to DB
-			StockTradingServer.Logger logger = new StockTradingServer.Logger();
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-
+			LoggerCustom.logLoginActivity(u.getEmail(), "password update");
+			
+			// email notification
+			String messageBody = "Dear " + u.getFirstName() + " " + u.getLastName() + "\n\nYour password had been recently changed.";
+			SendEmail.sendEmailNotification(u.getEmail(), "Password changed", messageBody);
+			
 			if (affectedRows == 0) {
 				v.setVerified(false);
 				v.setStatus("Could not update the table");
