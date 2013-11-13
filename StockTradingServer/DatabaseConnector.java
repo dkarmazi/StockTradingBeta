@@ -2031,27 +2031,31 @@ public class DatabaseConnector {
 		String superEmail = null;
 
 		int firmID;
-		PreparedStatement st = null;
-		ResultSet rs = null;
+		PreparedStatement st1 = null;
+		PreparedStatement st2 = null;
+		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+
 		String query1 = "SELECT FIRMID FROM USERS where ID = ?";
 		String query2 = "SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = ?";		
 		
 		try {
 			
-			st = this.con.prepareStatement(query1);			
-			st.setInt(1, UserID);
-			rs = st.executeQuery();
+			st1 = this.con.prepareStatement(query1);			
+			st1.setInt(1, UserID);
+			rs1 = st1.executeQuery();
 
-			if (rs.next()) {
-				firmID = rs.getInt("FIRMID");
+			if (rs1.next()) {
+				firmID = rs1.getInt("FIRMID");
 
-				st = this.con.prepareStatement(query2);
-				st.setInt(1, UserID);
-				rs = st.executeQuery();
+				st2 = this.con.prepareStatement(query2);
+				st2.setInt(1, firmID);
+				rs2 = st2.executeQuery();
 				
-				if (rs.next()) {
-					superEmail = rs.getString("SUPER_EMAIL");
+				if (rs2.next()) {
+					superEmail = rs2.getString("SUPER_EMAIL");
 				}
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
