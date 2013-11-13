@@ -873,4 +873,18 @@ public class  Utility
         } 
         return status;
     }
+    
+    public static boolean IsFirstLogin(int userId)
+    {
+        boolean status = false;
+        try
+        {
+            status = serverInterface.isFirstLoginEver(userId);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        return status;
+    }
 }

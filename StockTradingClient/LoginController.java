@@ -64,7 +64,9 @@ public class LoginController implements Initializable {
             
             Stage stage = new Stage();
             Parent root = null;
-            if (Utility.IsPasswordExpired(Utility.getCurrentUserID()))
+
+            if (Utility.IsFirstLogin(Utility.getCurrentUserID())
+                    || Utility.IsPasswordExpired(Utility.getCurrentUserID()))
             {
                 root = FXMLLoader.load(
                             MainController.class.getResource("PasswordChange.fxml")
@@ -74,7 +76,7 @@ public class LoginController implements Initializable {
                 stage.setTitle("Stock Trading Platform");
                 stage.setResizable(false);
                 stage.initModality(Modality.WINDOW_MODAL);
-                
+
                 stage.show(); 
             }
             else
@@ -85,7 +87,7 @@ public class LoginController implements Initializable {
 
                 stage.setScene(new Scene(root));
                 stage.setTitle("Stock Trading Platform");
-                
+
                 stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
                 {
                     public void handle(WindowEvent we) 
@@ -93,9 +95,10 @@ public class LoginController implements Initializable {
                         System.out.println("TODO: Need to unset the session");
                     }
                 });
-                
+
                 stage.show();
             }
+            
                    
             
             ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window

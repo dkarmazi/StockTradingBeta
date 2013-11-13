@@ -141,7 +141,6 @@ public class PasswordChangeController implements Initializable {
         {
             Message.setText("Your new password is empty or do not match with the confirmation.");
         }
-
     }
     
     @FXML 
