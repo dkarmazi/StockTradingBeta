@@ -74,6 +74,7 @@ public class LoginController implements Initializable {
             
             // TODO Capture the proper user ids
             //User currentUser = Utility.GetUserLimited(UserEmail.getText().trim());
+            System.out.println(loginStatus.getSession());
             Utility.setCurrentSessionId(loginStatus.getSession());
             Utility.SetCurrentUser(UserEmail.getText().trim());
                     
@@ -140,7 +141,8 @@ public class LoginController implements Initializable {
     @FXML
     public void ResetPasswordHandler(ActionEvent event) throws IOException
     {
-        // TODO: Reset password
+        Validator validator = Utility.ResetPasswordRequest(UserEmail.getText().trim());
+        Message.setText(validator.getStatus());        
     }
     
     @FXML

@@ -792,4 +792,18 @@ public class  Utility
         }  
         return validator;
     }
+    
+    public static Validator ResetPasswordRequest(String email)
+    {
+        Validator validator = new Validator();
+        try
+        {
+            validator = serverInterface.forgotPassword(email);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        return validator;
+    }
 }
