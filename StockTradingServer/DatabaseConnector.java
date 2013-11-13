@@ -1929,7 +1929,7 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);
 			st.setString(1, Email);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 
 			if (rs.next()) {
 				userID = rs.getInt("ID");
@@ -1951,7 +1951,7 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);			
 			st.setInt(1, UserID);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 			
 
 			if (rs.next()) {
@@ -1984,7 +1984,7 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, userID);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 			
 			for (int count = 0; count < numberOfPasswordsToLookUp; count++) {
 				if (rs.next()) {
@@ -2014,7 +2014,7 @@ public class DatabaseConnector {
 			
 			st = this.con.prepareStatement(query);
 			st.setInt(1, UserID);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 
 			if (rs.next()) {
 				if (rs.getInt(1) == 1) {
@@ -2040,14 +2040,14 @@ public class DatabaseConnector {
 			
 			st = this.con.prepareStatement(query1);			
 			st.setInt(1, UserID);
-			rs = st.executeQuery(query1);
+			rs = st.executeQuery();
 
 			if (rs.next()) {
 				firmID = rs.getInt("FIRMID");
 
 				st = this.con.prepareStatement(query2);
 				st.setInt(1, UserID);
-				rs = st.executeQuery(query2);
+				rs = st.executeQuery();
 				
 				if (rs.next()) {
 					superEmail = rs.getString("SUPER_EMAIL");
@@ -2069,7 +2069,7 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);			
 			st.setString(1, Email);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 
 			if (rs.next()) {
 				result = true;
