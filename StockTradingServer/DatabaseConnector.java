@@ -1929,9 +1929,8 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);
 			st.setString(1, Email);
-			st.executeQuery(query);
-			
-			rs = st.getResultSet();
+			rs = st.executeQuery(query);
+
 			if (rs.next()) {
 				userID = rs.getInt("ID");
 			}
@@ -1944,14 +1943,17 @@ public class DatabaseConnector {
 	@SuppressWarnings("deprecation")
 	public boolean isUserPasswordExpired(int UserID) {
 		boolean result = false;
-
-		Statement st = null;
+		
+		PreparedStatement st = null;
 		ResultSet rs = null;
+		String query = "SELECT * from USERPASSWORDHISTORY where USERID = ? order by SETON DESC";
+
 		try {
-			st = con.createStatement();
-			st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID="
-					+ UserID + " order by SETON DESC");
-			rs = st.getResultSet();
+			st = this.con.prepareStatement(query);			
+			st.setInt(1, UserID);
+			rs = st.executeQuery(query);
+			
+
 			if (rs.next()) {
 				Timestamp setOnDate = rs.getTimestamp("SETON");
 				Timestamp expireOnDate = setOnDate;
@@ -1975,13 +1977,15 @@ public class DatabaseConnector {
 			int numberOfPasswordsToLookUp) {
 
 		boolean result = false;
-		Statement st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
+		String query = "SELECT * FROM USERPASSWORDHISTORY WHERE USERID=? ORDER BY SETON DESC";
+
 		try {
-			st = this.con.createStatement();
-			st.executeQuery("SELECT * from USERPASSWORDHISTORY where USERID="
-					+ userID + " order by SETON DESC");
-			rs = st.getResultSet();
+			st = this.con.prepareStatement(query);
+			st.setInt(1, userID);
+			rs = st.executeQuery(query);
+			
 			for (int count = 0; count < numberOfPasswordsToLookUp; count++) {
 				if (rs.next()) {
 					PasswordHasher ph = new PasswordHasher();
@@ -2002,13 +2006,16 @@ public class DatabaseConnector {
 
 		boolean result = false;
 
-		Statement st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
+		String query = "SELECT COUNT(*) FROM USERPASSWORDHISTORY WHERE USERID = ?";
+
 		try {
-			st = con.createStatement();
-			st.executeQuery("select count(*) from USERPASSWORDHISTORY where USERID ="
-					+ UserID);
-			rs = st.getResultSet();
+			
+			st = this.con.prepareStatement(query);
+			st.setInt(1, UserID);
+			rs = st.executeQuery(query);
+
 			if (rs.next()) {
 				if (rs.getInt(1) == 1) {
 					return true;
@@ -2024,20 +2031,24 @@ public class DatabaseConnector {
 		String superEmail = null;
 
 		int firmID;
-		Statement st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
+		String query1 = "SELECT FIRMID FROM USERS where ID = ?";
+		String query2 = "SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = ?";		
+		
 		try {
-			st = con.createStatement();
-			st.executeQuery("SELECT FIRMID FROM USERS where ID = " + UserID);
-			rs = st.getResultSet();
+			
+			st = this.con.prepareStatement(query1);			
+			st.setInt(1, UserID);
+			rs = st.executeQuery(query1);
+
 			if (rs.next()) {
 				firmID = rs.getInt("FIRMID");
 
-				st = con.createStatement();
-				st.executeQuery("SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = "
-						+ firmID);
-				rs = st.getResultSet();
-
+				st = this.con.prepareStatement(query2);
+				st.setInt(1, UserID);
+				rs = st.executeQuery(query2);
+				
 				if (rs.next()) {
 					superEmail = rs.getString("SUPER_EMAIL");
 				}
@@ -2050,12 +2061,16 @@ public class DatabaseConnector {
 
 	public boolean isUserExists(String Email) {
 		boolean result = false;
-		Statement st = null;
+
+		PreparedStatement st = null;
 		ResultSet rs = null;
+		String query = "SELECT ID FROM USERS WHERE EMAIL = ?";
+
 		try {
-			st = con.createStatement();
-			st.executeQuery("select ID from USERS where EMAIL='" + Email + "'");
-			rs = st.getResultSet();
+			st = this.con.prepareStatement(query);			
+			st.setString(1, Email);
+			rs = st.executeQuery(query);
+
 			if (rs.next()) {
 				result = true;
 			}
@@ -2064,7 +2079,9 @@ public class DatabaseConnector {
 		}
 		return result;
 	}
-
+	
+	
+	
 	public Validator updateUserPassword(int userId, String plainPass,
 			String plainPassConfirm) {
 		Validator v = new Validator();
