@@ -20,6 +20,9 @@ public interface ServerInterface extends Remote {
 	
 	public BrokerageFirm getHello() throws RemoteException;
 
+	
+	public User selectUserByEmailLimited(String emailToSelect) throws RemoteException;
+
 	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String clientSessionID)
 			throws RemoteException;
 
@@ -85,15 +88,15 @@ public interface ServerInterface extends Remote {
 			throws RemoteException;
 	
 	
-	public Validator checkIfUsernamePasswordMatch(String email, String plainPass, String clientSessionID)
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass)
 			throws RemoteException;
 
-	public Validator checkIfUsernamePasswordActivationCodeMatch(String email, String plainPass, String plainCode, String clientSessionID) 
+	public Validator checkIfUsernamePasswordActivationCodeMatch(String email, String plainPass, String plainCode) 
 			throws RemoteException;
 
-	public Validator checkIfUsernameTempPasswordActivationCodeMatch(String email, String plainTempPass, String plainCode, String clientSessionID) 
+	public Validator checkIfUsernameTempPasswordActivationCodeMatch(String email, String plainTempPass, String plainCode) 
 			throws RemoteException;
 
-	public Validator forgotPassword(String email, String clientSessionID) throws RemoteException;
+	public Validator forgotPassword(String email) throws RemoteException;
         
 }

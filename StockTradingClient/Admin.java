@@ -18,6 +18,7 @@ import StockTradingCommon.Enumeration.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
 import StockTradingServer.DatabaseConnector;
 import StockTradingServer.User;
+import StockTradingServer.Validator;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -79,9 +80,19 @@ public class Admin extends Application {
 			serverInterface = (ServerInterface) registry
 					.lookup("TradingServer");
 
-			System.out.println(serverInterface.selectBrokersAll(1, clientSessionID).toString());
 
-			//StockTradingServer.BrokerageFirm message = serverInterface.getHello();
+			String email = "dkarmazi@gwu.edu";
+			String plainPass = "1234";
+
+			Validator v = serverInterface.checkIfUsernamePasswordMatch(email, plainPass);
+			
+			
+//			//System.out.println(v.getSession());
+//			
+//			System.out.println()
+//			
+//			//System.out.println(serverInterface.selectBrokersAll(1, clientSessionID).toString());
+
 			
 			
 			//ArrayList<StockTradingServer.BrokerageFirm> c =  serverInterface.selectBrokerageFirmsAll();

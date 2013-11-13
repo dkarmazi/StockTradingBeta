@@ -8,10 +8,13 @@ import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import javax.mail.Session;
+
 import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
 import StockTradingServer.DatabaseConnector;
 import StockTradingServer.Order;
+import StockTradingServer.Sessions;
 import StockTradingServer.StatusesOptions;
 import StockTradingServer.Stock;
 import StockTradingServer.User;
@@ -20,6 +23,10 @@ import StockTradingServer.Validator;
 public class TradingServer extends UnicastRemoteObject implements
 		ServerInterface {
 	private static final int PORT = 2019;
+	Sessions tradingSessions = new Sessions();
+	
+	
+	
 	// we will be reusing this class throughout all the methors
 	// while this TradingServer is alive
 	public DatabaseConnector dbCon = new DatabaseConnector();
@@ -175,28 +182,49 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
 
 	@Override
-	public Validator checkIfUsernamePasswordMatch(String email, String plainPass, String sessionID)
+	public Validator checkIfUsernamePasswordMatch(String email, String plainPass)
 			throws RemoteException {
-		return this.dbCon.checkIfUsernamePasswordMatch(email, plainPass);
+
+		// if logged in, set session
+		Validator v = this.dbCon.checkIfUsernamePasswordMatch(email, plainPass);
+		if(v.isVerified()) {
+			v.setSession(tradingSessions.setSession(email));
+		}		
+		return v;
 	}
 
 	@Override
 	public Validator checkIfUsernamePasswordActivationCodeMatch(String email,
-			String plainPass, String plainCode, String sessionID) throws RemoteException {
-		return this.dbCon.checkIfUsernamePasswordActivationCodeMatch(email,
+			String plainPass, String plainCode) throws RemoteException {
+		
+		// if logged in, set session
+		Validator v = this.dbCon.checkIfUsernamePasswordActivationCodeMatch(email,
 				plainPass, plainCode);
+		if(v.isVerified()) {
+			v.setSession(tradingSessions.setSession(email));
+		}		
+		return v;
+
 	}
 
 	@Override
 	public Validator checkIfUsernameTempPasswordActivationCodeMatch(
-			String email, String plainTempPass, String plainCode, String sessionID)
+			String email, String plainTempPass, String plainCode)
 			throws RemoteException {
-		return this.dbCon.checkIfUsernameTempPasswordActivationCodeMatch(email,
+
+		// if logged in, set session
+		Validator v = this.dbCon.checkIfUsernameTempPasswordActivationCodeMatch(email,
 				plainTempPass, plainCode);
+
+		if(v.isVerified()) {
+			v.setSession(tradingSessions.setSession(email));
+		}		
+		return v;
+
 	}
 
 	@Override
-	public Validator forgotPassword(String email, String sessionID) throws RemoteException {
+	public Validator forgotPassword(String email) throws RemoteException {
 		return this.dbCon.forgotPassword(email);
 	}
 
@@ -223,6 +251,12 @@ public class TradingServer extends UnicastRemoteObject implements
 			System.out.println("TradingServer err: " + e.getMessage());
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public User selectUserByEmailLimited(String emailToSelect)
+			throws RemoteException {
+		return this.dbCon.selectUserByEmailLimited(emailToSelect);
 	}
 
 }
