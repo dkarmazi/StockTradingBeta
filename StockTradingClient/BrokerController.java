@@ -204,23 +204,18 @@ public class BrokerController implements Initializable {
             return;
         }
         
-       /* if (
-                Password1.getText().equals( Password2.getText()) &&
-                !Password2.getText().trim().equals("")
-            )
-        {*/
-            KeyValuePair keyValue = BrokersListView.getSelectionModel().getSelectedItem();       
 
+            KeyValuePair keyValue = BrokersListView.getSelectionModel().getSelectedItem();       
+            String newPasswordMsg = "";
             int brokerId = Integer.parseInt( keyValue.getKey());
             Validator validator =Utility.ChangePassword(brokerId, Password1.getText(), Password2.getText());
-            Message.setText(validator.getStatus());
-
+            if (validator.isVerified())
+            {
+                newPasswordMsg = "\nPassword is reset to " + Password2.getText();
+            }
+            Message.setText(validator.getStatus() + newPasswordMsg);
                     
-        /*}
-        else
-        {
-            Message.setText("Check your password. Password should be non-empty and the confirmation should be matched.");
-        }*/
+
     }
     private void SetPasswordBarometerDefaultColor()
     {
@@ -253,8 +248,8 @@ public class BrokerController implements Initializable {
         }
         
         // Hide passwords
-        Password1.visibleProperty().setValue(false);
-        Password2.visibleProperty().setValue(false);
+        //Password1.visibleProperty().setValue(false);
+        //Password2.visibleProperty().setValue(false);
         //Password.visibleProperty().setValue(false);
         
         KeyValuePair keyValue = BrokersListView.getSelectionModel().getSelectedItem();       
