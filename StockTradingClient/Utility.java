@@ -745,14 +745,14 @@ public class  Utility
         // TODO: remove databaseConnector
         //DatabaseConnector db = new DatabaseConnector();
         //user = db.selectUserByEmailLimited(userEmail);
-        /*try
+        try
         {
-           // user = serverInterface.selectUserByEmailLimited(userEmail,  getCurrentSessionId());               
+            user = serverInterface.selectUserByEmailLimited(userEmail);               
         }
         catch (RemoteException e)
         {
             e.printStackTrace();
-        }*/
+        }
         
         
         /*user.setId(44);
