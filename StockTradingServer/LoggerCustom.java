@@ -6,8 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-public class Logger {
-
+public class LoggerCustom {
+	private static String dbLogFileName = "logDbActivity.txt";
+	private static String loginLogFileName = "logLoginActivity.txt";
+	
 	private String username = "dkarmazi";
 
 	public String getUsername() {
@@ -32,7 +34,7 @@ public class Logger {
 			
 			data = data + delimiter + h.sha512(data, "acas") + endOfEntry;
 
-			File file = new File("logDbActivity.txt");
+			File file = new File(dbLogFileName);
 
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
@@ -50,5 +52,44 @@ public class Logger {
 		}
 
 	}
+	
+	
+	public static void logLoginActivity(String email, String activity) {
+		String delimiter = " | ";
+		String endOfEntry = "\n\n\n";
+
+		try {
+			java.util.Date date = new java.util.Date();
+			String timestamp = new Timestamp(date.getTime()).toString();
+
+			String data = timestamp + delimiter + email + delimiter + activity;
+			
+			PasswordHasher h = new PasswordHasher();
+			
+			data = data + delimiter + h.sha512(data, "acas") + endOfEntry;
+
+			File file = new File(loginLogFileName);
+
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			// true = append file
+			FileWriter fileWritter = new FileWriter(file.getName(), true);
+			BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+			bufferWritter.write(data);
+			bufferWritter.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	
+	
+	
 
 }

@@ -13,13 +13,18 @@ public class Main {
 		DatabaseConnector dc = new DatabaseConnector();
 
 		String email = "dkarmazi@gwu.edu";
-		String plainPass = "1234";
+		String plainPass = "123";
 
+		
+		System.out.println(dc.checkIfUsernamePasswordActivationCodeMatch(email, plainPass, "74f2qm78db"));
 		//System.out.println(dc.checkIfUsernamePasswordMatch(email, plainPass));
-		//dc.unsetActivationCodeAndTempPassword(49);
+		//dc.forgotPassword(email);
 
-		dc.forgotPassword(email);
-		//System.out.println(dc.checkIfUsernameTempPasswordActivationCodeMatch(email, "6vvv6ajnq1", "5dct0ktbvv").toString());
+		
+		//System.out.println(dc.updateUserPassword(49, "123", "123").getStatus());
+		
+		//dc.forgotPassword(email);
+		//System.out.println(dc.checkIfUsernameTempPasswordActivationCodeMatch(email, "65q0s2je5t", "1b8md4fj3j").toString());
 		
 		// Logger log = new Logger();
 		// log.logDatabaseActivity("dkarmazi", "Select * From Users");
