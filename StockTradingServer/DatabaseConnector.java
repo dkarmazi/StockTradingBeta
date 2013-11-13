@@ -2081,7 +2081,7 @@ public class DatabaseConnector {
 		// check if the password is recent
 		if (passwordHasBeenAlreadyUsed(userId, plainPass, 3)) {
 			v.setVerified(false);
-			v.setStatus("Our recordsd indicate that this password had alerady been used in the recent past");
+			v.setStatus("Our records indicate that this password had alerady been used in the recent past");
 			return v;
 		}
 
