@@ -1921,11 +1921,16 @@ public class DatabaseConnector {
 
 	public int getUserIDByEmail(String Email) {
 		int userID = -1;
-		Statement st = null;
+
+		PreparedStatement st = null;
 		ResultSet rs = null;
+		String query = "SELECT ID from USERS WHERE EMAIL= ?";
+
 		try {
-			st = con.createStatement();
-			st.executeQuery("select ID from USERS where EMAIL='" + Email + "'");
+			st = this.con.prepareStatement(query);
+			st.setString(1, Email);
+			st.executeQuery(query);
+			
 			rs = st.getResultSet();
 			if (rs.next()) {
 				userID = rs.getInt("ID");
