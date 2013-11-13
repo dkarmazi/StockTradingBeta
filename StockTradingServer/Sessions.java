@@ -5,7 +5,7 @@ import java.sql.Statement;
 import java.util.UUID;
 import java.util.Vector;
 
-
+// Ahmad Kouraiem
 public class Sessions {
 
 	private Vector<Integer> loggedUsers = new Vector();
