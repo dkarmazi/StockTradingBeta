@@ -1924,12 +1924,12 @@ public class DatabaseConnector {
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT ID from USERS WHERE EMAIL= ?";
+		String query = "SELECT ID from USERS WHERE EMAIL = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
 			st.setString(1, Email);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 
 			if (rs.next()) {
 				userID = rs.getInt("ID");
@@ -1951,7 +1951,7 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);			
 			st.setInt(1, UserID);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 			
 
 			if (rs.next()) {
@@ -1979,12 +1979,12 @@ public class DatabaseConnector {
 		boolean result = false;
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT * FROM USERPASSWORDHISTORY WHERE USERID=? ORDER BY SETON DESC";
+		String query = "SELECT * FROM USERPASSWORDHISTORY WHERE USERID = ? ORDER BY SETON DESC";
 
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, userID);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 			
 			for (int count = 0; count < numberOfPasswordsToLookUp; count++) {
 				if (rs.next()) {
@@ -2014,7 +2014,7 @@ public class DatabaseConnector {
 			
 			st = this.con.prepareStatement(query);
 			st.setInt(1, UserID);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 
 			if (rs.next()) {
 				if (rs.getInt(1) == 1) {
@@ -2031,27 +2031,31 @@ public class DatabaseConnector {
 		String superEmail = null;
 
 		int firmID;
-		PreparedStatement st = null;
-		ResultSet rs = null;
+		PreparedStatement st1 = null;
+		PreparedStatement st2 = null;
+		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+
 		String query1 = "SELECT FIRMID FROM USERS where ID = ?";
 		String query2 = "SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = ?";		
 		
 		try {
 			
-			st = this.con.prepareStatement(query1);			
-			st.setInt(1, UserID);
-			rs = st.executeQuery(query1);
+			st1 = this.con.prepareStatement(query1);			
+			st1.setInt(1, UserID);
+			rs1 = st1.executeQuery();
 
-			if (rs.next()) {
-				firmID = rs.getInt("FIRMID");
+			if (rs1.next()) {
+				firmID = rs1.getInt("FIRMID");
 
-				st = this.con.prepareStatement(query2);
-				st.setInt(1, UserID);
-				rs = st.executeQuery(query2);
+				st2 = this.con.prepareStatement(query2);
+				st2.setInt(1, firmID);
+				rs2 = st2.executeQuery();
 				
-				if (rs.next()) {
-					superEmail = rs.getString("SUPER_EMAIL");
+				if (rs2.next()) {
+					superEmail = rs2.getString("SUPER_EMAIL");
 				}
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2069,7 +2073,7 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);			
 			st.setString(1, Email);
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 
 			if (rs.next()) {
 				result = true;
