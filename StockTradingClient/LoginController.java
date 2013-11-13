@@ -30,10 +30,8 @@ public class LoginController implements Initializable {
 
     @FXML private TextField     UserEmail;
     @FXML private PasswordField Password;
-    @FXML private Label Message;
-    
-    @FXML private Button RecoverPassword;
-    @FXML private Button ActivateAccount;
+    @FXML private Label Message;    
+
             
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -59,21 +57,7 @@ public class LoginController implements Initializable {
         
         if (loginStatus.isVerified())
         {
-            //TODO: Get the userid  by calling the int userid = loginStatus.getCode(); 
-            // then Get the userInfo by the passing the userid
-            // Then check the role whether is admin or not.
-            
-            /*if (UserEmail.getText().trim().equalsIgnoreCase("admin"))
-            {
-                Utility.setCurrentUserRole(Enumeration.UserRole.USER_ROLE_ADMIN);
-            }
-            else
-            {
-                Utility.setCurrentUserRole(Enumeration.UserRole.USER_ROLE_BROKER);
-            }*/
-            
-            // TODO Capture the proper user ids
-            //User currentUser = Utility.GetUserLimited(UserEmail.getText().trim());
+
             System.out.println(loginStatus.getSession());
             Utility.setCurrentSessionId(loginStatus.getSession());
             Utility.SetCurrentUser(UserEmail.getText().trim());
@@ -141,7 +125,7 @@ public class LoginController implements Initializable {
     @FXML
     public void ResetPasswordHandler(ActionEvent event) throws IOException
     {
-        Validator validator = Utility.ResetPasswordRequest(UserEmail.getText().trim());
+        Validator validator = Utility.ResetPasswordRequest(UserEmail.getText().trim());        
         Message.setText(validator.getStatus());        
     }
     

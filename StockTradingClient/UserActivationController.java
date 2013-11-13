@@ -1,6 +1,7 @@
 
 package StockTradingClient;
 
+import StockTradingServer.Validator;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,7 +41,10 @@ public class UserActivationController implements Initializable {
     {
         // TODO
         //if the account activation successful, redirect to the main screen.
-        if (true)
+        Validator validator = Utility.UnlockAccountRequest(UserEmail.getText().trim()
+                                                        , Password.getText()
+                                                        , ActivationCode.getText());
+        if (validator.isVerified())
         {
             // Account activate - show the main window
             Stage stage = new Stage();
@@ -54,6 +58,10 @@ public class UserActivationController implements Initializable {
             stage.show(); 
 
             ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
+        }
+        else
+        {
+            Message.setText(validator.getStatus());
         }
     }
 }

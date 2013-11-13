@@ -41,7 +41,7 @@ public class BrokerController implements Initializable {
     @FXML private Button btnClear;
     @FXML private Button btnRandomPassword;    
     
-    PasswordClassifier passwordClassifier;
+    PasswordClassifier passwordClassifier = null;
     @FXML
     private void handleClearButtonAction(ActionEvent event) {
         

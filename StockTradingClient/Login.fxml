@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -44,8 +43,8 @@
     <Label fx:id="Message" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="156.0" maxWidth="1.7976931348623157E308" mouseTransparent="true" prefHeight="39.00091552734375" prefWidth="432.0" text="" textAlignment="CENTER" textFill="RED" underline="false" wrapText="true" />
     <HBox id="HBox" alignment="CENTER" layoutX="14.0" maxWidth="1.7976931348623157E308" prefWidth="428.0" spacing="50.0" AnchorPane.bottomAnchor="4.96">
       <children>
-        <Button fx:id="ActivateAccount" mnemonicParsing="false" onAction="#ActivateAccountHandler" prefWidth="120.0" text="Activate Account" />
-        <Button fx:id="RecoverPassword" mnemonicParsing="false" onAction="#RecoverPasswordHandler" text="Recover Password" />
+        <Button id="ActivateAccount" mnemonicParsing="false" onAction="#ActivateAccountHandler" prefWidth="120.0" text="Activate Account" />
+        <Button id="RecoverPassword" mnemonicParsing="false" onAction="#RecoverPasswordHandler" text="Recover Password" />
       </children>
     </HBox>
   </children>

@@ -806,4 +806,18 @@ public class  Utility
         } 
         return validator;
     }
+    
+    public static Validator UnlockAccountRequest(String email, String currentPassword, String activationCode)
+    {
+        Validator validator = new Validator();
+        try
+        {
+            validator = serverInterface.checkIfUsernamePasswordActivationCodeMatch(email, currentPassword, activationCode);
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } 
+        return validator;
+    }
 }

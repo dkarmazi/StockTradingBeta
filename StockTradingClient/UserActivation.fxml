@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -8,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="223.0" prefWidth="450.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.UserActivationController">
+<AnchorPane id="AnchorPane" prefHeight="231.0" prefWidth="450.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.UserActivationController">
   <children>
     <VBox id="VBox" alignment="CENTER" layoutX="14.0" layoutY="5.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-1.0" prefHeight="180.0" prefWidth="433.0" spacing="5.0">
       <children>
@@ -50,6 +49,6 @@
         </GridPane>
       </children>
     </VBox>
-    <Label fx:id="Message" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="185.0" mouseTransparent="true" prefHeight="30.0" prefWidth="422.9999000000025" text="" textAlignment="CENTER" textFill="RED" underline="false" wrapText="true" />
+    <Label fx:id="Message" alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="185.0" mouseTransparent="true" prefHeight="40.0" prefWidth="423.0" text="" textAlignment="CENTER" textFill="RED" underline="false" wrapText="true" />
   </children>
 </AnchorPane>
