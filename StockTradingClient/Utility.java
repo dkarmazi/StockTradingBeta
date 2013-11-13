@@ -21,10 +21,12 @@ import javafx.scene.control.*;
  */
 public class  Utility 
 {
-   // private static int brokerageFirmID = -1;     // when a broker logs in his Brokerage Firm id should be here
-    private static int brokerID = -1;            // when a broker logs in his id should be here
-    private static User currentUser = new User();                  // when a user logs in, current user details set here 
-    
+   // private static int brokerageFirmID = -1;          // when a broker logs in his Brokerage Firm id should be here
+    private static int brokerID = -1;                   // when a broker logs in his id should be here
+    private static User currentUser = new User();       // when a user logs in, current user details set here 
+    private static String currentSessionId = null;      // keep the current users session id
+
+
     private static ServerInterface serverInterface = null;
    //  private static DatabaseConnector dbConnector = new DatabaseConnector(); 
     
@@ -58,6 +60,12 @@ public class  Utility
     }
     public static int getCurrentUserRole() {
         return currentUser.getRoleId();
+    }
+    public static String getCurrentSessionId() {
+        return currentSessionId;
+    }
+    public static void setCurrentSessionId(String currentSessionId) {
+        Utility.currentSessionId = currentSessionId;
     }
     //public static void setCurrentUserRole(int currentUserRole) {
     //    currentUser.setRoleId(currentUserRole);
@@ -130,7 +138,7 @@ public class  Utility
         
         ArrayList<StatusesOptions> statuses = null;
 		try {
-			statuses = serverInterface.selectAllStatuses(Admin.clientSessionID);
+			statuses = serverInterface.selectAllStatuses(getCurrentSessionId());
 			//System.out.println("asdasds" + statuses.toString());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -174,7 +182,7 @@ public class  Utility
         Validator validator = null;
         try
         {
-            validator = serverInterface.insertNewStock(stock, Admin.clientSessionID);
+            validator = serverInterface.insertNewStock(stock, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -188,7 +196,7 @@ public class  Utility
         Validator validator = null;
         try
         {
-            validator = serverInterface.insertNewStock(stock, Admin.clientSessionID);
+            validator = serverInterface.insertNewStock(stock, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -203,7 +211,7 @@ public class  Utility
         ArrayList<Stock> records = null;        
         try
         {
-            records = serverInterface.selectStockAll(Admin.clientSessionID);
+            records = serverInterface.selectStockAll(getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -224,7 +232,7 @@ public class  Utility
         ArrayList<Stock> records = null;
         try
         {
-            records = serverInterface.selectStockAll(Admin.clientSessionID);
+            records = serverInterface.selectStockAll(getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -242,7 +250,7 @@ public class  Utility
         Stock stock = null;
         try
         {
-            stock = serverInterface.selectStock(stockId, Admin.clientSessionID);
+            stock = serverInterface.selectStock(stockId, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -258,7 +266,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewBroker(broker, Admin.clientSessionID);
+            validator = serverInterface.insertNewBroker(broker, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -272,7 +280,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateBroker(broker.getId(), broker, Admin.clientSessionID); 
+            validator = serverInterface.updateBroker(broker.getId(), broker, getCurrentSessionId()); 
         }
         catch (RemoteException e)
         {
@@ -290,7 +298,7 @@ public class  Utility
 
             try
             {
-                records = serverInterface.selectBrokersAll(statusID, Admin.clientSessionID)  ;   
+                records = serverInterface.selectBrokersAll(statusID, getCurrentSessionId())  ;   
             }
             catch (RemoteException e)
             {
@@ -301,7 +309,7 @@ public class  Utility
         {
             try
             {
-                records = serverInterface.selectBrokersAllbyFirm(brokerageFirm, Admin.clientSessionID);
+                records = serverInterface.selectBrokersAllbyFirm(brokerageFirm, getCurrentSessionId());
             }
             catch (RemoteException e)
             {
@@ -319,7 +327,7 @@ public class  Utility
      
         try
         {
-            user = serverInterface.selectBrokerUser(brokerId, Admin.clientSessionID);
+            user = serverInterface.selectBrokerUser(brokerId, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -334,7 +342,7 @@ public class  Utility
         BrokerageFirm brokerageFirm = null;
         try
         {
-            brokerageFirm = serverInterface.selectBrokerageFirm(firmId, Admin.clientSessionID);
+            brokerageFirm = serverInterface.selectBrokerageFirm(firmId, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -347,7 +355,7 @@ public class  Utility
         Validator validator = null;        
         try
         {
-            validator = serverInterface.insertNewBrokerageFirm(brokerageFirm, Admin.clientSessionID);
+            validator = serverInterface.insertNewBrokerageFirm(brokerageFirm, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -361,7 +369,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateBrokerageFirm(brokerageFirm.getId(), brokerageFirm, Admin.clientSessionID); 
+            validator = serverInterface.updateBrokerageFirm(brokerageFirm.getId(), brokerageFirm, getCurrentSessionId()); 
         }
         catch (RemoteException e)
         {
@@ -376,7 +384,7 @@ public class  Utility
         ArrayList<BrokerageFirm> records = null;
         try
         {
-            records = serverInterface.selectBrokerageFirmsAll(Admin.clientSessionID);
+            records = serverInterface.selectBrokerageFirmsAll(getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -397,7 +405,7 @@ public class  Utility
                 
         try
         {
-            records = serverInterface.selectBrokerageFirmsAll(Admin.clientSessionID);
+            records = serverInterface.selectBrokerageFirmsAll(getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -416,7 +424,7 @@ public class  Utility
         
         try
         {
-            customerInfo = serverInterface.selectCustomerInfo(customerId, Admin.clientSessionID);
+            customerInfo = serverInterface.selectCustomerInfo(customerId, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -431,7 +439,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewCustomerInfo(customer, Admin.clientSessionID);
+            validator = serverInterface.insertNewCustomerInfo(customer, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -446,7 +454,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateCustomerInfo(customer.getId(), customer, Admin.clientSessionID);  
+            validator = serverInterface.updateCustomerInfo(customer.getId(), customer, getCurrentSessionId());  
         }
         catch (RemoteException e)
         {
@@ -460,7 +468,7 @@ public class  Utility
         
          try
         {
-            records = serverInterface.selectCustomerInfoAll(Admin.clientSessionID);   
+            records = serverInterface.selectCustomerInfoAll(getCurrentSessionId());   
         }
         catch (RemoteException e)
         {
@@ -481,7 +489,7 @@ public class  Utility
         ArrayList<CustomerInfo> records = null;        
         try
         {
-            records = serverInterface.selectCustomersByFirm(brokerageFirmID, Admin.clientSessionID);
+            records = serverInterface.selectCustomersByFirm(brokerageFirmID, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -499,7 +507,7 @@ public class  Utility
         ArrayList<CustomerInfo> records = null;
         try
         {
-            records = serverInterface.selectCustomersByFirm(getCurrentUser_BrokerageFirmID(), Admin.clientSessionID); 
+            records = serverInterface.selectCustomersByFirm(getCurrentUser_BrokerageFirmID(), getCurrentSessionId()); 
         }
         catch (RemoteException e)
         {
@@ -525,7 +533,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewOrder(order, Admin.clientSessionID);
+            validator = serverInterface.insertNewOrder(order, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -542,7 +550,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateOrder(order.getOrderId(), order, Admin.clientSessionID);
+            validator = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -556,7 +564,7 @@ public class  Utility
         
         try
         {
-            order = serverInterface.selectOrder(orderID, Admin.clientSessionID);
+            order = serverInterface.selectOrder(orderID, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -573,7 +581,7 @@ public class  Utility
             records = serverInterface.selectOrdersByFirmByType(
                                                     getCurrentUser_BrokerageFirmID()
                                                     , Enumeration.OrderType.BUYING_ORDER
-                                                    , Admin.clientSessionID); 
+                                                    , getCurrentSessionId()); 
         }
         catch (RemoteException e)
         {
@@ -608,7 +616,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewOrder(order, Admin.clientSessionID);
+            validator = serverInterface.insertNewOrder(order, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -624,7 +632,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateOrder(order.getOrderId(), order, Admin.clientSessionID);
+            validator = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -638,7 +646,7 @@ public class  Utility
         
         try
         {
-            order = serverInterface.selectOrder(orderID, Admin.clientSessionID);
+            order = serverInterface.selectOrder(orderID, getCurrentSessionId());
         }
         catch (RemoteException e)
         {
@@ -658,7 +666,7 @@ public class  Utility
             records = serverInterface.selectOrdersByFirmByType(
                                                     getCurrentUser_BrokerageFirmID()
                                                     , Enumeration.OrderType.SELLING_ORDER
-                                                    , Admin.clientSessionID);    
+                                                    , getCurrentSessionId());    
         }
         catch (RemoteException e)
         {
@@ -703,7 +711,7 @@ public class  Utility
         }*/
         try
         {
-            validator = serverInterface.checkIfUsernamePasswordMatch(userName, password, Admin.clientSessionID);
+            validator = serverInterface.checkIfUsernamePasswordMatch(userName, password);
         }
         catch (RemoteException e)
         {
@@ -739,7 +747,7 @@ public class  Utility
         //user = db.selectUserByEmailLimited(userEmail);
         /*try
         {
-           // user = serverInterface.selectUserByEmailLimited(userEmail,  Admin.clientSessionID);               
+           // user = serverInterface.selectUserByEmailLimited(userEmail,  getCurrentSessionId());               
         }
         catch (RemoteException e)
         {
@@ -776,7 +784,7 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.checkIfUsernameTempPasswordActivationCodeMatch(email, tempPassword, activationCode, Admin.clientSessionID);
+            validator = serverInterface.checkIfUsernameTempPasswordActivationCodeMatch(email, tempPassword, activationCode);
         }
         catch (RemoteException e)
         {
