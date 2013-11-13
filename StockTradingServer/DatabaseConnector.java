@@ -1375,7 +1375,7 @@ public class DatabaseConnector {
 		User user = new User();
 
 		PreparedStatement st = null;
-		String query = "SELECT PASSWORD, SALT, STATUSID, FALSELOGINS, ID FROM USERS WHERE EMAIL = ?";
+		String query = "SELECT PASSWORD, SALT, STATUSID, FALSELOGINS, ID, ROLEID FROM USERS WHERE EMAIL = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
@@ -1390,12 +1390,14 @@ public class DatabaseConnector {
 				int statusId = res.getInt(3);
 				int falseLogins = res.getInt(4);
 				int id = res.getInt(5);
+                                int roleId = res.getInt(6);
 
 				user.setPassword(password);
 				user.setSalt(salt);
 				user.setStatusId(statusId);
 				user.setFalseLogins(falseLogins);
 				user.setId(id);
+                                user.setRoleId(roleId);
 			} else {
 
 			}
