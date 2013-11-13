@@ -74,7 +74,7 @@ public class LoginController implements Initializable {
             
             // TODO Capture the proper user ids
             //User currentUser = Utility.GetUserLimited(UserEmail.getText().trim());
-            
+            Utility.setCurrentSessionId(loginStatus.getSession());
             Utility.SetCurrentUser(UserEmail.getText().trim());
                     
             // TODO 
