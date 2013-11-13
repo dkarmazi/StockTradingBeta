@@ -159,7 +159,7 @@ public class PasswordChangeController implements Initializable {
             if (validator.isVerified())
             {
                 // chec whether the curren password = new password
-                if (PasswordOld.getText().equals(PasswordNew.getText()))
+                if (!PasswordOld.getText().equals(PasswordNew.getText()))
                 {
                     // Check whether the new password has been used before
                     if (Utility.HasPasswordUsedBefore(Utility.getCurrentUserID(), PasswordNew.getText()))
