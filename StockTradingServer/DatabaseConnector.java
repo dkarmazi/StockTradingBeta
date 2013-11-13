@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import StockTradingCommon.Enumeration;
 
 import java.text.DecimalFormat;
+import java.util.HashSet;
 
 /*
  * Dmitriy Karmazin, Ahmad Kouraiem
@@ -1898,8 +1899,9 @@ public class DatabaseConnector {
 		// validate email
 		v = verifyUserEmail(email);
 		if (!v.isVerified()) {
-			return v;
-		}
+                        v.setStatus("Activation code and temporary password had been sent to your mail box");
+			return v;                   
+                }
 
 		User u = selectUserByEmailLimited(email);
 
