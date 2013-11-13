@@ -1702,6 +1702,8 @@ public class DatabaseConnector {
 			unsetActivationCodeAndTempPassword(id);
 			result.setVerified(true);
 			result.setStatus("Welcome to Stocks Trading System");
+			
+			LoggerCustom.logLoginActivity(email, "Login Successful");
 
 			return result;
 		} else {
@@ -1726,6 +1728,8 @@ public class DatabaseConnector {
 						Enumeration.Strings.ACCOUNT_LOCKED_MESSAGE
 								+ activationCode);
 
+				LoggerCustom.logLoginActivity(email, "Account locked");
+				
 				result.setVerified(false);
 				result.setStatus("Error, exceeded the maximum number of login attempts, this user account has been locked");
 				return result;
@@ -1824,6 +1828,9 @@ public class DatabaseConnector {
 			updateDatabaseIntField("USERS", "ID", "STATUSID", u.getId(),
 					Enumeration.User.USER_STATUSID_ACTIVE);
 
+			LoggerCustom.logLoginActivity(email, "Account unlocked");
+			
+			
 			result.setVerified(true);
 			result.setStatus("Account unlocked");
 			return result;
@@ -1871,6 +1878,10 @@ public class DatabaseConnector {
 
 			result.setVerified(true);
 			result.setStatus("Account unlocked");
+			
+			LoggerCustom.logLoginActivity(email, "Forgotten password recovery check passed");
+
+			
 			return result;
 		} else {
 			result.setVerified(false);
@@ -1897,6 +1908,8 @@ public class DatabaseConnector {
 			return v;
 		}
 
+		LoggerCustom.logLoginActivity(email, "User forgot password");
+		
 		User u = selectUserByEmailLimited(email);
 
 		setActivationCodeAndTempPassword(u.getId());
