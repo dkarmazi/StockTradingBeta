@@ -5,11 +5,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.sql.Connection;
 import java.util.ArrayList;
 
-import javax.mail.Session;
-
+import StockTradingServer.ServerAuthRes;
 import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
 import StockTradingServer.DatabaseConnector;
@@ -50,10 +48,21 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
 
 	@Override
-	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String sessionID) {
+	public ServerAuthRes selectBrokerageFirmsAll(String sessionID) {
 		
-		return this.dbCon.selectBrokerageFirmsAll();
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.selectBrokerageFirmsAll());
+		auth.setHasAccess(true);
+		
+		return auth;
 	}
+
+	
+//	@Override
+//	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String sessionID) {
+//		
+//		return this.dbCon.selectBrokerageFirmsAll();
+//	}
 
 	@Override
 	public BrokerageFirm selectBrokerageFirm(int idToSelect, String sessionID) {

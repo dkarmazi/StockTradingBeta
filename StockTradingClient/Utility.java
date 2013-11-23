@@ -388,7 +388,7 @@ public class  Utility
         ArrayList<BrokerageFirm> records = null;
         try
         {
-            records = serverInterface.selectBrokerageFirmsAll(getCurrentSessionId());
+            records = (ArrayList<BrokerageFirm>) serverInterface.selectBrokerageFirmsAll(getCurrentSessionId()).getObject();
         }
         catch (RemoteException e)
         {
@@ -409,7 +409,7 @@ public class  Utility
                 
         try
         {
-            records = serverInterface.selectBrokerageFirmsAll(getCurrentSessionId());
+            records = (ArrayList<BrokerageFirm>) serverInterface.selectBrokerageFirmsAll(getCurrentSessionId()).getObject();
         }
         catch (RemoteException e)
         {

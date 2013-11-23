@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import StockTradingServer.ServerAuthRes;
 import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
 import StockTradingServer.Order;
@@ -23,9 +24,12 @@ public interface ServerInterface extends Remote {
 	
 	public User selectUserByEmailLimited(String emailToSelect) throws RemoteException;
 
-	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String clientSessionID)
-			throws RemoteException;
+//	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String clientSessionID)
+//			throws RemoteException;
 
+	public ServerAuthRes selectBrokerageFirmsAll(String clientSessionID) throws RemoteException;
+	
+	
 	public BrokerageFirm selectBrokerageFirm(int idToSelect, String clientSessionID)
 			throws RemoteException;
 
