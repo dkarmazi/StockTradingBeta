@@ -7,6 +7,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+import javax.mail.Session;
+
 import StockTradingServer.ServerAuthRes;
 import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
@@ -303,4 +305,11 @@ public class TradingServer extends UnicastRemoteObject implements
         {
             return this.passwordClassifier.GradePassword(password);
         }
+        
+    @Override
+    public boolean logOut(String sessionID) throws RemoteException{
+    	return tradingSessions.deleteSession(sessionID);
+    }
+    
+    
 }

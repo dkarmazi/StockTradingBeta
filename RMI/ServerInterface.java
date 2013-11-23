@@ -116,4 +116,6 @@ public interface ServerInterface extends Remote {
 			String plainPassConfirm) throws RemoteException;
         
 	public int GradePassword(String password) throws RemoteException;
+	
+	public boolean logOut (String sessionID) throws RemoteException;
 }
