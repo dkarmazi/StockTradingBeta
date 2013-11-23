@@ -52,8 +52,9 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
 
 	@Override
-	public ServerAuthRes selectBrokerageFirmsAll(String sessionID) {
-		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, "selectBrokerageFirmsAll");
+	public ServerAuthRes selectBrokerageFirmsAll(String clientSessionID) {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
 		ServerAuthRes auth = new ServerAuthRes();
 		if (allowed){
 			auth.setObject(this.dbCon.selectBrokerageFirmsAll());
@@ -72,131 +73,338 @@ public class TradingServer extends UnicastRemoteObject implements
 //	}
 
 	@Override
-	public BrokerageFirm selectBrokerageFirm(int idToSelect, String sessionID) {
-		return this.dbCon.selectBrokerageFirm(idToSelect);
+	public ServerAuthRes selectBrokerageFirm(int idToSelect, String sessionID) {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectBrokerageFirm(idToSelect));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator insertNewBrokerageFirm(BrokerageFirm newFirm, String sessionID) {
-		return this.dbCon.insertNewBrokerageFirm(newFirm);
+	public ServerAuthRes insertNewBrokerageFirm(BrokerageFirm newFirm, String sessionID) {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.insertNewBrokerageFirm(newFirm));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator updateBrokerageFirm(int idToUpdate,
+	public ServerAuthRes updateBrokerageFirm(int idToUpdate,
 			BrokerageFirm firmToUpdate, String sessionID) throws RemoteException {
-		return this.dbCon.updateBrokerageFirm(idToUpdate, firmToUpdate);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.updateBrokerageFirm(idToUpdate, firmToUpdate));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<User> selectBrokersAll(int pStatusId, String sessionID)
+	public ServerAuthRes selectBrokersAll(int pStatusId, String sessionID)
 			throws RemoteException {
-		return this.dbCon.selectBrokersAll(pStatusId);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectBrokersAll(pStatusId));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<User> selectBrokersAllbyFirm(int pFirmId, String sessionID)
+	public ServerAuthRes selectBrokersAllbyFirm(int pFirmId, String sessionID)
 			throws RemoteException {
-		return this.dbCon.selectBrokersAllbyFirm(pFirmId);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectBrokersAllbyFirm(pFirmId));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public User selectBrokerUser(int idToSelect, String sessionID) throws RemoteException {
-		return this.dbCon.selectBrokerUser(idToSelect);
+	public ServerAuthRes selectBrokerUser(int idToSelect, String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectBrokerUser(idToSelect));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator insertNewBroker(User newUser, String sessionID) throws RemoteException {
-		return this.dbCon.insertNewBroker(newUser);
+	public ServerAuthRes insertNewBroker(User newUser, String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.insertNewBroker(newUser));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator updateBroker(int idToUpdate, User user, String sessionID)
+	public ServerAuthRes updateBroker(int idToUpdate, User user, String sessionID)
 			throws RemoteException {
-		return this.dbCon.updateBroker(idToUpdate, user);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.updateBroker(idToUpdate, user));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<Stock> selectStockAll(String sessionID) throws RemoteException {
-		return this.dbCon.selectStockAll();
+	public ServerAuthRes selectStockAll(String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectStockAll());
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Stock selectStock(int idToSelect, String sessionID) throws RemoteException {
-		return this.dbCon.selectStock(idToSelect);
+	public ServerAuthRes selectStock(int idToSelect, String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectStock(idToSelect));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator insertNewStock(Stock newStock, String sessionID) throws RemoteException {
-		return this.dbCon.insertNewStock(newStock);
+	public ServerAuthRes insertNewStock(Stock newStock, String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.insertNewStock(newStock));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator updateStock(int idToUpdate, Stock stock, String sessionID)
+	public ServerAuthRes updateStock(int idToUpdate, Stock stock, String sessionID)
 			throws RemoteException {
-		return this.dbCon.updateStock(idToUpdate, stock);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.updateStock(idToUpdate, stock));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<Order> selectOrdersAll(String sessionID) throws RemoteException {
-		return this.dbCon.selectOrdersAll();
+	public ServerAuthRes selectOrdersAll(String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectOrdersAll());
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType, String sessionID)
+	public ServerAuthRes selectOrdersByFirmByType(int firmId, int orderType, String sessionID)
 			throws RemoteException {
-		return this.dbCon.selectOrdersByFirmByType(firmId, orderType);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectOrdersByFirmByType(firmId, orderType));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Order selectOrder(int idToSelect, String sessionID) throws RemoteException {
-		return this.dbCon.selectOrder(idToSelect);
+	public ServerAuthRes selectOrder(int idToSelect, String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectOrder(idToSelect));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator insertNewOrder(Order newOrder, String sessionID) throws RemoteException {
-		return this.dbCon.insertNewOrder(newOrder);
+	public ServerAuthRes insertNewOrder(Order newOrder, String sessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.insertNewOrder(newOrder));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator updateOrder(int idToUpdate, Order order, String sessionID)
+	public ServerAuthRes updateOrder(int idToUpdate, Order order, String sessionID)
 			throws RemoteException {
-		return this.dbCon.updateOrder(idToUpdate, order);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.updateOrder(idToUpdate, order));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<CustomerInfo> selectCustomerInfoAll(String sessionID)
+	public ServerAuthRes selectCustomerInfoAll(String sessionID)
 			throws RemoteException {
-		return this.dbCon.selectCustomerInfoAll();
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectCustomerInfoAll());
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<CustomerInfo> selectCustomersByFirm(int firmId, String sessionID)
+	public ServerAuthRes selectCustomersByFirm(int firmId, String sessionID)
 			throws RemoteException {
-		return this.dbCon.selectCustomersByFirm(firmId);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectCustomersByFirm(firmId));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public CustomerInfo selectCustomerInfo(int idToSelect, String sessionID)
+	public ServerAuthRes selectCustomerInfo(int idToSelect, String sessionID)
 			throws RemoteException {
-		return this.dbCon.selectCustomerInfo(idToSelect);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectCustomerInfo(idToSelect));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator insertNewCustomerInfo(CustomerInfo newCustomer, String sessionID)
+	public ServerAuthRes insertNewCustomerInfo(CustomerInfo newCustomer, String sessionID)
 			throws RemoteException {
-		return this.dbCon.insertNewCustomerInfo(newCustomer);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.insertNewCustomerInfo(newCustomer));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public Validator updateCustomerInfo(int idToUpdate,
+	public ServerAuthRes updateCustomerInfo(int idToUpdate,
 			CustomerInfo customerToUpdate, String sessionID) throws RemoteException {
-		return this.dbCon.updateCustomerInfo(idToUpdate, customerToUpdate);
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.updateCustomerInfo(idToUpdate, customerToUpdate));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
-	public ArrayList<StatusesOptions> selectAllStatuses(String sessionID)
+	public ServerAuthRes selectAllStatuses(String sessionID)
 			throws RemoteException {
-		return this.dbCon.selectAllStatuses();
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectAllStatuses());
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
 	}
 
 	@Override
@@ -312,8 +520,17 @@ public class TradingServer extends UnicastRemoteObject implements
         }
         
     @Override
-    public boolean logOut(String sessionID) throws RemoteException{
-    	return tradingSessions.deleteSession(sessionID);
+    public ServerAuthRes logOut(String sessionID) throws RemoteException{
+    	String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+    	boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+    	ServerAuthRes auth = new ServerAuthRes();
+    	if (allowed){
+    		auth.setObject(tradingSessions.deleteSession(sessionID));
+    	}else{
+    		auth.setObject(null);
+    	}
+    	auth.setHasAccess(allowed);
+    	return auth;
     }
     
     

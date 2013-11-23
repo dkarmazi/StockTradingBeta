@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 import javafx.scene.control.*;
 
 /**
@@ -142,7 +144,15 @@ public class  Utility
         
         ArrayList<StatusesOptions> statuses = null;
 		try {
-			statuses = serverInterface.selectAllStatuses(getCurrentSessionId());
+			//statuses = serverInterface.selectAllStatuses(getCurrentSessionId());
+			
+			ServerAuthRes results = serverInterface.selectAllStatuses(getCurrentSessionId());
+			if (results.isHasAccess()) {
+				statuses = (ArrayList<StatusesOptions>) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectAllStatuses");
+				return;
+			}
 			//System.out.println("asdasds" + statuses.toString());
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -186,7 +196,15 @@ public class  Utility
         Validator validator = null;
         try
         {
-            validator = serverInterface.insertNewStock(stock, getCurrentSessionId());
+           // validator = serverInterface.insertNewStock(stock, getCurrentSessionId());
+            ServerAuthRes results = serverInterface.insertNewStock(stock, getCurrentSessionId());
+
+            if (results.isHasAccess()) {
+            	validator = (Validator) results.getObject();
+            }else{
+            	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewStock");
+            	return null;
+            }
         }
         catch (RemoteException e)
         {
@@ -200,7 +218,17 @@ public class  Utility
         Validator validator = null;
         try
         {
-            validator = serverInterface.insertNewStock(stock, getCurrentSessionId());
+            //validator = serverInterface.insertNewStock(stock, getCurrentSessionId());
+
+			ServerAuthRes results = serverInterface.insertNewStock(stock, getCurrentSessionId());
+			
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewStock");
+				return null;
+			}
+        	
         }
         catch (RemoteException e)
         {
@@ -215,7 +243,16 @@ public class  Utility
         ArrayList<Stock> records = null;        
         try
         {
-            records = serverInterface.selectStockAll(getCurrentSessionId());
+            //records = serverInterface.selectStockAll(getCurrentSessionId());
+
+			ServerAuthRes results = serverInterface.selectStockAll(getCurrentSessionId());
+			
+			if (results.isHasAccess()) {
+				records = (ArrayList<Stock>) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+				return;
+			}
         }
         catch (RemoteException e)
         {
@@ -236,7 +273,16 @@ public class  Utility
         ArrayList<Stock> records = null;
         try
         {
-            records = serverInterface.selectStockAll(getCurrentSessionId());
+           // records = serverInterface.selectStockAll(getCurrentSessionId());
+
+			ServerAuthRes results = serverInterface.selectStockAll(getCurrentSessionId());
+			
+			if (results.isHasAccess()) {
+				records = (ArrayList<Stock>) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+				return;
+			}
         }
         catch (RemoteException e)
         {
@@ -254,7 +300,15 @@ public class  Utility
         Stock stock = null;
         try
         {
-            stock = serverInterface.selectStock(stockId, getCurrentSessionId());
+            //stock = serverInterface.selectStock(stockId, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.selectStock(stockId, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				stock = (Stock) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStock");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -270,7 +324,15 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewBroker(broker, getCurrentSessionId());
+            //validator = serverInterface.insertNewBroker(broker, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.insertNewBroker(broker, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewBroker");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -284,7 +346,15 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateBroker(broker.getId(), broker, getCurrentSessionId()); 
+            //validator = serverInterface.updateBroker(broker.getId(), broker, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.updateBroker(broker.getId(), broker, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateBroker");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -302,7 +372,15 @@ public class  Utility
 
             try
             {
-                records = serverInterface.selectBrokersAll(statusID, getCurrentSessionId())  ;   
+                //records = serverInterface.selectBrokersAll(statusID, getCurrentSessionId())  ;
+            	ServerAuthRes results = serverInterface.selectBrokersAll(statusID, getCurrentSessionId());
+
+    			if (results.isHasAccess()) {
+    				records = (ArrayList<User>) results.getObject();
+    			}else{
+    				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokersAll");
+    				return;
+    			}
             }
             catch (RemoteException e)
             {
@@ -313,7 +391,16 @@ public class  Utility
         {
             try
             {
-                records = serverInterface.selectBrokersAllbyFirm(brokerageFirm, getCurrentSessionId());
+                //records = serverInterface.selectBrokersAllbyFirm(brokerageFirm, getCurrentSessionId());
+            	ServerAuthRes results = serverInterface.selectBrokersAllbyFirm(brokerageFirm, getCurrentSessionId());
+
+    			if (results.isHasAccess()) {
+    				records = (ArrayList<User>) results.getObject();
+    			}else{
+    				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokersAllbyFirm");
+    				return;
+    			}
+
             }
             catch (RemoteException e)
             {
@@ -331,7 +418,15 @@ public class  Utility
      
         try
         {
-            user = serverInterface.selectBrokerUser(brokerId, getCurrentSessionId());
+           // user = serverInterface.selectBrokerUser(brokerId, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.selectBrokerUser(brokerId, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				user = (User) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokerUser ");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -346,7 +441,15 @@ public class  Utility
         BrokerageFirm brokerageFirm = null;
         try
         {
-            brokerageFirm = serverInterface.selectBrokerageFirm(firmId, getCurrentSessionId());
+            //brokerageFirm = serverInterface.selectBrokerageFirm(firmId, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.selectBrokerageFirm(firmId, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				brokerageFirm = (BrokerageFirm) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokerageFirm");
+				//return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -359,7 +462,15 @@ public class  Utility
         Validator validator = null;        
         try
         {
-            validator = serverInterface.insertNewBrokerageFirm(brokerageFirm, getCurrentSessionId());
+            //validator = serverInterface.insertNewBrokerageFirm(brokerageFirm, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.insertNewBrokerageFirm(brokerageFirm, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewBrokerageFirm");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -373,7 +484,16 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateBrokerageFirm(brokerageFirm.getId(), brokerageFirm, getCurrentSessionId()); 
+//            validator = serverInterface.updateBrokerageFirm(brokerageFirm.getId(), brokerageFirm, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.updateBrokerageFirm(brokerageFirm.getId(), brokerageFirm, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateBrokerageFirm");
+				return null;
+			}
+
         }
         catch (RemoteException e)
         {
@@ -388,7 +508,15 @@ public class  Utility
         ArrayList<BrokerageFirm> records = null;
         try
         {
-            records = (ArrayList<BrokerageFirm>) serverInterface.selectBrokerageFirmsAll(getCurrentSessionId()).getObject();
+           // records = (ArrayList<BrokerageFirm>) serverInterface.selectBrokerageFirmsAll(getCurrentSessionId()).getObject();
+        	ServerAuthRes results = serverInterface.selectBrokerageFirmsAll(getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				records = (ArrayList<BrokerageFirm>) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokerageFirmsAll");
+				return;
+			}
         }
         catch (RemoteException e)
         {
@@ -428,7 +556,15 @@ public class  Utility
         
         try
         {
-            customerInfo = serverInterface.selectCustomerInfo(customerId, getCurrentSessionId());
+           // customerInfo = serverInterface.selectCustomerInfo(customerId, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.selectCustomerInfo(customerId, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				customerInfo = (CustomerInfo) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomerInfo");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -443,7 +579,15 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewCustomerInfo(customer, getCurrentSessionId());
+           // validator = serverInterface.insertNewCustomerInfo(customer, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.insertNewCustomerInfo(customer, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewCustomerInfo");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -458,7 +602,16 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateCustomerInfo(customer.getId(), customer, getCurrentSessionId());  
+            //validator = serverInterface.updateCustomerInfo(customer.getId(), customer, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.updateCustomerInfo(customer.getId(), customer, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateCustomerInfo");
+				return null;
+			}
+
         }
         catch (RemoteException e)
         {
@@ -472,7 +625,16 @@ public class  Utility
         
          try
         {
-            records = serverInterface.selectCustomerInfoAll(getCurrentSessionId());   
+            //records = serverInterface.selectCustomerInfoAll(getCurrentSessionId());
+        	 ServerAuthRes results = serverInterface.selectCustomerInfoAll(getCurrentSessionId());
+
+			 if (results.isHasAccess()) {
+				 records = (ArrayList<CustomerInfo>) results.getObject();
+			 }else{
+			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomerInfoAll");
+			 	return;
+			 }
+
         }
         catch (RemoteException e)
         {
@@ -493,7 +655,16 @@ public class  Utility
         ArrayList<CustomerInfo> records = null;        
         try
         {
-            records = serverInterface.selectCustomersByFirm(brokerageFirmID, getCurrentSessionId());
+            //records = serverInterface.selectCustomersByFirm(brokerageFirmID, getCurrentSessionId());
+       	 	ServerAuthRes results = serverInterface.selectCustomersByFirm(brokerageFirmID, getCurrentSessionId());
+		
+			 if (results.isHasAccess()) {
+				 records = (ArrayList<CustomerInfo>) results.getObject();
+			 }else{
+			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomersByFirm");
+			 	return;
+			 }
+
         }
         catch (RemoteException e)
         {
@@ -511,7 +682,16 @@ public class  Utility
         ArrayList<CustomerInfo> records = null;
         try
         {
-            records = serverInterface.selectCustomersByFirm(getCurrentUser_BrokerageFirmID(), getCurrentSessionId()); 
+            //records = serverInterface.selectCustomersByFirm(getCurrentUser_BrokerageFirmID(), getCurrentSessionId());
+       	 	ServerAuthRes results = serverInterface.selectCustomersByFirm(getCurrentUser_BrokerageFirmID(), getCurrentSessionId());
+    		
+			 if (results.isHasAccess()) {
+				 records = (ArrayList<CustomerInfo>) results.getObject();
+			 }else{
+			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomersByFirm");
+			 	return;
+			 }
+
         }
         catch (RemoteException e)
         {
@@ -537,7 +717,16 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewOrder(order, getCurrentSessionId());
+            //validator = serverInterface.insertNewOrder(order, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.insertNewOrder(order, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewOrder");
+				return null;
+			}
+
         }
         catch (RemoteException e)
         {
@@ -554,7 +743,16 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
+           // validator = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateOrder");
+				return null;
+			}
+
         }
         catch (RemoteException e)
         {
@@ -568,7 +766,15 @@ public class  Utility
         
         try
         {
-            order = serverInterface.selectOrder(orderID, getCurrentSessionId());
+            //order = serverInterface.selectOrder(orderID, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.selectOrder(orderID, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				order = (Order) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrder");
+				return null;
+			}
         }
         catch (RemoteException e)
         {
@@ -582,10 +788,22 @@ public class  Utility
         ArrayList<Order> records = null; 
         try
         {
-            records = serverInterface.selectOrdersByFirmByType(
-                                                    getCurrentUser_BrokerageFirmID()
-                                                    , Enumeration.OrderType.BUYING_ORDER
-                                                    , getCurrentSessionId()); 
+//            records = serverInterface.selectOrdersByFirmByType(
+//                                                    getCurrentUser_BrokerageFirmID()
+//                                                    , Enumeration.OrderType.BUYING_ORDER
+//                                                    , getCurrentSessionId());
+       	 	ServerAuthRes results = serverInterface.selectOrdersByFirmByType(
+								                  getCurrentUser_BrokerageFirmID()
+								                  , Enumeration.OrderType.BUYING_ORDER
+								                  , getCurrentSessionId());
+    		
+			 if (results.isHasAccess()) {
+				 records = (ArrayList<Order>) results.getObject();
+			 }else{
+			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrdersByFirmByType");
+			 	return;
+			 }
+
         }
         catch (RemoteException e)
         {
@@ -620,7 +838,16 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.insertNewOrder(order, getCurrentSessionId());
+            //validator = serverInterface.insertNewOrder(order, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.insertNewOrder(order, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewOrder");
+				return null;
+			}
+
         }
         catch (RemoteException e)
         {
@@ -636,7 +863,16 @@ public class  Utility
         
         try
         {
-            validator = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
+            //validator = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.updateOrder(order.getOrderId(), order, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				validator = (Validator) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateOrder");
+				return null;
+			}
+
         }
         catch (RemoteException e)
         {
@@ -650,7 +886,16 @@ public class  Utility
         
         try
         {
-            order = serverInterface.selectOrder(orderID, getCurrentSessionId());
+            //order = serverInterface.selectOrder(orderID, getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.selectOrder(orderID, getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				order = (Order) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrder");
+				return null;
+			}
+
         }
         catch (RemoteException e)
         {
@@ -667,10 +912,22 @@ public class  Utility
         
         try
         {
-            records = serverInterface.selectOrdersByFirmByType(
-                                                    getCurrentUser_BrokerageFirmID()
-                                                    , Enumeration.OrderType.SELLING_ORDER
-                                                    , getCurrentSessionId());    
+//            records = serverInterface.selectOrdersByFirmByType(
+//                                                    getCurrentUser_BrokerageFirmID()
+//                                                    , Enumeration.OrderType.SELLING_ORDER
+//                                                    , getCurrentSessionId());    
+       	 	ServerAuthRes results = serverInterface.selectOrdersByFirmByType(
+									                  getCurrentUser_BrokerageFirmID()
+									                  , Enumeration.OrderType.SELLING_ORDER
+									                  , getCurrentSessionId());
+
+			if (results.isHasAccess()) {
+				records = (ArrayList<Order>) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrdersByFirmByType");
+				return;
+			}
+        
         }
         catch (RemoteException e)
         {

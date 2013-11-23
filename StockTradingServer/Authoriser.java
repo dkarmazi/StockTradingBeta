@@ -8,6 +8,8 @@ import java.sql.Statement;
 public class Authoriser {
 	
 	public boolean isAllowed (Sessions sessions, String sessionID, String Action) {
+		LoggerCustom log = new LoggerCustom();
+		
 		int actionID;
 		int userID;
 		userID = sessions.getUserIDfromSession(sessionID);
@@ -18,8 +20,10 @@ public class Authoriser {
 		boolean result = db.isUserAllowedToDoAction(userID, actionID);
 		if (result){
 			System.out.println("UserID: " + userID + ", Session ID: " + sessionID + " is allowed to invoke: " + Action);
+			log.logLoginActivity("Reference Model", "UserID: " + userID + ", Session ID: " + sessionID + " is allowed to invoke: " + Action);
 		}else{
 			System.out.println("UserID: " + userID + ", Session ID: " + sessionID + " is NOT allowed to invoke: " + Action);
+			log.logLoginActivity("Reference Model", "UserID: " + userID + ", Session ID: " + sessionID + " is allowed to invoke: " + Action);
 		}
 		
 		return result;
