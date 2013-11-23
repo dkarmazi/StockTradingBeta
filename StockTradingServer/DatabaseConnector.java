@@ -2161,5 +2161,66 @@ public class DatabaseConnector {
 
 		return v;
 	}
+	
+	public int getActionID(String Action){
+		int actionID = -1;
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		String query = "SELECT * from ACTIONS WHERE ACTIONS.DESC = ?";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setString(1, Action);
+			rs = st.executeQuery();
+
+			if (rs.next()) {
+				actionID = rs.getInt("ID");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return actionID;
+	}
+	
+	public boolean isUserAllowedToDoAction (int userID, int actionID){
+		boolean result = false;
+
+		//find the user role:
+		int UserRoleID = 0;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT ROLEID from USERS where ID= ?";
+		try{
+			st = this.con.prepareStatement(query);
+			st.setInt(1, userID);
+			rs = st.executeQuery();
+ 	        rs = st.getResultSet();
+	        result = rs.next();	        
+	        if (!result){
+	        	return result;
+	        }	        
+	        UserRoleID = rs.getInt("ROLEID");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		//find if the user role got the right to perform the action
+		query = "SELECT * FROM ROLERIGHTS where (ROLEID = ? and ACTIONID = ?)";
+		try{
+			st = this.con.prepareStatement(query);
+			st.setInt(1, UserRoleID);
+			st.setInt(2, actionID);
+			rs = st.executeQuery();
+ 	        rs = st.getResultSet();
+	        result = rs.next();
+	        return result;
+		}catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 }

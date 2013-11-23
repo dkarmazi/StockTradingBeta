@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.mail.Session;
 
+import StockTradingServer.Authoriser;
 import StockTradingServer.ServerAuthRes;
 import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
@@ -24,7 +25,8 @@ import StockTradingServer.Validator;
 public class TradingServer extends UnicastRemoteObject implements
 		ServerInterface {
 	private static final int PORT = 2019;
-	Sessions tradingSessions = new Sessions();
+	public Sessions tradingSessions = new Sessions();
+	public Authoriser RefMonitor = new Authoriser();
 	
 	
 	
@@ -51,11 +53,14 @@ public class TradingServer extends UnicastRemoteObject implements
 
 	@Override
 	public ServerAuthRes selectBrokerageFirmsAll(String sessionID) {
-		
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, "selectBrokerageFirmsAll");
 		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.selectBrokerageFirmsAll());
-		auth.setHasAccess(true);
-		
+		if (allowed){
+			auth.setObject(this.dbCon.selectBrokerageFirmsAll());
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
 		return auth;
 	}
 
