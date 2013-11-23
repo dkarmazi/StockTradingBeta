@@ -58,4 +58,13 @@ public class Sessions {
 		return userID;
 	}
 
+	public boolean deleteSession(String sessionID){
+		if (sessionIDs.contains(sessionID)){
+			int userIndex = sessionIDs.indexOf(sessionID);
+			sessionIDs.remove(userIndex);
+			loggedUsers.remove(userIndex);
+			return true;
+		}
+		return false;
+	}
 }
