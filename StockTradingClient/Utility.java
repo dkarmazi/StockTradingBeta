@@ -71,7 +71,14 @@ public class  Utility
     }
     public static void unSetCurrentSessionId()
     {
-        
+        try
+        {
+           serverInterface.logOut(getCurrentSessionId());
+        }
+        catch (RemoteException e) 
+        {
+            e.printStackTrace();
+        }   
     }
     //public static void setCurrentUserRole(int currentUserRole) {
     //    currentUser.setRoleId(currentUserRole);

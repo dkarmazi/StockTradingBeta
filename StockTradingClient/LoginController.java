@@ -92,7 +92,8 @@ public class LoginController implements Initializable {
                 {
                     public void handle(WindowEvent we) 
                     {
-                        System.out.println("TODO: Need to unset the session");
+                        // Unset the session id of the current user
+                        Utility.unSetCurrentSessionId();
                     }
                 });
 
