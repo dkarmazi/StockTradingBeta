@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="518.0" prefWidth="942.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.BrokerController">
+<AnchorPane id="AnchorPane" prefHeight="518.0" prefWidth="942.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.AdminController">
   <children>
     <SplitPane dividerPositions="0.3425531914893617" focusTraversable="true" prefHeight="471.0" prefWidth="825.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
       <items>
@@ -16,18 +16,12 @@
           <children>
             <VBox prefHeight="414.0" prefWidth="-1.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <children>
-                <Label text="Brokerage Firm :" />
-                <ComboBox fx:id="brokerageFirmComboBox" disable="false" maxWidth="1.7976931348623157E308" onAction="#handleShowBrokers">
-                  <items>
-                    <FXCollections fx:factory="observableArrayList" />
-                  </items>
-                </ComboBox>
-                <Label prefHeight="30.0" prefWidth="245.0" text="Brokers in the system:" />
+                <Label prefHeight="30.0" prefWidth="245.0" text="Administrators in the system:" />
                 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                   <content>
                     <AnchorPane id="Content" maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0">
                       <children>
-                        <ListView id="BrokerageFirmListView" fx:id="BrokersListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView id="AdministratorageFirmListView" fx:id="AdministratorsListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                       </children>
                     </AnchorPane>
                   </content>
@@ -40,22 +34,22 @@
           <children>
             <GridPane id="GridPane" alignment="TOP_LEFT" prefWidth="592.0" AnchorPane.bottomAnchor="106.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="35.0">
               <children>
-                <Label text="Broker Profile:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Administrator Profile:" GridPane.columnIndex="0" GridPane.rowIndex="0">
                   <font>
                     <Font name="System Bold" size="13.0" fx:id="x1" />
                   </font>
                 </Label>
-                <Label disable="false" text="Broker Name :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label disable="false" text="Administrator Name :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                   <children>
-                    <TextField fx:id="BrokerFirstName" prefWidth="162.0" promptText="First Name" />
-                    <TextField fx:id="BrokerLastName" prefWidth="247.0" promptText="Last Name" />
+                    <TextField id="AdministratorFirstName" fx:id="AdminFirstName" prefWidth="162.0" promptText="First Name" />
+                    <TextField id="AdministratorLastName" fx:id="AdminLastName" prefWidth="247.0" promptText="Last Name" />
                   </children>
                 </HBox>
                 <Label text="Social Security Number:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <TextField fx:id="BrokerSSN" alignment="CENTER_LEFT" maxWidth="-Infinity" prefWidth="155.0" promptText="SSN Number" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField id="AdministratorSSN" fx:id="AdminSSN" alignment="CENTER_LEFT" maxWidth="-Infinity" minWidth="-1.0" prefWidth="155.0" promptText="SSN Number" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <TextField fx:id="Email" prefWidth="200.0" promptText="This is the user name of the Broker." GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="Email" prefWidth="200.0" promptText="This is the user name of the Administrator." GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <Label text="Status :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                 <ChoiceBox fx:id="StatusChoiceBox" mouseTransparent="false" pickOnBounds="false" prefWidth="146.49990844726562" GridPane.columnIndex="1" GridPane.rowIndex="4">
                   <items>
@@ -119,7 +113,7 @@
         </AnchorPane>
       </items>
     </SplitPane>
-    <Label alignment="CENTER_LEFT" contentDisplay="LEFT" text="Brokers Details" textAlignment="CENTER" textFill="#292929" textOverrun="ELLIPSIS" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="6.0">
+    <Label alignment="CENTER_LEFT" contentDisplay="LEFT" text="Administrators Details" textAlignment="CENTER" textFill="#292929" textOverrun="ELLIPSIS" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="6.0">
       <font>
         <Font size="16.0" />
       </font>

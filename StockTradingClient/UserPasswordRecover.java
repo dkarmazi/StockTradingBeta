@@ -14,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import StockTradingServer.Validator;
 /**
@@ -32,9 +34,49 @@ public class UserPasswordRecover implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        UserEmail.textProperty().addListener
+        (
+            new ChangeListener<String>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue)
+                {
+                    ResetScreenAppearance();
+                }
+            }
+        );
+        ActivationCode.textProperty().addListener
+        (
+            new ChangeListener<String>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue)
+                {
+                    ResetScreenAppearance();
+                }
+            }
+        );
+        Password.textProperty().addListener
+        (
+            new ChangeListener<String>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue)
+                {
+                    ResetScreenAppearance();
+                }
+            }
+        );
     }   
     
+    private void ResetScreenAppearance()
+    {
+        Message.setText("");
+    }
+        
     @FXML
     private void PasswordRecoveryHandle(ActionEvent event) throws IOException
     {
@@ -49,6 +91,7 @@ public class UserPasswordRecover implements Initializable {
             
             Utility.setCurrentSessionId(validator.getSession());
             Utility.SetCurrentUser(UserEmail.getText().trim());
+            Utility.setPasswordRecoverMode(true);
             
             Stage stage = new Stage();
             Parent root =FXMLLoader.load(

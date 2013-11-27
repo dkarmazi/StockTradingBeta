@@ -20,5 +20,6 @@
     <Label layoutX="352.0" layoutY="116.0" text="Broker" />
     <ToggleButton fx:id="HackMode" blendMode="SRC_OVER" mnemonicParsing="false" onAction="#handleButtonAction_btnHackMode" prefWidth="115.0" selected="false" text="Hack Mode Off" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
     <Button fx:id="ChangePassword" mnemonicParsing="false" onAction="#handleButtonAction_btnChangePassword" prefWidth="115.0" text="Change Password" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+    <Button id="Broker" fx:id="Administrator" layoutX="14.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddAdmin" prefWidth="130.0" text="Administrator" />
   </children>
 </AnchorPane>

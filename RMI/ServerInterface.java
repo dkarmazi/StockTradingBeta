@@ -12,6 +12,7 @@ import StockTradingServer.Order;
 import StockTradingServer.StatusesOptions;
 import StockTradingServer.Stock;
 import StockTradingServer.User;
+import StockTradingServer.UserAdmin;
 import StockTradingServer.Validator;
 
 public interface ServerInterface extends Remote {
@@ -26,6 +27,19 @@ public interface ServerInterface extends Remote {
 
 //	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String clientSessionID)
 //			throws RemoteException;
+
+        public ServerAuthRes selectAdministratorsAll(int pStatusId, String clientSessionID)
+			throws RemoteException;
+        
+        public ServerAuthRes selectAdminUser(int idToSelect, String clientSessionID) 
+                        throws RemoteException;
+        
+        public ServerAuthRes insertNewAdmin(UserAdmin newUser, String sessionID) 
+                        throws RemoteException;
+        
+        public ServerAuthRes updateAdmin(int idToUpdate, UserAdmin user, String sessionID)
+			throws RemoteException;
+        
 
 	public ServerAuthRes selectBrokerageFirmsAll(String clientSessionID) throws RemoteException;
 	

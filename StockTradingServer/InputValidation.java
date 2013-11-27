@@ -63,6 +63,22 @@ public class InputValidation {
 		return v;
 	}
 
+       public Validator validateIntDefault(int input, int defaultValue , String label) {
+		String delimiter = "\n";
+		Validator v = new Validator();
+
+		v.setVerified(true);
+		v.setStatus("");
+
+		if (input != defaultValue) {
+			v.setVerified(false);
+			v.setStatus("Error " + label
+					+ " does not hold default value." + delimiter);
+		}
+
+		return v;
+	}
+                
 	public Validator validateDoubleGeneral(double input, String label) {
 		String delimiter = "\n";
 		Validator v = new Validator();

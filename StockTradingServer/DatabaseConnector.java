@@ -93,7 +93,290 @@ public class DatabaseConnector {
 		this.con = con;
 	}
 
-	/*
+        /*
+	 * This function returns all admin users 0 - all 1,2 - with certain status
+	 */
+	public ArrayList<User> selectAdministratorsAll(int pStatusId) {
+		ArrayList<User> usersAll = new ArrayList<User>();
+		Statement st = null;
+		ResultSet rs = null;
+		String query = "SELECT * FROM USERS WHERE ROLEID = 1";
+
+		if (pStatusId != Enumeration.Broker.BROKER_SELECT_PARAM_EMPTY) {
+			query += " AND STATUSID = \"" + pStatusId + "\"";
+		}
+
+		try {
+			st = this.con.createStatement();
+			ResultSet res = st.executeQuery(query);
+
+			while (res.next()) {
+
+				int id = res.getInt(1);
+				String firstName = res.getString(2);
+				String lastName = res.getString(3);
+				String email = res.getString(4);
+				byte[] ssn = res.getBytes(5);
+				String password = res.getString(6);
+				String salt = res.getString(7);
+				int roleId = res.getInt(8);
+				int statusId = res.getInt(9);
+				int brokerFirmId = res.getInt(10);
+
+				// Decrypt sensitive data
+				String iv = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_IV;
+				String key = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_KEY;
+
+				DataEncryptor de = new DataEncryptor();
+				de.setIV(iv);
+
+				String decryptedSsn = "";
+				try {
+					decryptedSsn = de.decrypt(ssn, key);
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					// e.printStackTrace();
+					decryptedSsn = "err";
+				}
+				// End sensitive data decryption
+
+				User user = new User();
+				user.setId(id);
+				user.setFirstName(firstName);
+				user.setLastName(lastName);
+				user.setEmail(email);
+				user.setSsn(decryptedSsn);
+				user.setPassword(password);
+				user.setSalt(salt);
+				user.setRoleId(roleId);
+				user.setStatusId(statusId);
+				user.setBrokerFirmId(brokerFirmId);
+
+				usersAll.add(user);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return usersAll;
+	}
+	
+        /*
+	 * This function returns a broker for a given userid
+	 */
+	public UserAdmin selectAdminUser(int idToSelect) {
+		UserAdmin user = new UserAdmin();
+
+		PreparedStatement st = null;
+		String query = "SELECT * FROM USERS WHERE ID = ? AND ROLEID = 1";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, idToSelect);
+
+			ResultSet res = st.executeQuery();
+
+			res.next();
+
+			int id = res.getInt(1);
+			String firstName = res.getString(2);
+			String lastName = res.getString(3);
+			String email = res.getString(4);
+			byte[] ssn = res.getBytes(5);
+			String password = res.getString(6);
+			String salt = res.getString(7);
+			int roleId = res.getInt(8);
+			int statusId = res.getInt(9);
+			int brokerFirmId = res.getInt(10);
+
+			// Decrypt sensitive data
+			String iv = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_IV;
+			String key = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_KEY;
+
+			DataEncryptor de = new DataEncryptor();
+			de.setIV(iv);
+
+			String decryptedSsn = "";
+			try {
+				decryptedSsn = de.decrypt(ssn, key);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				decryptedSsn = "err";
+			}
+			// End sensitive data decryption
+
+			user.setId(id);
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setEmail(email);
+			user.setSsn(decryptedSsn);
+			user.setPassword(password);
+			user.setSalt(salt);
+			user.setRoleId(roleId);
+			user.setStatusId(statusId);
+			user.setBrokerFirmId(brokerFirmId);
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return user;
+	}
+
+        	/*
+	 * This function inserts a new broker MySQL injection checked
+	 */
+	public Validator insertNewAdmin(UserAdmin newUser) {
+		// validate input
+		Validator v = newUser.validate();
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		String query = "INSERT INTO USERS (FIRSTNAME, LASTNAME, EMAIL, SSN, PASSWORD, SALT, ROLEID, STATUSID, FIRMID) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+
+		try {
+
+			// Password hashing
+			PasswordHasher ph = new PasswordHasher();
+			String salt = ph.generateSalt();
+			String passwordHashed = ph.sha512(newUser.getPassword(), salt);
+			// end password hashing
+
+			// Sensitive data encryption
+			String iv = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_IV;
+			String key = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_KEY;
+			DataEncryptor de = new DataEncryptor();
+			de.setIV(iv);
+
+			byte[] ssnCipher = null;
+
+			try {
+				ssnCipher = de.encrypt(newUser.getSsn(), key);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// end encryption
+
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setString(1, newUser.getFirstName());
+			st.setString(2, newUser.getLastName());
+			st.setString(3, newUser.getEmail());
+			st.setBytes(4, ssnCipher);
+			st.setString(5, passwordHashed);
+			st.setString(6, salt);
+			st.setInt(7, newUser.getRoleId());
+			st.setInt(8, newUser.getStatusId());
+			st.setInt(9, newUser.getBrokerFirmId());
+
+			int affectedRows = st.executeUpdate();
+
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not insert into the table");
+				return v;
+			}
+
+			rs = st.getGeneratedKeys();
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		v.setVerified(true);
+		v.setStatus("Success");
+
+		return v;
+	}
+
+	public Validator updateAdmin(int idToUpdate, UserAdmin user) {
+		// validate input
+            
+                user.setBrokerFirmId(-1);
+		Validator v = user.validate();
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		String query = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
+
+		try {
+
+			// Password hashing
+			PasswordHasher ph = new PasswordHasher();
+			String salt = ph.generateSalt();
+			String passwordHashed = ph.sha512(user.getPassword(), salt);
+			// end password hashing
+
+			// Sensitive data encryption
+			String iv = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_IV;
+			String key = StockTradingCommon.Enumeration.Broker.BROKER_ENCRYPT_KEY;
+			DataEncryptor de = new DataEncryptor();
+			de.setIV(iv);
+
+			byte[] ssnCipher = null;
+
+			try {
+				ssnCipher = de.encrypt(user.getSsn(), key);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// end encryption
+
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setString(1, user.getFirstName());
+			st.setString(2, user.getLastName());
+			st.setString(3, user.getEmail());
+			st.setBytes(4, ssnCipher);
+
+			st.setInt(5, user.getRoleId());
+			st.setInt(6, user.getStatusId());
+			st.setInt(7, user.getBrokerFirmId());
+			st.setInt(8, idToUpdate);
+
+			int affectedRows = st.executeUpdate();
+
+			// log to DB
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not update the table");
+				return v;
+			}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		v.setVerified(true);
+		v.setStatus("Success");
+
+		return v;
+	}
+
+        /*
 	 * This function returns an array list of the brokerage firms
 	 */
 	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll() {
@@ -596,8 +879,8 @@ public class DatabaseConnector {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
-		String query = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, PASSWORD = ?, SALT = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
-
+		//String query = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, PASSWORD = ?, SALT = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
+                String query = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
 		try {
 
 			// Password hashing
@@ -628,12 +911,12 @@ public class DatabaseConnector {
 			st.setString(2, user.getLastName());
 			st.setString(3, user.getEmail());
 			st.setBytes(4, ssnCipher);
-			st.setString(5, passwordHashed);
-			st.setString(6, salt);
-			st.setInt(7, user.getRoleId());
-			st.setInt(8, user.getStatusId());
-			st.setInt(9, user.getBrokerFirmId());
-			st.setInt(10, idToUpdate);
+			//st.setString(5, passwordHashed);
+			//st.setString(6, salt);
+			st.setInt(5, user.getRoleId());
+			st.setInt(6, user.getStatusId());
+			st.setInt(6, user.getBrokerFirmId());
+			st.setInt(8, idToUpdate);
 
 			int affectedRows = st.executeUpdate();
 

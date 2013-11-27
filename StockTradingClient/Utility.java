@@ -28,7 +28,7 @@ public class  Utility
     private static int brokerID = -1;                   // when a broker logs in his id should be here
     private static User currentUser = new User();       // when a user logs in, current user details set here 
     private static String currentSessionId = null;      // keep the current users session id
-
+    private static boolean passwordRecoverMode = false;
 
     private static ServerInterface serverInterface = null;
    //  private static DatabaseConnector dbConnector = new DatabaseConnector(); 
@@ -81,6 +81,17 @@ public class  Utility
             e.printStackTrace();
         }   
     }
+    
+    public static boolean isPasswordRecoverMode() 
+    {
+        return passwordRecoverMode;
+    }
+
+    public static void setPasswordRecoverMode(boolean passwordRecoverMode) 
+    {
+        Utility.passwordRecoverMode = passwordRecoverMode;
+    }
+    
     //public static void setCurrentUserRole(int currentUserRole) {
     //    currentUser.setRoleId(currentUserRole);
     //}
@@ -324,6 +335,117 @@ public class  Utility
         }
         return stock;
     }
+    
+        // Administrator
+    
+    public static void PopulateAdministrators(ListView listView)
+    {        
+        listView.getItems().clear();
+        ArrayList<User> records = null;
+        
+        int statusID = 0;
+
+        try
+        {
+            //records = serverInterface.selectBrokersAll(statusID, getCurrentSessionId())  ;
+            ServerAuthRes results = serverInterface.selectAdministratorsAll(statusID, getCurrentSessionId());
+
+            if (results.isHasAccess()) 
+            {
+                    records = (ArrayList<User>) results.getObject();
+            }
+            else
+            {
+                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectAdministratorsAll");
+                    return;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        
+        for (User s : records)
+        {
+            listView.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getFirstName() + " " + s.getLastName()));
+        }
+    } 
+    public static UserAdmin GetAdminInfo(int adminId)
+    {
+        UserAdmin user = null;
+     
+        try
+        {
+            ServerAuthRes results = serverInterface.selectAdminUser(adminId, getCurrentSessionId());
+
+            if (results.isHasAccess()) 
+            {
+                    user = (UserAdmin) results.getObject();
+            }
+            else
+            {
+                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectAdminUser ");
+                    return null;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return user;
+    }
+    
+    public static Validator AddAdmin(UserAdmin admin)
+    {
+        Validator validator = null;
+        admin.setBrokerFirmId(Enumeration.BrokerageFirm.BROKERAGE_FIRM_ID_FOR_ADMIN);
+        try
+        {
+            ServerAuthRes results = serverInterface.insertNewAdmin(admin, getCurrentSessionId());
+
+            if (results.isHasAccess()) 
+            {
+                validator = (Validator) results.getObject();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewAdmin");
+                return null;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
+    }
+    
+    public static Validator UpdateAdmin(UserAdmin admin)
+    {
+        Validator validator = null;
+        admin.setBrokerFirmId(Enumeration.BrokerageFirm.BROKERAGE_FIRM_ID_FOR_ADMIN);
+        try
+        {
+            ServerAuthRes results = serverInterface.updateAdmin(admin.getId(), admin, getCurrentSessionId());
+
+            if (results.isHasAccess()) 
+            {
+                validator = (Validator) results.getObject();
+            } 
+            else 
+            {
+                JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateAdmin");
+                return null;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        return validator;
+    }
+    
+
     
     // Broker
     public static Validator AddBroker(User broker)

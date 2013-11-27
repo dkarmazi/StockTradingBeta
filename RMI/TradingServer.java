@@ -20,6 +20,7 @@ import StockTradingServer.Sessions;
 import StockTradingServer.StatusesOptions;
 import StockTradingServer.Stock;
 import StockTradingServer.User;
+import StockTradingServer.UserAdmin;
 import StockTradingServer.Validator;
 
 public class TradingServer extends UnicastRemoteObject implements
@@ -51,6 +52,80 @@ public class TradingServer extends UnicastRemoteObject implements
 		return this.dbCon.getHello();
 	}
 
+        @Override
+	public ServerAuthRes selectAdministratorsAll(int pStatusId, String sessionID)
+			throws RemoteException 
+        {
+            String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+            boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+            ServerAuthRes auth = new ServerAuthRes();
+            if (allowed)
+            {
+                auth.setObject(this.dbCon.selectAdministratorsAll(pStatusId));
+            }
+            else
+            {
+                auth.setObject(null);
+            }
+            auth.setHasAccess(allowed);
+            return auth;
+	}
+        
+        @Override
+	public ServerAuthRes selectAdminUser(int idToSelect, String sessionID) throws RemoteException 
+        {
+            String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+            boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+            ServerAuthRes auth = new ServerAuthRes();
+            if (allowed)
+            {
+                auth.setObject(this.dbCon.selectAdminUser(idToSelect));
+            }
+            else
+            {
+                auth.setObject(null);
+            }
+            auth.setHasAccess(allowed);
+            return auth;
+	}
+
+        @Override
+	public ServerAuthRes insertNewAdmin(UserAdmin newUser, String sessionID) throws RemoteException 
+        {
+            String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+            boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+            ServerAuthRes auth = new ServerAuthRes();
+            if (allowed)
+            {
+                auth.setObject(this.dbCon.insertNewAdmin(newUser));
+            }
+            else
+            {
+                auth.setObject(null);
+            }
+            auth.setHasAccess(allowed);
+            return auth;
+	}
+
+	@Override
+	public ServerAuthRes updateAdmin(int idToUpdate, UserAdmin user, String sessionID)
+			throws RemoteException 
+        {
+            String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+            boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+            ServerAuthRes auth = new ServerAuthRes();
+            if (allowed)
+            {
+                auth.setObject(this.dbCon.updateAdmin(idToUpdate, user));
+            }
+            else
+            {
+                auth.setObject(null);
+            }
+            auth.setHasAccess(allowed);
+            return auth;
+	}
+        
 	@Override
 	public ServerAuthRes selectBrokerageFirmsAll(String clientSessionID) {
 		String action = Thread.currentThread().getStackTrace()[1].getMethodName();

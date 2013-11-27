@@ -70,6 +70,16 @@ public class PasswordChangeController implements Initializable {
             }
         );
         
+        if (Utility.isPasswordRecoverMode())
+        {
+            PasswordOld.setDisable(true);
+            PasswordOld.setPromptText("Ignore the current password");
+        }
+        else
+        {
+            PasswordOld.setDisable(false);
+            PasswordOld.setPromptText("Your current password");
+        }
     }    
     
     private void ResetScreenAppearance()
@@ -145,7 +155,7 @@ public class PasswordChangeController implements Initializable {
     
     @FXML 
     public void ChangePassword(ActionEvent event) throws IOException
-    {        
+    {       
        
         if (
                 PasswordNew.getText().equals( PasswordConfirm.getText()) &&
@@ -153,64 +163,63 @@ public class PasswordChangeController implements Initializable {
             )
         {
             Validator validator;
-            // Check whether the current password correct
-            //Validator validator = Utility.AuthenticateUser(Utility.getCurrentUserEmail()
-            //                            , PasswordOld.getText());
-            //if (validator.isVerified())
+            
+            
+            if (!Utility.isPasswordRecoverMode())
             {
-                // chec whether the curren password = new password
-                if (!PasswordOld.getText().equals(PasswordNew.getText()))
+                // password changed by the logon user. (not the password recovery mode)
+                
+                // Check whether the current password correct
+                validator = Utility.AuthenticateUser(Utility.getCurrentUserEmail()
+                                        , PasswordOld.getText());
+                
+            }
+            else
+            {
+                validator = new Validator();
+                validator.setVerified(true);
+            }
+            
+            if (validator.isVerified())
+            {
+                validator = null;
+                validator = Utility.ChangePassword(Utility.getCurrentUserID()
+                                                    , PasswordNew.getText()
+                                                    , PasswordConfirm.getText());
+                
+                if (validator.isVerified())
                 {
-                    // Check whether the new password has been used before
-                    if (Utility.HasPasswordUsedBefore(Utility.getCurrentUserID(), PasswordNew.getText()))
-                    {
-                        Message.setText("You cannot repeat last " 
-                                + Enumeration.Password.PASSWORD_HISTORY_COUNT  
-                            + " passwords. Enter a new password.");
-                    }
-                    else
-                    {        
-                        validator = Utility.ChangePassword(Utility.getCurrentUserID()
-                                                                    , PasswordNew.getText()
-                                                                    , PasswordConfirm.getText());
-                        if (validator.isVerified())
-                        {
-                            // password changed - show the main window
-                            Stage stage = new Stage();
-                            Parent root =FXMLLoader.load(
-                            MainController.class.getResource("Main.fxml"));
+                    // password changed - show the main window
+                    Stage stage = new Stage();
+                    Parent root =FXMLLoader.load(
+                    MainController.class.getResource("Main.fxml"));
 
-                            stage.setScene(new Scene(root));
-                            stage.setTitle("Stock Trading Platform");
-                            //stage.initModality(Modality.NONE);
-                            //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
-                            stage.show(); 
+                    stage.setScene(new Scene(root));
+                    stage.setTitle("Stock Trading Platform");
+                    //stage.initModality(Modality.NONE);
+                    //stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );            
+                    stage.show(); 
 
-                            ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
-                        }
-                        else
-                        {
-                            Message.setText(validator.getStatus());
-                        }
-                    }
+                    ((Node)(event.getSource())).getScene().getWindow().hide();  // hide the current window
+                    
+                    Utility.setPasswordRecoverMode(false);
                 }
                 else
                 {
-                    Message.setText("Your new password is identical to the current password."
-                            + "Use a new password. ");
-                }
-
+                    Message.setText(validator.getStatus());
+                } 
             }
-            /*else
+            else
             {
-                Message.setText("Check your current password. ");
-                    
-            }*/
+                Message.setText(validator.getStatus());
+            }
         }
         else
         {
             Message.setText("Check your password. "
                     + "New password should be non-empty and confirmation should be matched");
         }
+        
+        
     }
 }

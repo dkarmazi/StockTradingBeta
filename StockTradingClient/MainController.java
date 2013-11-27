@@ -36,7 +36,8 @@ public class MainController implements Initializable {
     @FXML private Button BrokerageFirm;
     @FXML private Button Broker;
     @FXML private Button Stock;    
-    
+    @FXML private Button Administrator;
+        
     // Only for Broker
     @FXML private Button Customer;
     @FXML private Button SellOrder;
@@ -65,6 +66,25 @@ public class MainController implements Initializable {
         stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
         stage.show();
 
+    }
+    
+    @FXML
+    private void handleButtonAction_btnAddAdmin(ActionEvent event) throws IOException{
+        if (!Utility.checkBrokerWindowPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(
+            MainController.class.getResource("Admin.fxml"));
+            //MainController.class.getResource("../StockTradingClient.MessageBox/Info.fxml"));
+        
+        stage.setScene(new Scene(root));
+        stage.setTitle("Administrators");
+        stage.initModality(Modality.NONE);
+        //stage.initStyle(StageStyle.UNDECORATED);
+        stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
+        stage.show();
     }
     
     @FXML
@@ -205,7 +225,8 @@ public class MainController implements Initializable {
         BrokerageFirm.setVisible(true);
         Broker.setVisible(true);
         Stock.setVisible(true);
-
+        Administrator.setVisible(true);
+        
         // Hide
         Customer.setVisible(false);
         BuyOrder.setVisible(false);
@@ -218,7 +239,8 @@ public class MainController implements Initializable {
         BrokerageFirm.setVisible(false);
         Broker.setVisible(false);
         Stock.setVisible(false);
-
+        Administrator.setVisible(false);
+        
         // Show
         Customer.setVisible(true);
         BuyOrder.setVisible(true);

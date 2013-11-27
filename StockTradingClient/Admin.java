@@ -32,7 +32,17 @@ public class Admin extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception 
         {
-
+            /*
+            try
+            {
+            StockTradingServer.DatabaseConnector dc = new StockTradingServer.DatabaseConnector();
+            dc.updateUserPassword(52, "QQQqqq112", "QQQqqq112");
+            }
+            catch (Exception ex)
+            {
+                System.out.println(ex.getMessage());
+            }
+            */
             if(serverInterface != null) {
 			Utility.setServerInterface(serverInterface);
 		} else {

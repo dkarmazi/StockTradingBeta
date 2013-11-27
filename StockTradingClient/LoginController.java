@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 
 import StockTradingServer.Validator;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.stage.Modality;
 import javafx.stage.WindowEvent;
@@ -44,9 +46,40 @@ public class LoginController implements Initializable {
                     }
                 }
                 );
+        UserEmail.textProperty().addListener
+        (
+            new ChangeListener<String>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue)
+                {
+                    ResetScreenAppearance();
+                }
+            }
+        );
+        
+        Password.textProperty().addListener
+        (
+            new ChangeListener<String>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue)
+                {
+                    ResetScreenAppearance();
+                }
+            }
+        );
         //UserEmail.setText("hirosh@gwmail.gwu.edu");
         //Password.setText("admin");
     }   
+    
+    private void ResetScreenAppearance()
+    {
+        Message.setText("");
+    }
+        
     @FXML
     public void Login(ActionEvent event) throws IOException
     {
