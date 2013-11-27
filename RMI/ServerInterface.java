@@ -67,7 +67,7 @@ public interface ServerInterface extends Remote {
 	public ServerAuthRes updateBroker(int idToUpdate, User user, String clientSessionID)
 			throws RemoteException;
 
-	public ServerAuthRes selectStockAll(String clientSessionID) throws RemoteException;
+	public ServerAuthRes selectStockAll(int pStatusId, String clientSessionID) throws RemoteException;
 
 	public ServerAuthRes selectStock(int idToSelect, String clientSessionID) throws RemoteException;
 

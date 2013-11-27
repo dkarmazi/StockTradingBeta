@@ -641,7 +641,7 @@ public class DatabaseConnector {
 	 */
 	public ArrayList<User> selectBrokersAll(int pStatusId) {
 		ArrayList<User> usersAll = new ArrayList<User>();
-		Statement st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM USERS WHERE ROLEID = 2";
 
@@ -650,8 +650,8 @@ public class DatabaseConnector {
 		}
 
 		try {
-			st = this.con.createStatement();
-			ResultSet res = st.executeQuery(query);
+			st = this.con.prepareStatement(query);
+			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
 
@@ -992,15 +992,18 @@ public class DatabaseConnector {
 	/*
 	 * This function returns an arraylist of all the active stocks in the system
 	 */
-	public ArrayList<Stock> selectStockAll() {
+	public ArrayList<Stock> selectStockAll(int pStatusId) {
 		ArrayList<Stock> stocksAll = new ArrayList<Stock>();
-		Statement st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT * FROM STOCKS WHERE STATUSID = 1;";
 
+		String query = "SELECT * FROM STOCKS  ";
+		if (pStatusId != 0) {
+			query += " WHERE STATUSID = \"" + pStatusId + "\"";
+		}
 		try {
-			st = this.con.createStatement();
-			ResultSet res = st.executeQuery(query);
+			st = this.con.prepareStatement(query);
+			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
 

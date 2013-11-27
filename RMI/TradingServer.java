@@ -276,12 +276,12 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
 
 	@Override
-	public ServerAuthRes selectStockAll(String sessionID) throws RemoteException {
+	public ServerAuthRes selectStockAll(int pStatusId, String sessionID) throws RemoteException {
 		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
 		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
 		ServerAuthRes auth = new ServerAuthRes();
 		if (allowed){
-			auth.setObject(this.dbCon.selectStockAll());
+			auth.setObject(this.dbCon.selectStockAll(pStatusId));
 		}else{
 			auth.setObject(null);
 		}

@@ -42,6 +42,7 @@ public class MainController implements Initializable {
     @FXML private Button Customer;
     @FXML private Button SellOrder;
     @FXML private Button BuyOrder;
+    @FXML private Button StockView;
     
     // Common to all users
     @FXML private Button ChangePassword;    
@@ -185,6 +186,25 @@ public class MainController implements Initializable {
         stage.show();
     }
     
+        @FXML
+    private void handleButtonAction_btnStockView(ActionEvent event) throws IOException{
+        
+    	if (!Utility.checkStockViewPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(
+            MainController.class.getResource("StockView.fxml"));
+ 
+        stage.setScene(new Scene(root));
+        stage.setTitle("View Stocks");
+        stage.initModality(Modality.NONE);
+        stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
+        stage.show();
+    }
+    
     @FXML
     private void handleButtonAction_btnHackMode(ActionEvent event) throws IOException
     {
@@ -230,7 +250,8 @@ public class MainController implements Initializable {
         // Hide
         Customer.setVisible(false);
         BuyOrder.setVisible(false);
-        SellOrder.setVisible(false);        
+        SellOrder.setVisible(false);  
+        StockView.setVisible(false);
     }
     
     private void SetScreenForBroker()
@@ -244,7 +265,8 @@ public class MainController implements Initializable {
         // Show
         Customer.setVisible(true);
         BuyOrder.setVisible(true);
-        SellOrder.setVisible(true);        
+        SellOrder.setVisible(true);     
+        StockView.setVisible(true);
     }
     
     private void SetScreenForHackerDemo()
@@ -253,10 +275,12 @@ public class MainController implements Initializable {
         BrokerageFirm.setVisible(true);
         Broker.setVisible(true);
         Stock.setVisible(true);
+        Administrator.setVisible(true);
 
         Customer.setVisible(true);
         BuyOrder.setVisible(true);
-        SellOrder.setVisible(true);   
+        SellOrder.setVisible(true);  
+        StockView.setVisible(true);
     }
     
     private void SetScreenForUserRole()

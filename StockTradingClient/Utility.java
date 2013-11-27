@@ -7,12 +7,13 @@ import StockTradingCommon.Enumeration;
 import StockTradingServer.*;
 
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.swing.JOptionPane;
 
@@ -264,7 +265,11 @@ public class  Utility
         {
             //records = serverInterface.selectStockAll(getCurrentSessionId());
 
-			ServerAuthRes results = serverInterface.selectStockAll(getCurrentSessionId());
+			ServerAuthRes results = serverInterface.selectStockAll
+                        (
+                                Enumeration.Status.ALL
+                                , getCurrentSessionId()
+                        );
 			
 			if (results.isHasAccess()) {
 				records = (ArrayList<Stock>) results.getObject();
@@ -285,23 +290,55 @@ public class  Utility
         }
         comboBox.getSelectionModel().selectFirst();
     }
-    
     public static void PopulateStocks(ListView listView)
     {
         listView.getItems().clear();
         ArrayList<Stock> records = null;
         try
         {
-           // records = serverInterface.selectStockAll(getCurrentSessionId());
+            ServerAuthRes results = serverInterface.selectStockAll
+                            (
+                                    Enumeration.Status.ALL
+                                    , getCurrentSessionId()
+                            );
 
-			ServerAuthRes results = serverInterface.selectStockAll(getCurrentSessionId());
-			
-			if (results.isHasAccess()) {
-				records = (ArrayList<Stock>) results.getObject();
-			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
-				return;
-			}
+            if (results.isHasAccess()) {
+                    records = (ArrayList<Stock>) results.getObject();
+            }else{
+                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    return;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        
+        for(Stock s : records)
+        {
+            listView.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getName() ));
+        }
+        listView.getSelectionModel().selectFirst();
+    }
+    
+    public static void PopulateStocksActiveOnly(ListView listView)
+    {
+        listView.getItems().clear();
+        ArrayList<Stock> records = null;
+        try
+        {
+            ServerAuthRes results = serverInterface.selectStockAll
+                (
+                    Enumeration.Status.ACTIVE
+                    , getCurrentSessionId()
+                );
+
+            if (results.isHasAccess()) {
+                    records = (ArrayList<Stock>) results.getObject();
+            }else{
+                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    return;
+            }
         }
         catch (RemoteException e)
         {
@@ -335,9 +372,45 @@ public class  Utility
         }
         return stock;
     }
+    public static void PopulateStocksForTradingSession(TableView tableView)
+    {
+        tableView.getItems().clear();
+
+        ArrayList<Stock> records = null;
+        try
+        {
+
+            ServerAuthRes results = serverInterface.selectStockAll
+                    (
+                            Enumeration.Status.ACTIVE
+                            ,getCurrentSessionId()
+                    );
+
+            if (results.isHasAccess()) {
+                    records = (ArrayList<Stock>) results.getObject();
+            }else{
+                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    return;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        
+        ObservableList<Stock> data;
+        data = FXCollections.observableArrayList();
+        
+        
+        for(Stock s : records)
+        {
+            data.add(s); 
+        }
+
+        tableView.setItems(data);
+    }
     
-        // Administrator
-    
+    // Administrator
     public static void PopulateAdministrators(ListView listView)
     {        
         listView.getItems().clear();
@@ -394,7 +467,6 @@ public class  Utility
         }
         return user;
     }
-    
     public static Validator AddAdmin(UserAdmin admin)
     {
         Validator validator = null;
@@ -419,7 +491,6 @@ public class  Utility
         }
         return validator;
     }
-    
     public static Validator UpdateAdmin(UserAdmin admin)
     {
         Validator validator = null;
@@ -670,6 +741,29 @@ public class  Utility
         try
         {
             records = (ArrayList<BrokerageFirm>) serverInterface.selectBrokerageFirmsAll(getCurrentSessionId()).getObject();
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        for(BrokerageFirm s : records)
+        {
+            listView.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getName() ));
+        }
+    }
+    public static void PopulateBrokerageFirmsActive(ListView listView)
+    {
+        listView.getItems().clear();
+        ArrayList<BrokerageFirm> records = null;       
+                
+        try
+        {
+            records = (ArrayList<BrokerageFirm>) serverInterface.selectBrokerageFirmsByStatus
+                    ( 
+                            Enumeration.BrokerageFirm.BROKERAGE_FIRM_STATUS_ACTIVE_ID
+                            ,getCurrentSessionId()
+                    ).getObject();
+            
         }
         catch (RemoteException e)
         {
@@ -1359,4 +1453,13 @@ public class  Utility
     	return results;
     }   
     
+    public static boolean checkStockViewPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("selectStock", getCurrentSessionId());
+        results = results && serverInterface.checkPermission("selectStockAll", getCurrentSessionId());
+
+    	
+    	return results;
+    }   
 }

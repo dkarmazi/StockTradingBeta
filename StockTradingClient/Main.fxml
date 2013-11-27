@@ -7,19 +7,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.MainController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="631.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.MainController">
   <children>
     <Button fx:id="BrokerageFirm" layoutX="152.0" layoutY="142.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddBrokerageFirm" prefWidth="130.0" text="Brokerage Firm" />
     <Button fx:id="Broker" layoutX="152.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddBroker" prefWidth="130.0" text="Broker" />
     <Button fx:id="Stock" layoutX="152.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddStock" prefWidth="130.0" text="Stock" />
-    <Button fx:id="Customer" layoutX="352.0" layoutY="142.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddCustomer" prefWidth="130.0" text="Customer" />
-    <Button fx:id="SellOrder" layoutX="352.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddSellOrder" prefWidth="130.0" text="Selling Order" />
-    <Button fx:id="BuyOrder" layoutX="352.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddBuyOrder" prefWidth="130.0" text="Buying Order" />
-    <Line endX="6.0" endY="240.0" layoutX="312.0" layoutY="101.0" smooth="true" startX="8.0" startY="-13.0" stroke="#0029ff" strokeDashOffset="0.0" strokeLineCap="ROUND" strokeLineJoin="MITER" strokeMiterLimit="10.0" strokeWidth="0.7" />
-    <Label layoutX="152.0" layoutY="116.0" text="Administrator" />
-    <Label layoutX="352.0" layoutY="116.0" text="Broker" />
-    <ToggleButton fx:id="HackMode" blendMode="SRC_OVER" mnemonicParsing="false" onAction="#handleButtonAction_btnHackMode" prefWidth="115.0" selected="false" text="Hack Mode Off" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-    <Button fx:id="ChangePassword" mnemonicParsing="false" onAction="#handleButtonAction_btnChangePassword" prefWidth="115.0" text="Change Password" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+    <Button fx:id="Customer" layoutX="337.0" layoutY="143.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddCustomer" prefWidth="130.0" text="Customer" />
+    <Button fx:id="SellOrder" layoutX="337.0" layoutY="193.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddSellOrder" prefWidth="130.0" text="Selling Order" />
+    <Button fx:id="BuyOrder" layoutX="337.0" layoutY="243.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddBuyOrder" prefWidth="130.0" text="Buying Order" />
+    <Line endX="6.0" endY="240.0" layoutX="308.0" layoutY="101.0" smooth="true" startX="7.0" startY="-56.0" stroke="#0029ff" strokeDashOffset="0.0" strokeLineCap="ROUND" strokeLineJoin="MITER" strokeMiterLimit="10.0" strokeWidth="0.7" />
+    <Label layoutX="79.0" layoutY="46.0" text="Administrator" />
+    <Label layoutX="410.0" layoutY="46.0" text="Broker" />
+    <ToggleButton fx:id="HackMode" blendMode="SRC_OVER" mnemonicParsing="false" onAction="#handleButtonAction_btnHackMode" prefWidth="135.0" selected="false" text="Hack Mode Off" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+    <Button fx:id="ChangePassword" mnemonicParsing="false" onAction="#handleButtonAction_btnChangePassword" prefWidth="135.0" text="Change Password" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
     <Button id="Broker" fx:id="Administrator" layoutX="14.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddAdmin" prefWidth="130.0" text="Administrator" />
+    <Button fx:id="StockView" layoutX="482.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleButtonAction_btnStockView" prefWidth="130.0" text="View Stocks" />
   </children>
 </AnchorPane>
