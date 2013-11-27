@@ -237,9 +237,8 @@ public class  Utility
         Validator validator = null;
         try
         {
-            //validator = serverInterface.insertNewStock(stock, getCurrentSessionId());
 
-			ServerAuthRes results = serverInterface.insertNewStock(stock, getCurrentSessionId());
+			ServerAuthRes results = serverInterface.updateStock(stock.getId(), stock, getCurrentSessionId());
 			
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
