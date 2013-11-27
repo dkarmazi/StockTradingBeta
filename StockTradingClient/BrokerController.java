@@ -204,18 +204,15 @@ public class BrokerController implements Initializable {
             return;
         }
         
-
-            KeyValuePair keyValue = BrokersListView.getSelectionModel().getSelectedItem();       
-            String newPasswordMsg = "";
-            int brokerId = Integer.parseInt( keyValue.getKey());
-            Validator validator =Utility.ChangePassword(brokerId, Password1.getText(), Password2.getText());
-            if (validator.isVerified())
-            {
-                newPasswordMsg = "\nPassword is reset to " + Password2.getText();
-            }
-            Message.setText(validator.getStatus() + newPasswordMsg);
-                    
-
+        KeyValuePair keyValue = BrokersListView.getSelectionModel().getSelectedItem();       
+        String newPasswordMsg = "";
+        int brokerId = Integer.parseInt( keyValue.getKey());
+        Validator validator =Utility.ChangePassword(brokerId, Password1.getText(), Password2.getText());
+        if (validator.isVerified())
+        {
+            newPasswordMsg = "\nPassword is reset to " + Password2.getText();
+        }
+        Message.setText(validator.getStatus() + newPasswordMsg);
     }
     private void SetPasswordBarometerDefaultColor()
     {

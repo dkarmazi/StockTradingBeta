@@ -236,8 +236,6 @@ public class AdminController implements Initializable {
             newPasswordMsg = "\nPassword is reset to " + Password2.getText();
         }
         Message.setText(validator.getStatus() + newPasswordMsg);
-                    
-
     }
     
     public void PopulateAdministrators()
