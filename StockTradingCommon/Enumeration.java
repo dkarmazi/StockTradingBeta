@@ -86,4 +86,10 @@ public class Enumeration {
         public static class Password        {
             public final static int PASSWORD_HISTORY_COUNT = 3;
         }
+        
+        public static class Status
+        {
+            public final static int ACTIVE = 1;
+            public final static int INACTIVE = 2;
+        }
 }
