@@ -43,7 +43,8 @@ public interface ServerInterface extends Remote {
 
 	public ServerAuthRes selectBrokerageFirmsAll(String clientSessionID) throws RemoteException;
 	
-	
+	public ServerAuthRes selectBrokerageFirmsByStatus(int status, String clientSessionID) throws RemoteException;
+        
 	public ServerAuthRes selectBrokerageFirm(int idToSelect, String clientSessionID)
 			throws RemoteException;
 
