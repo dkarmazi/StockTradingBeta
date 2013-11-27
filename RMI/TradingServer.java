@@ -533,5 +533,10 @@ public class TradingServer extends UnicastRemoteObject implements
     	return auth;
     }
     
+    @Override
+    public boolean checkPermission (String methodName, String clientSessionID) throws RemoteException{
+    	return RefMonitor.isAllowed(tradingSessions, clientSessionID, methodName);
+    }
+    
     
 }

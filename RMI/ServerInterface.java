@@ -118,4 +118,6 @@ public interface ServerInterface extends Remote {
 	public int GradePassword(String password) throws RemoteException;
 	
 	public ServerAuthRes logOut (String sessionID) throws RemoteException;
+
+	public boolean checkPermission (String methodName, String clientSessionID) throws RemoteException;
 }

@@ -4,10 +4,15 @@
  */
 package StockTradingClient;
 
+import RMI.ServerInterface;
 import StockTradingCommon.Enumeration;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javax.swing.JOptionPane;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +28,7 @@ import javafx.stage.StageStyle;
 /**
  * FXML Controller class
  *
- * @author Sulochane
+ * @author Sulochane, Kouraiem
  */
 public class MainController implements Initializable {
     
@@ -44,7 +49,12 @@ public class MainController implements Initializable {
     @FXML
     private void handleButtonAction_btnAddBrokerageFirm(ActionEvent event) throws IOException{
 
-
+    	
+    	if (!Utility.checkBrokerageFirmWindowPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("BrokerFirm.fxml"));
@@ -60,6 +70,11 @@ public class MainController implements Initializable {
     @FXML
     private void handleButtonAction_btnAddBroker(ActionEvent event) throws IOException{
         
+    	if (!Utility.checkBrokerWindowPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("Broker.fxml"));
@@ -76,6 +91,11 @@ public class MainController implements Initializable {
     @FXML
     private void handleButtonAction_btnAddStock(ActionEvent event) throws IOException{
         
+    	if (!Utility.checkStockWindowPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("Stock.fxml"));
@@ -90,6 +110,11 @@ public class MainController implements Initializable {
     @FXML
     private void handleButtonAction_btnAddCustomer(ActionEvent event) throws IOException{
         
+    	if (!Utility.checkCustomerWindowPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("Customer.fxml"));
@@ -104,6 +129,12 @@ public class MainController implements Initializable {
     @FXML
     private void handleButtonAction_btnAddSellOrder(ActionEvent event) throws IOException{
         
+
+    	if (!Utility.checkSellingOrderWindowPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("SellOrder.fxml"));
@@ -118,6 +149,11 @@ public class MainController implements Initializable {
     @FXML
     private void handleButtonAction_btnAddBuyOrder(ActionEvent event) throws IOException{
         
+    	if (!Utility.checkBuyingOrderWindowPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("BuyOrder.fxml"));

@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 /**
  * @date    :   Oct 21, 2013
  * @author  :   Hirosh Wickramasuriya
+ * @author  :   Ahmad Kouraiem
  */
 public class  Utility 
 {
@@ -1151,4 +1152,87 @@ public class  Utility
         } 
         return status;
     }
+    
+    public static boolean checkBrokerageFirmWindowPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("insertNewBrokerageFirm", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("updateBrokerageFirm", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectAllStatuses", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectBrokerageFirmsAll", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectBrokerageFirm", getCurrentSessionId());
+    	
+    	return results;
+    }
+    
+    
+    public static boolean checkBrokerWindowPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("updateBroker", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("insertNewBrokerageFirm", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectAllStatuses", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectBrokerageFirmsAll", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectBrokerUser", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectBrokersAll", getCurrentSessionId());
+    	
+    	return results;
+    }
+    
+    public static boolean checkStockWindowPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("insertNewStock", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectStock", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectAllStatuses", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectStockAll", getCurrentSessionId());
+    	
+    	return results;
+    }    
+    
+    public static boolean checkCustomerWindowPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("insertNewCustomerInfo", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectCustomerInfoAll", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("updateCustomerInfo", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectAllStatuses", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectCustomerInfo", getCurrentSessionId());
+    	
+    	return results;
+    } 
+    
+    public static boolean checkSellingOrderWindowPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("insertNewOrder", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("updateOrder", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectCustomerInfo", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectStock", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectOrder", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectAllStatuses", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectCustomersByFirm", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectStockAll", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectOrdersByFirmByType", getCurrentSessionId());
+    	
+    	return results;
+    } 
+    
+    public static boolean checkBuyingOrderWindowPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("insertNewOrder", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("updateOrder", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectCustomerInfo", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectStock", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectOrder", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectCustomerInfo", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectAllStatuses", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectCustomersByFirm", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectStockAll", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("selectOrdersByFirmByType", getCurrentSessionId());
+    	
+    	return results;
+    }   
+    
 }
