@@ -166,17 +166,17 @@ public class AdminController implements Initializable {
     
     @FXML 
     private void handleRandomPasswordAction(ActionEvent event) 
-    {/*
+    {
         Security security = new Security();
         Password1.setText(security.CreateRandomPassword());
         Password2.setText( Password1.getText());
         handlePasswordClassification(event);
         //Email.setText( Password1.getText());
-    */}
+    }
     
     @FXML
     private void handlePasswordClassification(ActionEvent event)
-    { /*
+    { 
         SetPasswordBarometerDefaultColor();
         String activeGrade = "-fx-border-color:#000000;";
         if (
@@ -206,7 +206,7 @@ public class AdminController implements Initializable {
                 /*case Enumeration.PasswordGrade.PASSWORD_STRENGTH_VERYSTRONG:
                     activeGrade += "-fx-background-color: #FF0000;";
                     PasswordGrade??.setStyle(activeGrade);
-                    break; *   
+                    break; */   
                     
                     
             }
@@ -216,23 +216,26 @@ public class AdminController implements Initializable {
         {
             Message.setText("Check your password. Password should be non-empty and the confirmation should be matched.");
             
-        }*/
+        }
     }
     
     @FXML
     private void handleResetPassword(ActionEvent event)
     {
-        
+        if (AdministratorsListView.getItems().isEmpty() || AdministratorsListView.getSelectionModel().getSelectedItem() == null)
+        {
+            return;
+        }
 
-            KeyValuePair keyValue = AdministratorsListView.getSelectionModel().getSelectedItem();       
-            String newPasswordMsg = "";
-            int brokerId = Integer.parseInt( keyValue.getKey());
-            Validator validator =Utility.ChangePassword(brokerId, Password1.getText(), Password2.getText());
-            if (validator.isVerified())
-            {
-                newPasswordMsg = "\nPassword is reset to " + Password2.getText();
-            }
-            Message.setText(validator.getStatus() + newPasswordMsg);
+        KeyValuePair keyValue = AdministratorsListView.getSelectionModel().getSelectedItem();       
+        String newPasswordMsg = "";
+        int adminId = Integer.parseInt( keyValue.getKey());
+        Validator validator =Utility.ChangePassword(adminId, Password1.getText(), Password2.getText());
+        if (validator.isVerified())
+        {
+            newPasswordMsg = "\nPassword is reset to " + Password2.getText();
+        }
+        Message.setText(validator.getStatus() + newPasswordMsg);
                     
 
     }
