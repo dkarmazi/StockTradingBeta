@@ -421,6 +421,54 @@ public class DatabaseConnector {
 		return brokerageFirms;
 	}
 
+        /*
+	 * This function returns an array list of the brokerage firms by status
+	 */
+	public ArrayList<BrokerageFirm> selectBrokerageFirmsByStatus(int statusId) {
+		ArrayList<BrokerageFirm> brokerageFirms = new ArrayList<BrokerageFirm>();
+		ResultSet rs = null;
+                PreparedStatement st = null;
+                
+		String query = "SELECT * FROM BROKERAGE_FIRM_INFO WHERE STATUSID = ?;"; 
+
+		try {
+                        st = this.con.prepareStatement(query);
+			st.setInt(1, statusId);
+                    
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+
+				int id = res.getInt(1);
+				String name = res.getString(2);
+				String addressStreet = res.getString(3);
+				String addressCity = res.getString(4);
+				String addressState = res.getString(5);
+				String addressZip = res.getString(6);
+				String licenceNumber = res.getString(7);
+				int status = res.getInt(8);
+
+				BrokerageFirm brokerageFirm = new BrokerageFirm();
+				brokerageFirm.setId(id);
+				brokerageFirm.setName(name);
+				brokerageFirm.setAddressStreet(addressStreet);
+				brokerageFirm.setAddressCity(addressCity);
+				brokerageFirm.setAddressState(addressState);
+				brokerageFirm.setAddressZip(addressZip);
+				brokerageFirm.setLicenceNumber(licenceNumber);
+				brokerageFirm.setStatus(status);
+
+				brokerageFirms.add(brokerageFirm);
+
+			}
+		} catch (SQLException ex) {
+			// Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			// lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return brokerageFirms;
+	}
+        
 	/*
 	 * This function returns a single brokerage firm based on a given id MySQL
 	 * injection protection

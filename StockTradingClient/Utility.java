@@ -7,6 +7,7 @@ import StockTradingCommon.Enumeration;
 import StockTradingServer.*;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -638,7 +639,9 @@ public class  Utility
         try
         {
            // records = (ArrayList<BrokerageFirm>) serverInterface.selectBrokerageFirmsAll(getCurrentSessionId()).getObject();
-        	ServerAuthRes results = serverInterface.selectBrokerageFirmsAll(getCurrentSessionId());
+        	ServerAuthRes results = serverInterface.selectBrokerageFirmsByStatus(
+                        Enumeration.BrokerageFirm.BROKERAGE_FIRM_STATUS_ACTIVE_ID,
+                        getCurrentSessionId());
 
 			if (results.isHasAccess()) {
 				records = (ArrayList<BrokerageFirm>) results.getObject();

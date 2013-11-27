@@ -140,7 +140,19 @@ public class TradingServer extends UnicastRemoteObject implements
 		return auth;
 	}
 
-	
+	@Override
+	public ServerAuthRes selectBrokerageFirmsByStatus(int status, String clientSessionID) {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectBrokerageFirmsByStatus(status));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
+	}
 //	@Override
 //	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll(String sessionID) {
 //		
