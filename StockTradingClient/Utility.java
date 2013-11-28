@@ -1498,4 +1498,44 @@ public class  Utility
     	
     	return results;
     }   
+    
+    public static boolean checkLogViewPermission() throws RemoteException
+    {
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("getLoginActivity", getCurrentSessionId());
+        results = results && serverInterface.checkPermission("getDatabaseActivity", getCurrentSessionId());
+        
+        return results;
+    } 
+    
+    public static String getAuditLogLoginActivity()
+    {
+        String logContent = null;
+        try
+        {
+            return serverInterface.getLoginActivity();
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+            logContent = "Error occurred, cannot retrieve the loging activity log.";
+        }
+        return logContent;
+    }
+    
+    public static String getAuditLogDbActivity()
+    {
+        String logContent = null;
+        try
+        {
+            return serverInterface.getDatabaseActivity();
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+            logContent = "Error occurred, cannot retrieve the Database activity log.";
+        }
+        return logContent;
+    }
 }

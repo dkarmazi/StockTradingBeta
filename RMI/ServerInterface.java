@@ -135,4 +135,9 @@ public interface ServerInterface extends Remote {
 	public ServerAuthRes logOut (String sessionID) throws RemoteException;
 
 	public boolean checkPermission (String methodName, String clientSessionID) throws RemoteException;
+        
+        public String getLoginActivity() throws RemoteException;
+
+        public String getDatabaseActivity() throws RemoteException;
+
 }

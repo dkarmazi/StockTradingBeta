@@ -84,8 +84,8 @@ public class UserActivationController implements Initializable {
     @FXML
     private void ActivateAccount(ActionEvent event) throws IOException
     {
-        // TODO
-        //if the account activation successful, redirect to the main screen.
+
+        //if the account activation successful, redirect to the main screen (or change password if expired).
         Validator validator = Utility.UnlockAccountRequest(UserEmail.getText().trim()
                                                         , Password.getText()
                                                         , ActivationCode.getText());

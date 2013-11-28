@@ -80,8 +80,8 @@ public class UserPasswordRecover implements Initializable {
     @FXML
     private void PasswordRecoveryHandle(ActionEvent event) throws IOException
     {
-        // TODO
-        //if the account activation successful, redirect to the main screen.
+
+        //if the password recovery successful, redirect to the change password screen.
         Validator validator = Utility.RecoverPasswordRequest(UserEmail.getText().trim()
                                                     , Password.getText()
                                                     , ActivationCode.getText());

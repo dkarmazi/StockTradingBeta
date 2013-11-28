@@ -1,8 +1,10 @@
 package StockTradingServer;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
 
@@ -87,9 +89,55 @@ public class LoggerCustom {
 
 	}
 	
+        // Author : Hirosh
+        // Detail : Reads the content of loging file 
+	private static String readLogFile(String fileName)
+        {
+            String fileContent = "";
+            File file = null;
+            FileReader fileReader = null;
+            try
+            {
+                file = new File(fileName);
+                // if file doesnt exists, retun file not found
+                if (!file.exists()) 
+                {       
+                    fileContent = "File not found. Cannot get the Login Activity.";
+                }
+                //char[] buff = new char[1024];
+                fileReader = new FileReader(file);
+                BufferedReader br = new BufferedReader(fileReader);
+                String line = br.readLine();
+                while (line!= null)
+                {
+                    fileContent += line + System.lineSeparator();
+                    line = br.readLine();
+                }
+                //fileReader.
+                //fileReader.read(buff);
+                //fileContent = new String(buff);
+                fileReader.close();
+                br.close();
+            }
+            catch (IOException e) 
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                
+            }
+            return fileContent;
+        }
 	
+        public static String getDatabaseActivity()
+        {
+            return readLogFile(dbLogFileName);
+        }
 	
-	
-	
+	public static String getLoginActivity()
+        {
+            return readLogFile(loginLogFileName);
+        }
 
 }

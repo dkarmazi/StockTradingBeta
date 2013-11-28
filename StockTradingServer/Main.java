@@ -21,8 +21,9 @@ public class Main {
 		//dc.forgotPassword(email);
 
 		
-		System.out.println(dc.updateUserPassword(49, "123", "123").getStatus());
-		
+		//System.out.println(dc.updateUserPassword(49, "123", "123").getStatus());
+                
+		System.out.println(LoggerCustom.getDatabaseActivity());
 		//dc.forgotPassword(email);
 		//System.out.println(dc.checkIfUsernameTempPasswordActivationCodeMatch(email, "65q0s2je5t", "1b8md4fj3j").toString());
 		

@@ -14,6 +14,7 @@ import StockTradingServer.ServerAuthRes;
 import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
 import StockTradingServer.DatabaseConnector;
+import StockTradingServer.LoggerCustom;
 import StockTradingServer.Order;
 import StockTradingServer.PasswordClassifier;
 import StockTradingServer.Sessions;
@@ -625,5 +626,16 @@ public class TradingServer extends UnicastRemoteObject implements
     	return RefMonitor.isAllowed(tradingSessions, clientSessionID, methodName);
     }
     
+    @Override
+    public String getLoginActivity() throws RemoteException
+    {
+        return LoggerCustom.getLoginActivity();
+    }
+    
+    @Override
+    public String getDatabaseActivity() throws RemoteException
+    {
+        return LoggerCustom.getDatabaseActivity();
+    }
     
 }

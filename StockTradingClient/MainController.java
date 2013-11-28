@@ -28,7 +28,7 @@ import javafx.stage.StageStyle;
 /**
  * FXML Controller class
  *
- * @author Sulochane, Kouraiem
+ * @author Hirosh, Kouraiem
  */
 public class MainController implements Initializable {
     
@@ -37,7 +37,8 @@ public class MainController implements Initializable {
     @FXML private Button Broker;
     @FXML private Button Stock;    
     @FXML private Button Administrator;
-        
+    @FXML private Button LogView;
+    
     // Only for Broker
     @FXML private Button Customer;
     @FXML private Button SellOrder;
@@ -186,7 +187,7 @@ public class MainController implements Initializable {
         stage.show();
     }
     
-        @FXML
+    @FXML
     private void handleButtonAction_btnStockView(ActionEvent event) throws IOException{
         
     	if (!Utility.checkStockViewPermission()){
@@ -200,6 +201,25 @@ public class MainController implements Initializable {
  
         stage.setScene(new Scene(root));
         stage.setTitle("View Stocks");
+        stage.initModality(Modality.NONE);
+        stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
+        stage.show();
+    }
+    
+    @FXML
+    private void handleButtonAction_btnLogView(ActionEvent event) throws IOException{
+        
+    	if (!Utility.checkLogViewPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(
+            MainController.class.getResource("LogViewer.fxml"));
+ 
+        stage.setScene(new Scene(root));
+        stage.setTitle("View System Log");
         stage.initModality(Modality.NONE);
         stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
         stage.show();
@@ -246,6 +266,7 @@ public class MainController implements Initializable {
         Broker.setVisible(true);
         Stock.setVisible(true);
         Administrator.setVisible(true);
+        LogView.setVisible(true);
         
         // Hide
         Customer.setVisible(false);
@@ -261,6 +282,7 @@ public class MainController implements Initializable {
         Broker.setVisible(false);
         Stock.setVisible(false);
         Administrator.setVisible(false);
+        LogView.setVisible(false);
         
         // Show
         Customer.setVisible(true);
@@ -276,6 +298,7 @@ public class MainController implements Initializable {
         Broker.setVisible(true);
         Stock.setVisible(true);
         Administrator.setVisible(true);
+        LogView.setVisible(true);
 
         Customer.setVisible(true);
         BuyOrder.setVisible(true);
