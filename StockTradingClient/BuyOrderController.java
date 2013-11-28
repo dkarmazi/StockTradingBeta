@@ -347,7 +347,7 @@ public class BuyOrderController implements Initializable {
     }      
     private void PopulateStocks()
     {
-        Utility.PopulateStocks(StockNameComboBox);        
+        Utility.PopulateStocksActiveOnly(StockNameComboBox);        
     } 
     private void PopulateBuyOrders()
     {

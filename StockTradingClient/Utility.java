@@ -290,6 +290,42 @@ public class  Utility
         }
         comboBox.getSelectionModel().selectFirst();
     }
+    
+        public static void PopulateStocksActiveOnly(ComboBox comboBox)
+    {
+        comboBox.getItems().clear();
+        
+        ArrayList<Stock> records = null;        
+        try
+        {
+            //records = serverInterface.selectStockAll(getCurrentSessionId());
+
+			ServerAuthRes results = serverInterface.selectStockAll
+                        (
+                                Enumeration.Status.ACTIVE
+                                , getCurrentSessionId()
+                        );
+			
+			if (results.isHasAccess()) {
+				records = (ArrayList<Stock>) results.getObject();
+			}else{
+				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+				return;
+			}
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }  
+        comboBox.getItems().add(new KeyValuePair("-1", "[Select Stock]"));
+
+        for(Stock s : records)
+        {
+            comboBox.getItems().add(new KeyValuePair(Integer.toString(s.getId()), s.getName() ));
+        }
+        comboBox.getSelectionModel().selectFirst();
+    }
+        
     public static void PopulateStocks(ListView listView)
     {
         listView.getItems().clear();
