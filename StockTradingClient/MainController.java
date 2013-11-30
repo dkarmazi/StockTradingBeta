@@ -367,18 +367,7 @@ public class MainController implements Initializable {
         stage.initModality(Modality.NONE);
         stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
         
-        
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
-                {
-                    public void handle(WindowEvent we) 
-                    {
-                        try {
-							Utility.serverInterface.endTradingSession(Utility.getCurrentSessionId());
-						} catch (RemoteException e) {
-							e.printStackTrace();
-						}
-                    }
-                });
+
         stage.show();
     	
     }

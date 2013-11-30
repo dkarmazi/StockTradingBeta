@@ -14,6 +14,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import StockTradingServer.ServerAuthRes;
 import StockTradingServer.TradingSession;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -45,8 +46,62 @@ public class TradingSessionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-    	Utility.PopulateStocksActiveOnly(allStocksListView);
-    	Utility.PopulateBrokerageFirmsActive(allFirmListView);
+    	try{
+	    	ServerAuthRes AuthRes = Utility.serverInterface.isThereActiveTradingSession(Utility.getCurrentSessionId());
+			if (AuthRes.isHasAccess()){
+				boolean thereIsSession = (boolean) AuthRes.getObject();
+				if (!thereIsSession){
+			    	Utility.PopulateStocksActiveOnly(allStocksListView);
+			    	Utility.PopulateBrokerageFirmsActive(allFirmListView);
+			    	availableStocksListView.getItems().clear();
+			    	availableFirmListView.getItems().clear();
+				}else{
+					ServerAuthRes SAR = Utility.serverInterface.getTradingSessionInfo(Utility.getCurrentSessionId());
+					if (SAR.isHasAccess()){
+						
+						TradingSession TS = (TradingSession) SAR.getObject();
+						
+						limitUp.setText(Integer.toString(TS.getLimitUp()));
+						limitDown.setText(Integer.toString(TS.getLimitDown()));
+						
+						availableStocksListView.getItems().clear();
+						for (String s : TS.getAvailableStocksNames()){
+							KeyValuePair e = new KeyValuePair("1", s);
+							availableStocksListView.getItems().add(e);
+						}
+						
+						availableFirmListView.getItems().clear();
+						for (String s : TS.getAvailableFirmsNames()){
+							KeyValuePair e = new KeyValuePair("1", s);
+							availableFirmListView.getItems().add(e);
+						}
+						
+					   	endTradingSession.setDisable(false);
+				    	
+				    	limitUp.setDisable(true);
+				    	limitDown.setDisable(true);
+				    	
+				    	allStocksListView.setDisable(true);
+				    	availableStocksListView.setDisable(true);
+				    	allFirmListView.setDisable(true);
+				    	availableFirmListView.setDisable(true);
+				    	
+				    	selectStock.setDisable(true);
+				    	unselectStock.setDisable(true);
+				    	selectFirm.setDisable(true);
+				    	unselectFirm.setDisable(true);
+				    	
+				    	startTradingSession.setDisable(true);
+				 
+						
+					}else{
+						System.out.println("NOT ENOUGH ACCESS.");
+					}
+				}
+			}
+    	}catch(Exception e){
+    		return;
+    	}
     }
     
     private boolean validInput(){
@@ -178,6 +233,13 @@ public class TradingSessionController implements Initializable {
     	unselectFirm.setDisable(false);
     	
     	startTradingSession.setDisable(false);
+    	
+    	Utility.PopulateStocksActiveOnly(allStocksListView);
+    	Utility.PopulateBrokerageFirmsActive(allFirmListView);
+    	availableStocksListView.getItems().clear();
+    	availableFirmListView.getItems().clear();
+    	limitUp.setText("");
+    	limitDown.setText("");
     }
     
 }
