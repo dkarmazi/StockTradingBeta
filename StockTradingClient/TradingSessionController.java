@@ -45,8 +45,8 @@ public class TradingSessionController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-    	Utility.PopulateStocks(allStocksListView);
-    	Utility.PopulateBrokerageFirms(allFirmListView);
+    	Utility.PopulateStocksActiveOnly(allStocksListView);
+    	Utility.PopulateBrokerageFirmsActive(allFirmListView);
     }
     
     private boolean validInput(){

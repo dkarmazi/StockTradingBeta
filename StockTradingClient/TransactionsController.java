@@ -35,29 +35,27 @@ public class TransactionsController implements Initializable {
 		if (transactionsTable.getSelectionModel().isEmpty()){
 			JOptionPane.showMessageDialog(null, "No transaction selected.");
 		}else{
-			JOptionPane.showMessageDialog(null, "Good BOY");
+			
+			Transaction t = (Transaction) transactionsTable.getSelectionModel().getSelectedItem();
+			int transID = t.getID();
+			try{
+		           ServerAuthRes results = Utility.serverInterface.rollBackTransaction(transID, Utility.getCurrentSessionId());
+		           if (results.isHasAccess()) {
+		                   boolean done = (boolean) results.getObject();
+		                   if (done){
+		                	   JOptionPane.showMessageDialog(null, "Transaction rolled back successfully.");
+		                	   handleRefreshButton();
+		                   }
+		           }else{
+		                   JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+		                   return;
+		           }
+		       }
+		       catch (RemoteException e)
+		       {
+		           e.printStackTrace();
+		       }
 		}
-//		
-//		Transaction t = (Transaction) transactionsTable.getSelectionModel().getSelectedItem();
-//		int transID = t.getID();
-//		try{
-//	           ServerAuthRes results = Utility.serverInterface.rollBackTransaction(transID, Utility.getCurrentSessionId());
-//	           if (results.isHasAccess()) {
-//	                   boolean done = (boolean) results.getObject();
-//	                   if (done){
-//	                	   JOptionPane.showMessageDialog(null, "Transaction rolled back successfully.");
-//	                	   handleRefreshButton();
-//	                   }
-//	           }else{
-//	                   JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
-//	                   return;
-//	           }
-//	       }
-//	       catch (RemoteException e)
-//	       {
-//	           e.printStackTrace();
-//	       }
-//		
 	}
 	
 	@FXML void handleRefreshButton(){
@@ -102,6 +100,9 @@ public class TransactionsController implements Initializable {
        }
 
        transactionsTable.setItems(data);
+       
+       rollBackButton.setDisable(transactionsTable.getItems().isEmpty());
+	  
    }
    
    private void initTable(){

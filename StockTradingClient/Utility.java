@@ -80,6 +80,7 @@ public class  Utility
         try
         {
            serverInterface.logOut(getCurrentSessionId());
+           currentSessionId = null;
         }
         catch (RemoteException e) 
         {

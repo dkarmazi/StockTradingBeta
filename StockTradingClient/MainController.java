@@ -364,8 +364,10 @@ public class MainController implements Initializable {
         stage.setScene(new Scene(root));
         stage.setTitle("Trading Session Manager");
         stage.setResizable(false);
-        stage.initModality(Modality.WINDOW_MODAL);
-         
+        stage.initModality(Modality.NONE);
+        stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
+        
+        
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
                 {
                     public void handle(WindowEvent we) 
@@ -383,11 +385,7 @@ public class MainController implements Initializable {
     
     @FXML
     public void handleViewSessionInfoButton(ActionEvent event) throws IOException{
-    	
-    	if (!Utility.checkTradingSessionWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
-    		return;
-    	}
+
     	 Stage stage = new Stage();
          Parent root = FXMLLoader.load(
                                  MainController.class.getResource("ViewSessionInfo.fxml")
@@ -396,7 +394,8 @@ public class MainController implements Initializable {
          stage.setScene(new Scene(root));
          stage.setTitle("Trading Session Info");
          stage.setResizable(false);
-         stage.initModality(Modality.WINDOW_MODAL);
+         stage.initModality(Modality.NONE);
+         stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
                
          stage.show();
      	
@@ -410,6 +409,11 @@ public class MainController implements Initializable {
     		return;
     	}
     	
+    	boolean isThereTradingSession = (boolean) Utility.serverInterface.isThereActiveTradingSession(Utility.getCurrentSessionId()).getObject(); 
+    	if (!isThereTradingSession){
+    		JOptionPane.showMessageDialog(null, "No active trading session.");
+    		return;
+    	}
     	 Stage stage = new Stage();
          Parent root = FXMLLoader.load(
                                  MainController.class.getResource("Transactions.fxml")
@@ -418,7 +422,8 @@ public class MainController implements Initializable {
          stage.setScene(new Scene(root));
          stage.setTitle("Trading Session Transactions");
          stage.setResizable(true);
-         stage.initModality(Modality.WINDOW_MODAL);
+         stage.initModality(Modality.NONE);
+         stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
                
          stage.show();
      	

@@ -63,6 +63,10 @@ public class Sessions {
 			int userIndex = sessionIDs.indexOf(sessionID);
 			sessionIDs.remove(userIndex);
 			loggedUsers.remove(userIndex);
+			
+//			System.out.println(sessionIDs);
+//			System.out.println(loggedUsers);
+			
 			return true;
 		}
 		return false;

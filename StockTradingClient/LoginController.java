@@ -71,8 +71,8 @@ public class LoginController implements Initializable {
                 }
             }
         );
-        //UserEmail.setText("hirosh@gwmail.gwu.edu");
-        //Password.setText("admin");
+        UserEmail.setText("ahmadko@gmail.com");
+        Password.setText("P@ssw0rd");
     }   
     
     private void ResetScreenAppearance()
@@ -125,6 +125,7 @@ public class LoginController implements Initializable {
                     {
                         // Unset the session id of the current user
                         Utility.unSetCurrentSessionId();
+                        
                     }
                 });
 
