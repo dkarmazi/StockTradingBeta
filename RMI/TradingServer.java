@@ -561,8 +561,10 @@ public class TradingServer extends UnicastRemoteObject implements
 
 			// Bind this object instance to the name "TradingServer"
 			registry.bind("TradingServer", obj);
-
+			
 			System.out.println("Trading Server bound in registry");
+			
+			
 		} catch (Exception e) {
 			System.out.println("TradingServer err: " + e.getMessage());
 			e.printStackTrace();

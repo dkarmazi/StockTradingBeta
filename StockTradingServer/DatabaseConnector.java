@@ -2813,9 +2813,7 @@ public class DatabaseConnector {
 		return matchID;
 	}
 
-	/*
-	 * This function inserts a new order to the database
-	 */
+	
 	public boolean insertNewTransaction(Transaction newTransaction) {
 
 		PreparedStatement st = null;
@@ -2895,6 +2893,7 @@ public class DatabaseConnector {
 		}
 	}
 
+	
 	public boolean updateCustomerBalance(int customerID, double newBalance){
 		PreparedStatement st = null;
 		
@@ -2925,6 +2924,38 @@ public class DatabaseConnector {
 		}
 			
 	}
+
+	public boolean updateCustomerPendingbalance(int customerID, double newPendingbalance){
+		PreparedStatement st = null;
+		
+
+		String query = "UPDATE CUSTOMER_INFO SET PENDINGBALANCE = ? WHERE ID = ?";
+
+		try {
+			st = this.con.prepareStatement(query);
+			
+			st.setDouble(1, newPendingbalance);
+			st.setInt(2, customerID);
+			
+			int res = st.executeUpdate();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+			if (res ==1 ){
+				return true;
+			}else{
+				return false;
+			}
+
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+			return false;
+		}
+			
+	}
+
 	
 	public int selectCustomerStockAmount(int customerID, int stockID){
 		int amount = -1;
@@ -3039,7 +3070,9 @@ public class DatabaseConnector {
 
 		//3-2-Update Buying Customer Balance:
 		newBalance = selectCustomerInfo(buyingCustomerID).getBalance() - (transactionAmount * price);
+		double newPendingbalance = selectCustomerInfo(buyingCustomerID).getPendingbalance() - (transactionAmount * price); 
 		updateCustomerBalance(buyingCustomerID, newBalance);
+		updateCustomerPendingbalance(buyingCustomerID, newPendingbalance);
 		
 		//3-3-Update Selling Customer Stocks:
 		int ownedAmount = selectCustomerStockAmount(sellingCustomerID, stockID);
