@@ -23,5 +23,8 @@
     <Button fx:id="Administrator" layoutX="14.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleButtonAction_btnAddAdmin" prefWidth="130.0" text="Administrator" />
     <Button fx:id="StockView" layoutX="482.0" layoutY="192.0" mnemonicParsing="false" onAction="#handleButtonAction_btnStockView" prefWidth="130.0" text="View Stocks" />
     <Button fx:id="LogView" layoutX="14.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleButtonAction_btnLogView" prefWidth="130.0" text="View Logs" />
+    <Button fx:id="TradingSession" layoutX="14.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleTradingSessionButton" prefWidth="130.0" text="Trading Session" />
+    <Button fx:id="ViewSessionInfo" layoutX="337.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleViewSessionInfoButton" prefWidth="159.0" text="Trading Session Info" />
+    <Button fx:id="Transactions" layoutX="152.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleTransactionButton" prefWidth="130.0" text="Transactions" />
   </children>
 </AnchorPane>

@@ -93,4 +93,17 @@ public class Enumeration {
             public final static int ACTIVE = 1;
             public final static int INACTIVE = 2;
         }
+
+        public static class XmlFile
+        {
+            public final static int CONFIGURATION = 5000;
+        }
+        
+        public enum MessageIcon
+        {
+            INFORMATION,
+            WARNING,
+            QUESTION ,
+            ERROR;
+        }
 }

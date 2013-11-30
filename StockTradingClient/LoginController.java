@@ -83,8 +83,6 @@ public class LoginController implements Initializable {
     @FXML
     public void Login(ActionEvent event) throws IOException
     {
-        //Security secure = new Security();
-        //System.out.println(secure.CreateRandomPassword());
         Validator loginStatus = Utility.AuthenticateUser( UserEmail.getText().trim(), Password.getText().trim() );
         
         if (loginStatus.isVerified())

@@ -7,6 +7,7 @@ import StockTradingCommon.Enumeration;
 import StockTradingServer.*;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,8 @@ import javafx.collections.ObservableList;
 
 import javax.swing.JOptionPane;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
 /**
@@ -32,7 +35,7 @@ public class  Utility
     private static String currentSessionId = null;      // keep the current users session id
     private static boolean passwordRecoverMode = false;
 
-    private static ServerInterface serverInterface = null;
+    public static ServerInterface serverInterface = null;
    //  private static DatabaseConnector dbConnector = new DatabaseConnector(); 
     
     public static void setServerInterface(ServerInterface _serverInterface) {
@@ -1437,6 +1440,7 @@ public class  Utility
     	boolean results = true;
     	
     	results = results && serverInterface.checkPermission("insertNewStock", getCurrentSessionId());
+        results = results && serverInterface.checkPermission("updateStock", getCurrentSessionId());
     	results = results && serverInterface.checkPermission("selectStock", getCurrentSessionId());
     	results = results && serverInterface.checkPermission("selectAllStatuses", getCurrentSessionId());
     	results = results && serverInterface.checkPermission("selectStockAll", getCurrentSessionId());
@@ -1489,6 +1493,15 @@ public class  Utility
     	return results;
     }   
     
+    public static boolean checkTradingSessionWindowPermission() throws RemoteException{
+    	boolean results = true;
+    	
+    	results = results && serverInterface.checkPermission("startTradingSession", getCurrentSessionId());
+    	results = results && serverInterface.checkPermission("endTradingSession", getCurrentSessionId());
+    	
+    	return results;
+    } 
+    
     public static boolean checkStockViewPermission() throws RemoteException{
     	boolean results = true;
     	
@@ -1508,6 +1521,15 @@ public class  Utility
         
         return results;
     } 
+    
+    public static boolean checkTransactionWindowPermission() throws RemoteException{
+        boolean results = true;
+        
+        results = results && serverInterface.checkPermission("rollBackTransaction", getCurrentSessionId());
+        results = results && serverInterface.checkPermission("selectTransactionAll", getCurrentSessionId());
+
+        return results;
+    }
     
     public static String getAuditLogLoginActivity()
     {

@@ -15,6 +15,9 @@ public class Main {
 		String email = "dkarmazi@gwu.edu";
 		String plainPass = "123";
 
+                
+                //ReaderXml configReader = new ReaderXml();
+                
 		
 		//System.out.println(dc.checkIfUsernamePasswordActivationCodeMatch(email, plainPass, "74f2qm78db"));
 		//System.out.println(dc.checkIfUsernamePasswordMatch(email, plainPass));
@@ -23,7 +26,7 @@ public class Main {
 		
 		//System.out.println(dc.updateUserPassword(49, "123", "123").getStatus());
                 
-		System.out.println(LoggerCustom.getDatabaseActivity());
+		//System.out.println(LoggerCustom.getDatabaseActivity());
 		//dc.forgotPassword(email);
 		//System.out.println(dc.checkIfUsernameTempPasswordActivationCodeMatch(email, "65q0s2je5t", "1b8md4fj3j").toString());
 		

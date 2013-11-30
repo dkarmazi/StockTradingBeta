@@ -20,6 +20,8 @@ import StockTradingServer.PasswordClassifier;
 import StockTradingServer.Sessions;
 import StockTradingServer.StatusesOptions;
 import StockTradingServer.Stock;
+import StockTradingServer.Transaction;
+import StockTradingServer.TradingSession;
 import StockTradingServer.User;
 import StockTradingServer.UserAdmin;
 import StockTradingServer.Validator;
@@ -29,7 +31,7 @@ public class TradingServer extends UnicastRemoteObject implements
 	private static final int PORT = 2019;
 	public Sessions tradingSessions = new Sessions();
 	public Authoriser RefMonitor = new Authoriser();
-	
+	public int tradingSessionID = -1;
 	
 	
 	// we will be reusing this class throughout all the methors
@@ -638,4 +640,134 @@ public class TradingServer extends UnicastRemoteObject implements
         return LoggerCustom.getDatabaseActivity();
     }
     
+    @Override
+    public ServerAuthRes startTradingSession (TradingSession TS, String clientSessionID) throws RemoteException{
+    	if (tradingSessionID == -1){
+    		
+    		
+    		
+	    	String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+	    	boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+	    	ServerAuthRes auth = new ServerAuthRes();
+	    	if (allowed){
+	    		auth.setObject(null);
+	    		tradingSessionID = this.dbCon.insertNewTradingSession(TS); 
+	    	}else{
+	    		auth.setObject(null);
+	    	}
+	    	auth.setHasAccess(allowed);
+	    	return auth;
+    	}else{
+    		System.out.println("Trading Session is active already.");
+    		return null;
+    	}
+    }
+    
+    
+    @Override
+    public ServerAuthRes endTradingSession (String clientSessionID) throws RemoteException{
+    	if (tradingSessionID != -1){
+	    	String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+	    	boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+	    	ServerAuthRes auth = new ServerAuthRes();
+	    	if (allowed){
+	    		auth.setObject(null);
+	    		this.dbCon.endTradingSession(tradingSessionID); 
+	    		tradingSessionID = -1;
+	    		
+	    		//calculate closing prices:
+	    		this.dbCon.calculateClosingPrices(tradingSessionID);
+	    		
+	    		//flush the pending orders:
+	    		this.dbCon.flushPendingOrders();
+	    		
+	    	}else{
+	    		auth.setObject(null);
+	    	}
+	    	auth.setHasAccess(allowed);
+	    	return auth;
+    	}else{
+    		System.out.println("No Active Trading Session.");
+    		return null;
+    	}
+    }
+    
+    @Override
+    public ServerAuthRes isThereActiveTradingSession (String clientSessionID) throws RemoteException{
+    	String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+    	boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+    	ServerAuthRes auth = new ServerAuthRes();
+    	if (allowed){
+    		boolean thereis;
+    		if (tradingSessionID != -1){
+    			thereis = true;
+    			auth.setObject(thereis);
+    		}else{
+    			thereis = false;
+    			auth.setObject(thereis);
+    		}
+    	}else{
+    		auth.setObject(null);
+    	}
+    	auth.setHasAccess(allowed);
+    	return auth;
+    }
+    
+    @Override
+    public ServerAuthRes getTradingSessionInfo (String clientSessionID) throws RemoteException{
+    	String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+    	boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+    	ServerAuthRes auth = new ServerAuthRes();
+    	if (allowed){
+    		if (tradingSessionID != -1){
+    			auth.setObject(this.dbCon.getTradingSessionInfo(tradingSessionID));
+    		}else{
+    			
+    			auth.setObject(null);
+    		}
+    	}else{
+    		auth.setObject(null);
+    	}
+    	auth.setHasAccess(allowed);
+    	return auth;
+    }
+
+
+    @Override
+    public ServerAuthRes selectTransactionAll(String clientSessionID) throws RemoteException {
+        String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.selectTransactionAll(tradingSessionID));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+                auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
+	}
+	
+	@Override 
+	public ServerAuthRes rollBackTransaction(int transID, String clientSessionID) throws RemoteException{
+        String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.rollBackTransaction(transID));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
+    }
 }

@@ -14,6 +14,8 @@ public class CustomerInfo implements Serializable {
 	private String email;
 	private String phone;
         private int firmId;
+        private double balance;
+        private double pendingbalance;
 	private int statusId;
 
 	public int getId() {
@@ -64,6 +66,24 @@ public class CustomerInfo implements Serializable {
             this.firmId = firmId;
         }
         
+        
+        
+	public double getBalance() {
+			return balance;
+		}
+
+		public void setBalance(double balance) {
+			this.balance = balance;
+		}
+
+		public double getPendingbalance() {
+			return pendingbalance;
+		}
+
+		public void setPendingbalance(double pendingbalance) {
+			this.pendingbalance = pendingbalance;
+		}
+
 	public int getStatusId() {
 		return statusId;
 	}

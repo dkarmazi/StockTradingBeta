@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="329.0000999999975" prefWidth="481.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.ViewSessionInfoController">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Label fx:id="sessionStartedAt" layoutX="14.0" layoutY="14.0" text="Session Started at:" />
+    <Label fx:id="sessionStartedAtValue" layoutX="130.0" layoutY="14.0" text="Label" />
+    <Label fx:id="limitUp" layoutX="15.0" layoutY="39.0" text="Limit Up:" />
+    <Label fx:id="limitUpValue" layoutX="130.0" layoutY="39.0" text="Label" />
+    <Label fx:id="limitDown" layoutX="14.0" layoutY="67.0" text="Limit Down:" />
+    <Label fx:id="limitDownValue" layoutX="130.0" layoutY="67.0" text="Label" />
+    <Label fx:id="availableStock" layoutX="15.0" layoutY="97.0" text="Available Stocks:" />
+    <Label fx:id="availableFirms" layoutX="260.0" layoutY="97.0" text="Available Brokerage Firms:" />
+    <ListView fx:id="availableStocksListView" layoutX="14.0" layoutY="113.0" prefHeight="200.0" prefWidth="208.0" />
+    <ListView fx:id="availableFirmsListView" layoutX="260.0" layoutY="113.0" prefHeight="200.0" prefWidth="208.0" />
+    <Label fx:id="noTradingSession" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="132.0" prefHeight="53.0" prefWidth="453.0" text="NO ACTIVE SESSION" textAlignment="CENTER" textFill="RED" textOverrun="CLIP" visible="true">
+      <font>
+        <Font size="40.0" />
+      </font>
+    </Label>
+  </children>
+</AnchorPane>

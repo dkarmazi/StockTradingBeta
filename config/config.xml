@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<stockTrading>
+    <database>  
+        <hostIP>192.30.164.204</hostIP>
+        <port>3306</port>
+        <schema>repo6545</schema>
+        <user>repo6545</user>
+        <password>MF4@2163G!8d2L4</password>
+    </database>
+    <encryption>
+        <iv>ABAFACAFAA5ABBAA</iv>
+        <key>0123456789abcdef</key>
+    </encryption>
+</stockTrading>
+
+

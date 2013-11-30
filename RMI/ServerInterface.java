@@ -11,6 +11,7 @@ import StockTradingServer.CustomerInfo;
 import StockTradingServer.Order;
 import StockTradingServer.StatusesOptions;
 import StockTradingServer.Stock;
+import StockTradingServer.TradingSession;
 import StockTradingServer.User;
 import StockTradingServer.UserAdmin;
 import StockTradingServer.Validator;
@@ -140,4 +141,15 @@ public interface ServerInterface extends Remote {
 
         public String getDatabaseActivity() throws RemoteException;
 
+        public ServerAuthRes startTradingSession (TradingSession TS, String clientSessionID) throws RemoteException;
+	
+	public ServerAuthRes endTradingSession (String clientSessionID) throws RemoteException;
+	
+	public ServerAuthRes isThereActiveTradingSession (String clientSessionID) throws RemoteException;
+	
+	public ServerAuthRes getTradingSessionInfo (String clientSessionID) throws RemoteException;
+	
+	public ServerAuthRes selectTransactionAll(String clientSessionID) throws RemoteException;
+	
+	public ServerAuthRes rollBackTransaction(int transID, String clientSessionID) throws RemoteException;
 }
