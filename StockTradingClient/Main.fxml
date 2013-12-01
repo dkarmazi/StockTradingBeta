@@ -26,6 +26,5 @@
     <Button fx:id="TradingSession" layoutX="14.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleTradingSessionButton" prefWidth="130.0" text="Trading Session" />
     <Button fx:id="ViewSessionInfo" layoutX="337.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleViewSessionInfoButton" prefWidth="159.0" text="Trading Session Info" />
     <Button fx:id="Transactions" layoutX="152.0" layoutY="294.0" mnemonicParsing="false" onAction="#handleTransactionButton" prefWidth="130.0" text="Transactions" />
-    <Button fx:id="OrderView" layoutX="18.0" layoutY="142.0" mnemonicParsing="false" onAction="#handleButtonAction_btnOrderView" prefWidth="126.0" text="View Orders" />
   </children>
 </AnchorPane>
