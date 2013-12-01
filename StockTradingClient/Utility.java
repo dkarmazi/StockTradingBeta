@@ -1085,7 +1085,7 @@ public class  Utility
     }
 
     public static void PopulateBuyingOrders(TableView tableView)
-    {
+    {//
         tableView.getItems().clear();
 
         
