@@ -46,6 +46,7 @@ public class MainController implements Initializable {
     @FXML private Button TradingSession;
     @FXML private Button Transactions;
     @FXML private Button LogView;
+    @FXML private Button OrderView;
     
     // Only for Broker
     @FXML private Button Customer;
@@ -257,6 +258,25 @@ public class MainController implements Initializable {
     }
     
     @FXML
+    private void handleButtonAction_btnOrderView(ActionEvent event) throws IOException{
+        
+    	if (!Utility.checkOrderDetailsViewPermission()){
+    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
+        Stage stage = new Stage();
+        Parent root = FXMLLoader.load(
+            MainController.class.getResource("ViewOrders.fxml"));
+ 
+        stage.setScene(new Scene(root));
+        stage.setTitle("View Pending Orders");
+        stage.initModality(Modality.NONE);
+        stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
+        stage.show();
+    }
+    
+    @FXML
     private void handleButtonAction_btnHackMode(ActionEvent event) throws IOException
     {
         if (HackMode.isSelected())
@@ -300,6 +320,7 @@ public class MainController implements Initializable {
         TradingSession.setVisible(true);
         Transactions.setVisible(true);        
         LogView.setVisible(true);
+        OrderView.setVisible(true);
         
         // Hide
         Customer.setVisible(false);
@@ -319,6 +340,7 @@ public class MainController implements Initializable {
         TradingSession.setVisible(false);
         Transactions.setVisible(false);
         LogView.setVisible(false);
+        OrderView.setVisible(false);
         
         // Show
         Customer.setVisible(true);
@@ -338,6 +360,7 @@ public class MainController implements Initializable {
         TradingSession.setVisible(true);
         Transactions.setVisible(true);
         LogView.setVisible(true);
+        OrderView.setVisible(true);
 
         Customer.setVisible(true);
         BuyOrder.setVisible(true);
