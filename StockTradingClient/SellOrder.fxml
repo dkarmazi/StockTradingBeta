@@ -41,7 +41,6 @@
                 </Label>
                 <Label fx:id="Email" prefWidth="319.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label font="$x1" text="Quantity to sell" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                <Label text="Selling Price" GridPane.columnIndex="0" GridPane.rowIndex="9" />
                 <HBox id="HBox" alignment="CENTER_RIGHT" maxWidth="+Infinity" prefWidth="-1.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="15">
                   <children>
                     <Button fx:id="btnSave" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefWidth="80.0" rotate="0.0" text="Save" />
@@ -49,7 +48,6 @@
                     <Button fx:id="btnClear" cancelButton="true" contentDisplay="LEFT" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClearButtonAction" prefWidth="80.0" text="Clear" />
                   </children>
                 </HBox>
-                <Label text="Quantity of Stocks" GridPane.columnIndex="0" GridPane.rowIndex="10" />
                 <Label text="Session Details" GridPane.columnIndex="0" GridPane.rowIndex="1">
                   <font>
                     <Font name="System Bold" size="13.0" />
@@ -71,8 +69,6 @@
                     </FXCollections>
                   </items>
                 </ChoiceBox>
-                <TextField id="StockAskPrice" fx:id="StockPrice" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                <TextField fx:id="StockQuantity" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                 <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="13" />
                 <Label prefWidth="432.0" text=" " GridPane.columnIndex="1" GridPane.rowIndex="13" />
                 <ComboBox fx:id="CustomerComboBox" onAction="#onCustomerSelected" prefWidth="432.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
@@ -85,6 +81,10 @@
                   </items>
                 </ComboBox>
                 <Label fx:id="SessionParams" prefWidth="432.0" text="Price increase: 5% | Price decrease: 5%" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label text="Quantity of Stocks" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                <TextField fx:id="StockQuantity" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                <Label text="Selling Price" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                <TextField id="StockAskPrice" fx:id="StockPrice" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="134.0" prefWidth="153.0" />
