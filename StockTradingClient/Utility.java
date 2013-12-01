@@ -1091,7 +1091,6 @@ public class  Utility
         ArrayList<Order> records = null;
         try
         {
-
             ServerAuthRes results = serverInterface.selectOrderDetailsByType
                     (
                             Enumeration.OrderType.BUYING_ORDER
