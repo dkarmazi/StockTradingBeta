@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 
 import StockTradingCommon.Enumeration;
 import StockTradingServer.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 /**
  * FXML Controller class
  *
@@ -62,6 +64,8 @@ public class BrokerController implements Initializable {
         Email.clear();  
         Password1.clear();
         Password2.clear();
+        
+        StatusChoiceBox.getSelectionModel().selectFirst();
         
         Message.setText(null);
         
@@ -223,8 +227,8 @@ public class BrokerController implements Initializable {
         PasswordGradeStrong.setStyle(defultBackground);
     }
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //passwordClassifier = new PasswordClassifier();
+    public void initialize(URL url, ResourceBundle rb) 
+    {        
         SetPasswordBarometerDefaultColor();
         
         Utility.PopulateStatus(StatusChoiceBox);
