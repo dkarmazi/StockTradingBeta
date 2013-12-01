@@ -1491,7 +1491,7 @@ public class DatabaseConnector {
 
 		PreparedStatement st = null;
 
-		String query = "SELECT PASSWORD, SALT, STATUSID, FALSELOGINS, ID, ROLEID, ACTIVATIONCODE, ACTIVATIONCODESALT, TEMPPASSWORD, TEMPPASSWORDSALT FROM USERS WHERE EMAIL = ?";
+		String query = "SELECT PASSWORD, SALT, STATUSID, FALSELOGINS, ID, ROLEID, ACTIVATIONCODE, ACTIVATIONCODESALT, TEMPPASSWORD, TEMPPASSWORDSALT, FIRMID FROM USERS WHERE EMAIL = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
@@ -1510,6 +1510,7 @@ public class DatabaseConnector {
 				String activationCodeSalt = res.getString(8);
 				String tempPassword = res.getString(9);
 				String tempPasswordSalt = res.getString(10);
+				int firmId = res.getInt(11);
 
 				user.setPassword(password);
 				user.setSalt(salt);
@@ -1519,7 +1520,8 @@ public class DatabaseConnector {
 				user.setActivationCodeSalt(activationCodeSalt);
 				user.setTempPassword(tempPassword);
 				user.setTempPasswordSalt(tempPasswordSalt);
-
+				user.setBrokerFirmId(firmId);
+				
 				user.setId(id);
 				user.setRoleId(roleId);
 			} else {
@@ -3737,7 +3739,7 @@ public class DatabaseConnector {
 		int firmId = 0;		
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT FIRMID FROM HAS_FIRM_BROKERS WHERE BROKERID = ? AND STATUSID = 1";
+		String query = "SELECT FIRMID FROM USERS WHERE ID = ?";
 
 		try {
 			st = this.con.prepareStatement(query);

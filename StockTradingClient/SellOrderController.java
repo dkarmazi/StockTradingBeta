@@ -64,8 +64,7 @@ public class SellOrderController implements Initializable {
 
     	brokerId = Utility.getCurrentUserID();
     	brokerageFirmId = Utility.getCurrentUser_BrokerageFirmID();
-    	brokerageFirmId = 11;
-    	
+
     	
     	try {
 			ServerAuthRes sar = si.getTradingSessionInfo(clientSessionID);
