@@ -1094,7 +1094,7 @@ public class  Utility
 
             ServerAuthRes results = serverInterface.selectOrderDetailsByType
                     (
-                            Enumeration.OrderType.SELLING_ORDER
+                            Enumeration.OrderType.BUYING_ORDER
                             ,getCurrentSessionId()
                     );
 
