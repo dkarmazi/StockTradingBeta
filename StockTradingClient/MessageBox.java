@@ -92,6 +92,6 @@ public class MessageBox{
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
         
-        stage.show();
+        stage.showAndWait();
     }
 }
