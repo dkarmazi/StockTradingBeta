@@ -42,6 +42,7 @@ public class TradingServer extends UnicastRemoteObject implements
 	private TradingServer() throws Exception {
 		super(PORT, new RMISSLClientSocketFactory(),
 				new RMISSLServerSocketFactory());
+		tradingSessionID = this.dbCon.getActiveTradingSessionID();
 	}
 
 	@Override
