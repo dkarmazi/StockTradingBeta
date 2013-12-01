@@ -1088,6 +1088,7 @@ public class  Utility
     {
         tableView.getItems().clear();
 
+        
         ArrayList<Order> records = null;
         try
         {
