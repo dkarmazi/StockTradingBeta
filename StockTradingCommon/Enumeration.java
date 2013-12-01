@@ -30,7 +30,7 @@ public class Enumeration {
 		public final static int BROKERAGE_FIRM_STRING_LENGTH = 128;
 		public final static int BROKERAGE_FIRM_STATUS_ACTIVE_ID = 1;
 		public final static int BROKERAGE_FIRM_STATUS_INACTIVE_ID = 2;
-                public final static int BROKERAGE_FIRM_ID_FOR_ADMIN = 19; // id of the dummy brokerage firm
+                public final static int BROKERAGE_FIRM_ID_FOR_ADMIN = 1; // id of the dummy brokerage firm
 
 	}
 

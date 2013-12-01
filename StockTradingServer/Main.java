@@ -12,13 +12,7 @@ public class Main {
 
 		DatabaseConnector dc = new DatabaseConnector();
 
-		String email = "dkarmazi@gwu.edu";
-		String plainPass = "123";
 
-                
-                //ReaderXml configReader = new ReaderXml();
-                
-		
 		//System.out.println(dc.checkIfUsernamePasswordActivationCodeMatch(email, plainPass, "74f2qm78db"));
 		//System.out.println(dc.checkIfUsernamePasswordMatch(email, plainPass));
 		//dc.forgotPassword(email);
