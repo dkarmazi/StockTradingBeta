@@ -33,7 +33,7 @@ public class BuyOrderController implements Initializable {
 	private String clientSessionID = Utility.getCurrentSessionId();
 	private int brokerId;
 	private int brokerageFirmId;
-	private int orderTypeId = 1;
+	private int orderTypeId = 2;
 
 	private int lBound;
 	private int uBound;

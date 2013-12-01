@@ -692,14 +692,15 @@ public class TradingServer extends UnicastRemoteObject implements
 	    	if (allowed){
 	    		auth.setObject(null);
 	    		this.dbCon.endTradingSession(tradingSessionID); 
-	    		tradingSessionID = -1;
 	    		
 	    		//calculate closing prices:
 	    		this.dbCon.calculateClosingPrices(tradingSessionID);
 	    		
 	    		//flush the pending orders:
 	    		this.dbCon.flushPendingOrders();
-	    		
+
+	    		tradingSessionID = -1;
+
 	    	}else{
 	    		auth.setObject(null);
 	    	}
