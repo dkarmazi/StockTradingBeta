@@ -2541,7 +2541,7 @@ public class DatabaseConnector {
 		
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT * FROM ORDERS WHERE ( (TYPEID = ?)";
+		String query = "SELECT * FROM ORDERS_M WHERE ( (TYPEID = ?)";
 				query += " AND (CUSTOMERID != ?)";
 				query += " AND (STOCKID = ?)";
 				query += " AND (AMOUNT = ?)";
@@ -2971,7 +2971,7 @@ public class DatabaseConnector {
 		
 		PreparedStatement st = null;
 		
-		String query = "TRUNCATE TABLE ORDERS";
+		String query = "TRUNCATE TABLE ORDERS_M";
 
 		try {
 			st = this.con.prepareStatement(query);
