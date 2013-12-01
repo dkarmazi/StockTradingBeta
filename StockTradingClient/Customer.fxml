@@ -36,7 +36,7 @@
               <children>
                 <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                   <children>
-                    <Button mnemonicParsing="false" onAction="#handleAddNewButtonAction" text="Add New Broker" />
+                    <Button mnemonicParsing="false" onAction="#handleAddNewButtonAction" text="Add New Customer" />
                   </children>
                 </HBox>
                 <HBox id="HBox" alignment="CENTER_RIGHT" maxWidth="+Infinity" prefWidth="-1.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="15">

@@ -40,7 +40,9 @@ public class CustomerController implements Initializable {
 	// get meta data for this user
 	private ServerInterface si = (ServerInterface) Utility.serverInterface;
 	private String clientSessionID = Utility.getCurrentSessionId();
-	private int brokerageFirmId = Utility.getCurrentUser_BrokerageFirmID();
+	private int brokerageFirmId = Utility.getCurrentUserFirmID();
+	
+	
 
 	@FXML
 	private TextField CustomerFirstName;
@@ -123,6 +125,7 @@ public class CustomerController implements Initializable {
 		}
 		customer.setBalance(balance);
 		customer.setPendingBalance(0);
+		
 		// get status from dropbox
 		if (StatusChoiceBox.getValue().getKey() != null) {
 			customer.setStatusId(Integer.parseInt(StatusChoiceBox.getValue()
@@ -238,6 +241,8 @@ public class CustomerController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
+		Message.setText("broker"+Utility.getCurrentUserFirmID());
+		
 		Utility.PopulateStatus(StatusChoiceBox);		
 		Utility.PopulateCustomers(CustomerListView,
 				Utility.getCurrentUser_BrokerageFirmID());

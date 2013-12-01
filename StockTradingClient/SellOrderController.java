@@ -27,19 +27,21 @@ import javafx.scene.control.*;
  *
  * @author Sulochane, not anymore, Dmitriy Karmazin is in control
  */
-public class SellOrderController implements Initializable {               
+public class SellOrderController implements Initializable {
 
 	private ServerInterface si = (ServerInterface) Utility.serverInterface;
 	private String clientSessionID = Utility.getCurrentSessionId();
-	private int brokerageFirmId = 11; // = Utility.getCurrentUser_BrokerageFirmID();
+	private int brokerId;
+	private int brokerageFirmId;
 	private int orderTypeId = 1;
-	private int brokerId = 49;
-	private int lBound = 5;
-	private int uBound = 5;
-	
+
+	private int lBound;
+	private int uBound;
+	private String startTime;
+
+
 
     @FXML private Label SessionStart;
-    @FXML private Label SessionEnd;
     @FXML private Label SessionParams;
     @FXML private Label Message;
     @FXML private TextField StockQuantity;
@@ -60,13 +62,34 @@ public class SellOrderController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+    	brokerId = Utility.getCurrentUserID();
+    	brokerageFirmId = Utility.getCurrentUser_BrokerageFirmID();
+    	brokerageFirmId = 11;
+    	
+    	
+    	try {
+			ServerAuthRes sar = si.getTradingSessionInfo(clientSessionID);
+		
+			if(sar.isHasAccess()) {
+				TradingSession tradingSess = (TradingSession) sar.getObject();
+				lBound = tradingSess.getLimitDown();
+				uBound = tradingSess.getLimitUp();
+				startTime = tradingSess.getStartTime().toString();
+			} else {
+				Message.setText("Authorization failed");
+				return;
+			}    	
+    	} catch (RemoteException e) {
+			Message.setText("Authorization failed");
+			return;
+		}
+    	
+    	
     	// SESSION PARAMETERS
-    	String sessStart = "Start: 2013-11-27 08:00:00";
-    	String sessEnd= "End: 2013-11-27 20:00:00";
-    	String sessParams = "Price increase: 6% | Price decrease 7%";
+    	String sessStart = "Start: " + startTime;
+    	String sessParams = "Price increase: " + uBound + "% | Price decrease " + lBound + "%";
     	
     	SessionStart.setText(sessStart);
-    	SessionEnd.setText(sessEnd);
     	SessionParams.setText(sessParams);
     	    	
     	PopulatePendingOrders(orderTypeId);

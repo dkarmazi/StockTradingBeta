@@ -56,8 +56,6 @@
                   </font>
                 </Label>
                 <Label fx:id="SessionStart" prefWidth="432.0" text="Session start:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Label fx:id="SessionEnd" prefWidth="432.0" text="Session end:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Label fx:id="SessionParams" prefWidth="432.0" text="Price increase: 5% | Price decrease: 5%" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <Label text="Select Stock" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                 <Label text="Select Customer" GridPane.columnIndex="0" GridPane.rowIndex="5">
                   <font>
@@ -86,6 +84,7 @@
                     </FXCollections>
                   </items>
                 </ComboBox>
+                <Label fx:id="SessionParams" prefWidth="432.0" text="Price increase: 5% | Price decrease: 5%" GridPane.columnIndex="1" GridPane.rowIndex="2" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="134.0" prefWidth="153.0" />

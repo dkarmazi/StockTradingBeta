@@ -814,14 +814,14 @@ public class TradingServer extends UnicastRemoteObject implements
 	@Override
 	public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) {
 		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.placeSellingOrder(o, lBoundPercent, uBoundPercent));
+		auth.setObject(this.dbCon.placeSellingOrder(o, lBoundPercent, uBoundPercent, tradingSessionID));
 		auth.setHasAccess(true);    		
 		return auth;
 	}
    	@Override
 	public ServerAuthRes placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) {
 		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.placeBuyingOrder(o, lBoundPercent, uBoundPercent));
+		auth.setObject(this.dbCon.placeBuyingOrder(o, lBoundPercent, uBoundPercent, tradingSessionID));
 		auth.setHasAccess(true);    		
 		return auth;
 	}

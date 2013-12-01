@@ -172,6 +172,14 @@ public class MainController implements Initializable {
     		return;
     	}
     	
+     	boolean isThereTradingSession = (boolean) Utility.serverInterface.isThereActiveTradingSession(Utility.getCurrentSessionId()).getObject(); 
+    	if (!isThereTradingSession){
+    		MessageBox msgBox = new MessageBox("No active trading session.", Enumeration.MessageIcon.ERROR);
+    		msgBox.Show(event);
+    		//JOptionPane.showMessageDialog(null, "No active trading session.");
+    		return;
+    	}
+    	
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("SellOrder.fxml"));
@@ -188,6 +196,14 @@ public class MainController implements Initializable {
         
     	if (!Utility.checkBuyingOrderWindowPermission()){
     		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		return;
+    	}
+    	
+     	boolean isThereTradingSession = (boolean) Utility.serverInterface.isThereActiveTradingSession(Utility.getCurrentSessionId()).getObject(); 
+    	if (!isThereTradingSession){
+    		MessageBox msgBox = new MessageBox("No active trading session.", Enumeration.MessageIcon.ERROR);
+    		msgBox.Show(event);
+    		//JOptionPane.showMessageDialog(null, "No active trading session.");
     		return;
     	}
     	

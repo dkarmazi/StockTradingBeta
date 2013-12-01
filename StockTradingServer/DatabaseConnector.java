@@ -1345,16 +1345,20 @@ public class DatabaseConnector {
                 return customer;
 	}
 
+	/**
+	 * This method inserts a new customer
+	 */
 	public Validator insertNewCustomerInfo(CustomerInfo newCustomer) {
 		Validator v = newCustomer.validate();
 		if (!v.isVerified()) {
 			return v;
 		}
 
-		PreparedStatement st = null;
-		ResultSet rs = null;
-
-		String query = "INSERT INTO CUSTOMER_INFO (FIRSTNAME, LASTNAME, EMAIL, PHONE, STATUSID) VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement st = null, st2 = null;
+		ResultSet rs = null, rs2 = null;
+		long newId = 0;
+		String query = "INSERT INTO CUSTOMER_INFO (FIRSTNAME, LASTNAME, EMAIL, PHONE, BALANCE, PENDINGBALANCE, STATUSID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		String query2 = "INSERT INTO HAS_FIRM_CUSTOMERS (FIRMID, CUSTOMERID) VALUES (?, ?)";
 
 		try {
 			st = this.con.prepareStatement(query,
@@ -1363,23 +1367,33 @@ public class DatabaseConnector {
 			st.setString(2, newCustomer.getLastName());
 			st.setString(3, newCustomer.getEmail());
 			st.setString(4, newCustomer.getPhone());
-			st.setInt(5, newCustomer.getStatusId());
+			st.setDouble(5, newCustomer.getBalance());
+			st.setDouble(6, newCustomer.getPendingBalance());
+			st.setInt(7, newCustomer.getStatusId());
 
 			int affectedRows = st.executeUpdate();
+			rs = st.getGeneratedKeys();
+			rs.next();
+			int insertId = rs.getInt(1);
+			
 
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (affectedRows == 0) {
+			
+			// insert firm
+			st2 = this.con.prepareStatement(query2,
+					Statement.RETURN_GENERATED_KEYS);			
+			st2.setInt(1, newCustomer.getFirmId());
+			st2.setInt(2, insertId);
+			int affectedRows2 = st2.executeUpdate();
+			
+	
+			if (affectedRows == 0 || affectedRows2 == 0) {
 				v.setVerified(false);
 				v.setStatus("Could not insert into the table");
 				return v;
 			}
-
-			rs = st.getGeneratedKeys();
-			rs.next();
-			rs.getLong(1);
-			// System.out.println(rs.getLong(1));
 
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
@@ -1387,7 +1401,7 @@ public class DatabaseConnector {
 		}
 
 		v.setVerified(true);
-		v.setStatus("Success");
+		v.setStatus("Record " + newId + " inserted");
 
 		return v;
 	}
@@ -1401,8 +1415,7 @@ public class DatabaseConnector {
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
-
-		String query = "UPDATE CUSTOMER_INFO SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, PHONE = ?, STATUSID = ? WHERE ID = ?";
+		String query = "UPDATE CUSTOMER_INFO SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, PHONE = ?, BALANCE = ?, PENDINGBALANCE = ?, STATUSID = ? WHERE ID = ?";
 
 		try {
 			st = this.con.prepareStatement(query,
@@ -1411,19 +1424,21 @@ public class DatabaseConnector {
 			st.setString(2, customerToUpdate.getLastName());
 			st.setString(3, customerToUpdate.getEmail());
 			st.setString(4, customerToUpdate.getPhone());
-			st.setInt(5, customerToUpdate.getStatusId());
-			st.setInt(6, idToUpdate);
+			st.setDouble(5, customerToUpdate.getBalance());
+			st.setDouble(6, customerToUpdate.getPendingBalance());
+			st.setInt(7, customerToUpdate.getStatusId());
+			st.setInt(8, idToUpdate);
 
 			int affectedRows = st.executeUpdate();
-
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not update the record");
+				return v;
+			}
+			
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (affectedRows == 0) {
-				v.setVerified(false);
-				v.setStatus("Could not insert into the table");
-				return v;
-			}
 
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
@@ -3630,7 +3645,7 @@ public class DatabaseConnector {
 	/**
 	 * Place selling order
 	 */
-	public Validator placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent) {
+	public Validator placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, int tradingSessionID) {
 		Validator v = new Validator();
 		
 		// 0. Input validation
@@ -3675,15 +3690,16 @@ public class DatabaseConnector {
 		}
 		
 		// 5. check if we can match the order right away
-		boolean matched = false;
-		if(matched) {
-			// do matching procedure
-			v.setVerified(true);
-			v.setStatus("Order matched");
+		int matchedOrderId = isThereMatch(o);
+		if(matchedOrderId == -1) {
+			// no match, insert order to db
+			v = insertNewOrder(o);
 			return v;
 		} else {
-			// insert order to db
-			v = insertNewOrder(o);
+			// there is a match
+			makeTransaction(o, matchedOrderId, tradingSessionID);
+			v.setVerified(true);
+			v.setStatus("Order has been matched");
 			return v;
 		}
 	}
@@ -3851,7 +3867,7 @@ public class DatabaseConnector {
 	/**
 	 * Place buying order
 	 */
-	public Validator placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent) {
+	public Validator placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, int tradingSessionID) {
 		Validator v = new Validator();
 	
 		// 0. Input validation
@@ -3891,26 +3907,27 @@ public class DatabaseConnector {
 			return v;			
 		}
 		
-		// 4. check if we can match the order right away
-		boolean matched = false;
-		if(matched) {
-			// do matching procedure
-			v.setVerified(true);
-			v.setStatus("Order matched");
-		} else {
-			// insert order to db
-			v = insertNewOrder(o);
-		}
-		
-		// lock money
+		// 4. lock money
 		Validator check7 = lockAmountOnCustomerAccount(customer, requiredBalance);
 		if(!check7.isVerified()) {
 			v.setVerified(false);
 			v.setStatus("Locking money failed");
 			return v;
 		}
-					
-		return v;
+
+		// 5. check if we can match the order right away
+		int matchedOrderId = isThereMatch(o);
+		if(matchedOrderId == -1) {
+			// no match, insert order to db
+			v = insertNewOrder(o);
+			return v;
+		} else {
+			// there is a match
+			makeTransaction(o, matchedOrderId, tradingSessionID);
+			v.setVerified(true);
+			v.setStatus("Order has been matched");
+			return v;
+		}					
 	}
 	
 	
