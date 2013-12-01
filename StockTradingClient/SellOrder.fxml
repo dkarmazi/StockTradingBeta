@@ -16,12 +16,12 @@
           <children>
             <VBox prefHeight="413.999755859375" prefWidth="-1.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <children>
-                <Label prefHeight="30.0" prefWidth="245.99990000000253" text="All Selling Orders" />
+                <Label prefHeight="30.0" prefWidth="245.99990000000253" text="All Selling Orders (pending)" />
                 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                   <content>
                     <AnchorPane id="Content" maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0">
                       <children>
-                        <ListView id="BrokerageFirmListView" fx:id="SellOrderListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onEditCommit="#ShowDetails" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView id="BrokerageFirmListView" fx:id="PendingOrdersListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onEditCommit="#ShowDetails" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                       </children>
                     </AnchorPane>
                   </content>
@@ -32,52 +32,60 @@
         </AnchorPane>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="469.0" prefWidth="537.0">
           <children>
-            <GridPane id="GridPane" alignment="TOP_LEFT" prefWidth="596.0" AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="14.0">
+            <GridPane id="GridPane" alignment="TOP_LEFT" prefWidth="596.0" AnchorPane.bottomAnchor="66.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
               <children>
                 <Label text="Customer Details" GridPane.columnIndex="0" GridPane.rowIndex="0">
                   <font>
                     <Font name="System Bold" size="12.0" fx:id="x1" />
                   </font>
                 </Label>
-                <Label text="Customer Name :" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <ComboBox id="StockNames" fx:id="CustomerNameComboBox" maxWidth="+Infinity" onAction="#handleShowCustomerInfo" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                  <items>
-                    <FXCollections fx:factory="observableArrayList" />
-                  </items>
-                </ComboBox>
                 <Label fx:id="Email" prefWidth="319.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Label font="$x1" text="Stock Details:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <Label font="$x1" text="Order Details:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                <Label fx:id="CurrentStockPrice" alignment="CENTER_RIGHT" prefWidth="150.0" text="0.0000" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                <Label text="Current Stock Price:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                <ComboBox id="StockNames" fx:id="StockNameComboBox" maxWidth="+Infinity" onAction="#handleShowStockInfo" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                  <items>
-                    <FXCollections fx:factory="observableArrayList" />
-                  </items>
-                </ComboBox>
-                <Label text="Stock Name :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                <Label text="Issue Date :" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                <Label text="Ask Price :" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-                <Label text="Quantity :" GridPane.columnIndex="0" GridPane.rowIndex="12" />
-                <Label text="Status :" GridPane.columnIndex="0" GridPane.rowIndex="14" />
-                <TextField fx:id="IssueDate" alignment="CENTER" maxWidth="-Infinity" prefWidth="150.0" promptText="mm-dd-yyyy" text="" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                <TextField fx:id="StockAskPrice" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-                <TextField fx:id="StockQuantity" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-                <ChoiceBox fx:id="StatusChoiceBox" mouseTransparent="false" pickOnBounds="false" prefWidth="146.49990844726562" GridPane.columnIndex="1" GridPane.rowIndex="14">
-                  <items>
-                    <FXCollections fx:factory="observableArrayList" />
-                  </items>
-                </ChoiceBox>
+                <Label font="$x1" text="Quantity to sell" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                <Label text="Selling Price" GridPane.columnIndex="0" GridPane.rowIndex="9" />
                 <HBox id="HBox" alignment="CENTER_RIGHT" maxWidth="+Infinity" prefWidth="-1.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="15">
                   <children>
                     <Button fx:id="btnSave" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefWidth="80.0" rotate="0.0" text="Save" />
-                    <Button fx:id="btnAdd" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddButtonAction" prefWidth="80.0" rotate="0.0" text="Add" />
+                    <Button fx:id="btnAdd" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#onAddButtonClick" prefWidth="80.0" rotate="0.0" text="Add" />
                     <Button fx:id="btnClear" cancelButton="true" contentDisplay="LEFT" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClearButtonAction" prefWidth="80.0" text="Clear" />
                   </children>
                 </HBox>
-                <TextField id="SettlementDate" fx:id="ExpirationDate" alignment="CENTER" maxWidth="-Infinity" prefWidth="150.0" promptText="mm-dd-yyyy" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                <Label text="Expiry Date :" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                <Label text="Quantity of Stocks" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                <Label text="Session Details" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                  <font>
+                    <Font name="System Bold" size="13.0" />
+                  </font>
+                </Label>
+                <Label fx:id="SessionStart" prefWidth="432.0" text="Session start:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label fx:id="SessionEnd" prefWidth="432.0" text="Session end:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label fx:id="SessionParams" prefWidth="432.0" text="Price increase: 5% | Price decrease: 5%" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label text="Select Stock" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                <Label text="Select Customer" GridPane.columnIndex="0" GridPane.rowIndex="5">
+                  <font>
+                    <Font size="12.0" />
+                  </font>
+                </Label>
+                <ChoiceBox fx:id="StockChoiceBox" prefWidth="432.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ChoiceBox>
+                <TextField id="StockAskPrice" fx:id="StockPrice" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                <TextField fx:id="StockQuantity" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                <Label prefWidth="432.0" text=" " GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                <ComboBox fx:id="CustomerComboBox" onAction="#onCustomerSelected" prefWidth="432.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="134.0" prefWidth="153.0" />

@@ -1,11 +1,7 @@
 package StockTradingServer;
 
-
 import java.io.Serializable;
 import java.sql.Timestamp;
-
-
-
 
 public class Order implements Serializable {
 	private int orderId;
@@ -15,11 +11,9 @@ public class Order implements Serializable {
 	private int stockId;
 	private int amount;
 	private double price;
-	private Timestamp dateIssued;
-	private Timestamp dateExpiration;
 	private int statusId;
-        private String displaySummary;
-        
+	private String displaySummary;
+
 	public int getOrderId() {
 		return orderId;
 	}
@@ -76,30 +70,14 @@ public class Order implements Serializable {
 		this.price = price;
 	}
 
-	public Timestamp getDateIssued() {
-		return dateIssued;
+	public String getDisplaySummary() {
+		return displaySummary;
 	}
 
-	public void setDateIssued(Timestamp dateIssued) {
-		this.dateIssued = dateIssued;
+	public void setDisplaySummary(String displaySummary) {
+		this.displaySummary = displaySummary;
 	}
 
-	public Timestamp getDateExpiration() {
-		return dateExpiration;
-	}
-
-	public void setDateExpiration(Timestamp dateExpiration) {
-		this.dateExpiration = dateExpiration;
-	}
-
-        public String getDisplaySummary() {
-            return displaySummary;
-        }
-
-        public void setDisplaySummary(String displaySummary) {
-            this.displaySummary = displaySummary;
-        }
-        
 	public int getStatusId() {
 		return statusId;
 	}
@@ -112,7 +90,7 @@ public class Order implements Serializable {
 
 		InputValidation iv = new InputValidation();
 		Validator vResult = new Validator();
-		Validator vTypeId, vBrokerId, vCustomerId, vStockId, vAmount, vPrice, vDateIssued, vDateExpiration, vStatusId;
+		Validator vTypeId, vBrokerId, vCustomerId, vStockId, vAmount, vPrice, vStatusId;
 
 		Boolean verified = true;
 		String status = "";
@@ -147,19 +125,7 @@ public class Order implements Serializable {
 		verified &= vPrice.isVerified();
 		status += vPrice.getStatus();
 
-		// 7. date issued
-		vDateIssued = iv.validateTimestampGeneral(this.getDateIssued(),
-				"Date Issued");
-		verified &= vDateIssued.isVerified();
-		status += vDateIssued.getStatus();
-
-		// 8. date issued
-		vDateExpiration = iv.validateTimestampGeneral(this.getDateExpiration(),
-				"Date Expiration");
-		verified &= vDateExpiration.isVerified();
-		status += vDateExpiration.getStatus();
-
-		// 9. status id
+		// 7. status id
 		vStatusId = iv.validateIntGeneral(this.getStatusId(), "Status Id");
 		verified &= vStatusId.isVerified();
 		status += vStatusId.getStatus();
@@ -183,9 +149,9 @@ public class Order implements Serializable {
 		out += "StockId: " + this.getStockId() + delimiter;
 		out += "Amount: " + this.getAmount() + delimiter;
 		out += "Price: " + this.getPrice() + delimiter;
-		out += "DateIssued: " + this.getDateIssued() + delimiter;
-		out += "DateExpiration: " + this.getDateExpiration() + delimiter;
 		out += "StatusId: " + this.getStatusId() + delimiter;
+		//out += "Display summary: " + this.getDisplaySummary() + delimiter;
+		
 		out += endOfString;
 
 		return out;

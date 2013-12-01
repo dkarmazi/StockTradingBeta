@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.util.ArrayList;
 
+import StockTradingServer.Relationship;
 import StockTradingServer.ServerAuthRes;
 import StockTradingServer.BrokerageFirm;
 import StockTradingServer.CustomerInfo;
@@ -78,10 +79,7 @@ public interface ServerInterface extends Remote {
 			throws RemoteException;
 
 	public ServerAuthRes selectOrdersAll(String clientSessionID) throws RemoteException;
-
-        public ServerAuthRes selectOrdersByFirmByType(int firmId, int orderType, String clientSessionID) 
-                        throws RemoteException;
-                
+              
 	public ServerAuthRes selectOrder(int idToSelect, String clientSessionID) throws RemoteException;
 
 	public ServerAuthRes insertNewOrder(Order newOrder, String clientSessionID) throws RemoteException;
@@ -152,4 +150,13 @@ public interface ServerInterface extends Remote {
 	public ServerAuthRes selectTransactionAll(String clientSessionID) throws RemoteException;
 	
 	public ServerAuthRes rollBackTransaction(int transID, String clientSessionID) throws RemoteException;
+
+	public ServerAuthRes selectCustomerStocks(int customerId, String sessionID) throws RemoteException;
+	public ServerAuthRes updateHasCustomerStocks(Relationship r, String sessionID) throws RemoteException;
+	public ServerAuthRes insertHasCustomerStocks(Relationship r, String sessionID) throws RemoteException;
+	public ServerAuthRes selectAllStocks(String sessionID) throws RemoteException;
+	public ServerAuthRes selectHasCustomerStocks(int customerId, int stockId, String sessionID) throws RemoteException;
+	public ServerAuthRes selectOrdersByFirmByType(int firmId, int orderType, String sessionID) throws RemoteException; // delete one above
+	public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
+	public ServerAuthRes placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
 }

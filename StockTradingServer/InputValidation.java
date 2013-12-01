@@ -63,6 +63,22 @@ public class InputValidation {
 		return v;
 	}
 
+	public Validator validateDoubleGeneralWithNull(double input, String label) {
+		String delimiter = "\n";
+		Validator v = new Validator();
+
+		v.setVerified(true);
+		v.setStatus("");
+
+		if (input < 0) {
+			v.setVerified(false);
+			v.setStatus("Error " + label
+					+ " is not a proper double. Error happened." + delimiter);
+		}
+
+		return v;
+	}
+	
        public Validator validateIntDefault(int input, int defaultValue , String label) {
 		String delimiter = "\n";
 		Validator v = new Validator();

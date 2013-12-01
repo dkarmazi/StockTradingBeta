@@ -54,7 +54,7 @@ public class UserAdmin extends User{
 		status += vStatusId.getStatus();
 
 		// 7. firm id
-                vFirmId = iv.validateIntDefault(this.getBrokerFirmId(), Enumeration.BrokerageFirm.BROKERAGE_FIRM_ID_FOR_ADMIN, "FirmId");
+        vFirmId = iv.validateIntDefault(this.getBrokerFirmId(), Enumeration.BrokerageFirm.BROKERAGE_FIRM_ID_FOR_ADMIN, "FirmId");
 		verified &= vFirmId.isVerified();
 		status += vFirmId.getStatus();
 

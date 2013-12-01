@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.CustomerController">
+<AnchorPane id="AnchorPane" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.CustomerStocksController">
   <children>
     <SplitPane dividerPositions="0.27901787088842034" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
       <items>
@@ -16,12 +16,12 @@
           <children>
             <VBox prefHeight="413.999755859375" prefWidth="-1.0" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <children>
-                <Label prefHeight="30.0" prefWidth="245.0" text="Customers in my firm:" />
+                <Label prefHeight="30.0" prefWidth="245.0" text="Stocks for customer" />
                 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                   <content>
                     <AnchorPane id="Content" maxHeight="-1.0" maxWidth="-1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0">
                       <children>
-                        <ListView fx:id="CustomerListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ListView id="CustomerListView" fx:id="CustomerStocksListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMouseClicked="#ShowDetails" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                       </children>
                     </AnchorPane>
                   </content>
@@ -34,11 +34,7 @@
           <children>
             <GridPane id="GridPane" alignment="TOP_LEFT" prefWidth="596.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="14.0">
               <children>
-                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                  <children>
-                    <Button mnemonicParsing="false" onAction="#handleAddNewButtonAction" text="Add New Broker" />
-                  </children>
-                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                 <HBox id="HBox" alignment="CENTER_RIGHT" maxWidth="+Infinity" prefWidth="-1.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="15">
                   <children>
                     <Button fx:id="btnSave" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefWidth="80.0" text="Save" />
@@ -46,29 +42,20 @@
                     <Button fx:id="btnClear" cancelButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClearButtonAction" prefWidth="80.0" text="Clear" />
                   </children>
                 </HBox>
-                <Label text="Customer Details:" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                  <font>
-                    <Font name="System Bold" size="12.0" fx:id="x1" />
-                  </font>
-                </Label>
-                <Label text="First Name:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <Label text="Last Name:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <Label font="$x1" prefWidth="117.9998779296875" text="Add New Customer" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField id="" fx:id="CustomerFirstName" maxWidth="-Infinity" prefWidth="270.0" promptText="First Name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <TextField id="" fx:id="CustomerLastName" maxWidth="-Infinity" prefWidth="270.0" promptText="Last Name" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <Label text="Email :" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                <TextField id="" fx:id="CustomerEmail" maxWidth="-Infinity" prefWidth="270.0" promptText="Email" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                <Label text="Phone:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                <TextField id="" fx:id="CustomerPhone" maxWidth="-Infinity" prefWidth="270.0" promptText="xxx-xxx-xxxx" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                <Label text="Balance:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                <TextField id="" fx:id="CustomerBalance" maxWidth="-Infinity" minWidth="-1.0" prefWidth="270.0" promptText="amount of dollars" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                <Label text="Status :" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                <ChoiceBox fx:id="StatusChoiceBox" mouseTransparent="false" pickOnBounds="false" prefWidth="146.49990844726562" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                <Label text="Select stock" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label text="Amount" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <TextField id="" fx:id="CustomerStockAmount" maxWidth="-Infinity" prefWidth="200.0" promptText="Amount of stocks" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label text="Status :" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <ChoiceBox id="StatusChoiceBox" fx:id="CustomerStocksStatusChoiceBox" mouseTransparent="false" pickOnBounds="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                   <items>
                     <FXCollections fx:factory="observableArrayList" />
                   </items>
                 </ChoiceBox>
-                <Button id="btn" fx:id="btnCustomerStocks" mnemonicParsing="false" onAction="#handleCustomerStocksButtonAction" text="Stocks for this Customer" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+                <ChoiceBox id="StatusChoiceBox" fx:id="CustomerStocksChoiceBox" mouseTransparent="false" pickOnBounds="false" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList" />
+                  </items>
+                </ChoiceBox>
               </children>
               <columnConstraints>
                 <ColumnConstraints fillWidth="true" hgrow="SOMETIMES" minWidth="170.0" />
@@ -93,11 +80,16 @@
                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
+            <Label layoutX="26.0" layoutY="10.0" text="Stock Details:">
+              <font>
+                <Font name="System Bold" size="12.0" />
+              </font>
+            </Label>
           </children>
         </AnchorPane>
       </items>
     </SplitPane>
-    <Label alignment="CENTER_LEFT" contentDisplay="LEFT" text="Customer Details" textAlignment="CENTER" textFill="#292929" textOverrun="ELLIPSIS" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="6.0">
+    <Label alignment="CENTER_LEFT" contentDisplay="LEFT" text="Customer Stock Details" textAlignment="CENTER" textFill="#292929" textOverrun="ELLIPSIS" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="6.0">
       <font>
         <Font name="Candara Bold" size="16.0" />
       </font>

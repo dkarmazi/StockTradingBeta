@@ -4,373 +4,329 @@
  */
 package StockTradingClient;
 
+import RMI.ServerInterface;
 import StockTradingCommon.Enumeration;
 import StockTradingServer.*;
+
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-
 /**
  * FXML Controller class
  *
- * @author Sulochane
+ * @author Sulochane, not anymore, Dmitriy Karmazin is in control
  */
 public class BuyOrderController implements Initializable {               
 
-    
-    @FXML private TextField IssueDate;  
-    @FXML private TextField ExpirationDate;
-    @FXML private TextField StockBidPrice;  
-    @FXML private TextField StockQuantity;      
+	private ServerInterface si = (ServerInterface) Utility.serverInterface;
+	private String clientSessionID = Utility.getCurrentSessionId();
+	private int brokerageFirmId = 11; // = Utility.getCurrentUser_BrokerageFirmID();
+	private int orderTypeId = 2;
+	private int brokerId = 49;
+	private int lBound = 5;
+	private int uBound = 5;
+	
 
-    @FXML private ChoiceBox<KeyValuePair> StatusChoiceBox = new ChoiceBox<>();
-    @FXML private ListView<KeyValuePair> BuyOrderListView = new ListView<>();  
-    @FXML private ComboBox<KeyValuePair> CustomerNameComboBox = new ComboBox<>(); 
-    @FXML private ComboBox<KeyValuePair> StockNameComboBox = new ComboBox<>(); 
-    
+    @FXML private Label SessionStart;
+    @FXML private Label SessionEnd;
+    @FXML private Label SessionParams;
     @FXML private Label Message;
-    @FXML private Label Email;
-    @FXML private Label CurrentStockPrice;
-        
-    
+    @FXML private TextField StockQuantity;
+    @FXML private TextField StockPrice;
+    @FXML private ListView<KeyValuePair> PendingOrdersListView = new ListView<>();  
+    @FXML private ComboBox<KeyValuePair> CustomerComboBox = new ComboBox<>();
+    @FXML private ChoiceBox<KeyValuePair> StockChoiceBox = new ChoiceBox<>();
     @FXML private Button btnAdd;
     @FXML private Button btnSave;
     @FXML private Button btnClear;
     
-    @FXML
-    private void handleClearButtonAction(ActionEvent event) 
-    {
 
-        Email.setText(null);  
+    
+    
+    /**
+     * START SCREEN
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
 
-        IssueDate.clear();
-        ExpirationDate.clear();
-        StockBidPrice.clear(); 
-        StockQuantity.clear(); 
-        
-        CurrentStockPrice.setText(null);      
-        Message.setText(null);       
-               
-        SetScreenModeAddNew();
-        
+    	// SESSION PARAMETERS
+    	String sessStart = "Start: 2013-11-27 08:00:00";
+    	String sessEnd= "End: 2013-11-27 20:00:00";
+    	String sessParams = "Price increase: 6% | Price decrease 7%";
+    	
+    	SessionStart.setText(sessStart);
+    	SessionEnd.setText(sessEnd);
+    	SessionParams.setText(sessParams);
+    	    	
+    	PopulatePendingOrders(orderTypeId);
+    	PopulateCustomers();
+    	SetScreenModeAddNew();
     }
+
+    
+    
+    
+    
+    public void onCustomerSelected() {
+    	StockChoiceBox.setDisable(false);
+    	int customerId = Integer.parseInt(CustomerComboBox.getValue().getKey());
+    	PopulateStocks(customerId);
+    }
+    
+    
+    
+    public void onAddButtonClick() {
+    	// raw input
+    	String rCustomerId, rStockId, rAmount, rPrice;
+		rCustomerId = CustomerComboBox.getValue().getKey();
+		rStockId = StockChoiceBox.getValue().getKey();
+		rAmount = StockQuantity.getText();
+		rPrice = StockPrice.getText();
+
+		// initial input validation
+		if (!isNumeric(rCustomerId) || !isNumeric(rStockId) || !isNumeric(rAmount)) {
+			Message.setText("Quantity can be integer only");
+			return;
+		}
+		
+		// initial input validation
+		if (!isDouble(rPrice)) {
+			Message.setText("Price can be numeric only");
+			return;
+		}
+		
+		// get proper formating
+		int iCustomerId = Integer.parseInt(rCustomerId);
+		int iStockId = Integer.parseInt(rStockId);
+		int iAmount = Integer.parseInt(rAmount);
+		double iPrice = Double.parseDouble(rPrice);
+				
+		
+		Order o = new Order();
+		o.setTypeId(orderTypeId);
+		o.setBrokerId(brokerId);
+		o.setCustomerId(iCustomerId);
+		o.setStockId(iStockId);
+		o.setAmount(iAmount);
+		o.setPrice(iPrice);
+		o.setStatusId(1);
+				
+		try {
+			ServerAuthRes sar = si.placeBuyingOrder(o, lBound, uBound, clientSessionID);
+
+			if(sar.isHasAccess()) {
+				Validator v = (Validator) sar.getObject();
+				
+				if(!v.isVerified()) {
+					Message.setText(v.getStatus());
+					return;
+				} else {
+					Message.setText("Record added");
+					SetScreenModeAddNew();
+					return;
+				}
+				
+			} else {
+				Message.setText("Authorization failed");
+				return;				
+			}
+		
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    
+    
+    
+    
+    
+	public void PopulatePendingOrders(int typeId) {
+
+		ServerAuthRes sar;
+		
+		try {
+			sar = si.selectOrdersByFirmByType(brokerageFirmId, typeId, clientSessionID);
+
+			if(sar.isHasAccess()) {
+				ArrayList<Order> allPendingOrders = (ArrayList<Order>) sar.getObject();			 
+				for (Order order : allPendingOrders) {
+					PendingOrdersListView.getItems().add(
+							new KeyValuePair(Integer.toString(order.getOrderId()),
+									order.getDisplaySummary()));
+				}				
+			} else {
+				Message.setText("Authorization failed");
+			}
+
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void PopulateCustomers() {
+		try {
+			ServerAuthRes sar = si.selectCustomersByFirm(brokerageFirmId, clientSessionID);
+
+			if(sar.isHasAccess()) {
+				ArrayList<CustomerInfo> allCustomers = (ArrayList<CustomerInfo>) sar.getObject();
+				
+				CustomerComboBox.getItems().clear();
+		        
+		        for(CustomerInfo c : allCustomers) {
+		        	CustomerComboBox.getItems().add(new KeyValuePair(Integer.toString(c.getId()), c.getFirstName() + " " + c.getLastName()));
+		        }
+			} else {
+				Message.setText("Authorization failed");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void PopulateStocks(int customerId) {
+		try {
+			ServerAuthRes sar = si.selectCustomerStocks(customerId, clientSessionID);
+			
+
+			if(sar.isHasAccess()) {
+              ArrayList<Stock> allStocks = (ArrayList<Stock>) sar.getObject();
+				
+              StockChoiceBox.getItems().clear();
+		        
+		        for(Stock c : allStocks) {
+		        	StockChoiceBox.getItems().add(new KeyValuePair(Integer.toString(c.getId()), c.getName()));
+		        }
+			} else {
+				Message.setText("Authorization failed");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+		
+		
+		
+		
+		
+		
+		
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    @FXML
+    private void handleClearButtonAction(ActionEvent event) {
+
+    	StockQuantity.setText(null);
+    	StockPrice.setText(null);
+    	PendingOrdersListView.getSelectionModel().clearSelection();
+    	CustomerComboBox.getSelectionModel().clearSelection();
+    	StockChoiceBox.getSelectionModel().clearSelection();
+    	btnSave.setDisable(true);    
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     @FXML 
     private void handleAddButtonAction(ActionEvent event) throws Exception
     {
-        String errorMessage ="";
-        Order order = new Order();
-        
-        // TODO: Set customer id
-        if(CustomerNameComboBox.getValue().getKey() != null)
-        {
-            order.setCustomerId( Integer.parseInt(CustomerNameComboBox.getValue().getKey()));
-        }
-
-        if(StockNameComboBox.getValue().getKey() != null)
-        {
-            order.setStockId( Integer.parseInt(StockNameComboBox.getValue().getKey()));
-        }  
-        
-        if (Utility.isNumber(StockQuantity.getText()))
-        {
-            order.setAmount(Integer.parseInt( StockQuantity.getText()));
-        }
-        else
-        {
-             errorMessage += "Invalid Stock Quantity.";
-        }
-        
-        if (Utility.isNumber(StockBidPrice.getText()))
-        {
-             order.setPrice(Double.parseDouble( StockBidPrice.getText()));
-        }
-        else
-        {
-             errorMessage += System.lineSeparator() + "Invalid Bid Price.";
-        }
-        
-        if (!Utility.isValidDate(IssueDate.getText()))
-        {
-            errorMessage += "Invalid date format in Settlement Date. It should be in the form of MM-DD-YYYY.";
-        }
-        
-        if (!Utility.isValidDate(ExpirationDate.getText()))
-        {
-            errorMessage += System.lineSeparator() + "Invalid date format in Expiration Date. It should be in the form of MM-DD-YYYY.";
-        }
-        
-        if (!errorMessage.isEmpty())
-        {
-            Message.setText(errorMessage);
-            return;
-        }
-        
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-        java.util.Date settleDate = null;    
-        java.util.Date expiryDate = null;
-        try
-        {
-            settleDate = dateFormat.parse(IssueDate.getText());
-            expiryDate = dateFormat.parse(ExpirationDate.getText());
-        }
-        catch (ParseException ex)
-        {
-            Message.setText("Invalid Date, Please check the format.");
-            return;
-        }
-        //java.sql.Date sqlSettleDate = new java.sql.Date(settleDate.getTime());
-        //java.sql.Date sqlExpiryDate = new java.sql.Date(expiryDate.getTime());
-       
-        Timestamp sqlSettleDate = new Timestamp(settleDate.getTime());
-        Timestamp sqlExpiryDate = new Timestamp(expiryDate.getTime());
-        order.setDateIssued(sqlSettleDate );        
-        order.setDateExpiration(sqlExpiryDate );
-        if(StatusChoiceBox.getValue().getKey() != null)
-        {
-            order.setStatusId( Integer.parseInt(StatusChoiceBox.getValue().getKey()));
-        }
-        
-        Message.setText(Enumeration.Database.DB_REQUEST_INITIATED);
-        Validator validator = Utility.AddBuyingOrder(order);
-        if (validator.isVerified())
-        {
-            PopulateBuyOrders();
-            Message.setText(Enumeration.Database.DB_INSERT_SUCCESS);
-        }
-        else
-        {
-            Message.setText(validator.getStatus());
-        }         
     }
     
     @FXML
     private void handleSaveButtonAction(ActionEvent event) throws Exception
     {            
-        String errorMessage = "";
-        
-        if (BuyOrderListView.getItems().isEmpty() || BuyOrderListView.getSelectionModel().getSelectedItem() == null)
-        {
-            Message.setText("Please select the buying order that you want to edit.");
-            return;
-        }
-        
-        KeyValuePair keyValue = BuyOrderListView.getSelectionModel().getSelectedItem();        
-        
-        if (keyValue.getKey() == null)
-        {
-            Message.setText("Cannot find the Order ID.");
-            return;
-        }
-        
-        Order order = new Order();
-        
-        order.setOrderId(Integer.parseInt(keyValue.getKey()));     
-        
-        if(CustomerNameComboBox.getValue().getKey() != null)
-        {
-            order.setCustomerId( Integer.parseInt(CustomerNameComboBox.getValue().getKey()));
-        }
-
-        if(StockNameComboBox.getValue().getKey() != null)
-        {
-            order.setStockId( Integer.parseInt(StockNameComboBox.getValue().getKey()));
-        }
-        
-        if (Utility.isNumber(StockQuantity.getText()))
-        {
-            order.setAmount(Integer.parseInt( StockQuantity.getText()));
-        }
-        else
-        {
-             errorMessage += "Invalid Stock Quantity.";
-        }
-        
-        if (Utility.isNumber(StockBidPrice.getText()))
-        {
-             order.setPrice(Double.parseDouble( StockBidPrice.getText()));
-        }
-        else
-        {
-             errorMessage += System.lineSeparator() + "Invalid Bid Price.";
-        }
-        
-        if (!Utility.isValidDate(IssueDate.getText()))
-        {
-            errorMessage += System.lineSeparator() + "Invalid date format in Settlement Date.";
-        }
-        
-        if (!Utility.isValidDate(ExpirationDate.getText()))
-        {
-            errorMessage += System.lineSeparator() + "Invalid date format in Expiration Date." ;
-        }
-        
-        if (!errorMessage.isEmpty())
-        {
-            System.out.println(errorMessage);
-            Message.setText(errorMessage);
-            return;
-        }
-        
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-        java.util.Date settleDate = null;    
-        java.util.Date expiryDate = null;
-        try
-        {
-            settleDate = dateFormat.parse(IssueDate.getText());
-            expiryDate = dateFormat.parse(ExpirationDate.getText());
-        }
-        catch (ParseException ex)
-        {
-            Message.setText("Invalid Date, Please check the format.");
-            return;
-        }
-       
-        Timestamp sqlSettleDate = new Timestamp(settleDate.getTime());
-        Timestamp sqlExpiryDate = new Timestamp(expiryDate.getTime());
-        
-        order.setDateIssued(sqlSettleDate );        
-        order.setDateExpiration(sqlExpiryDate );
-        if(StatusChoiceBox.getValue().getKey() != null)
-        {
-            order.setStatusId( Integer.parseInt(StatusChoiceBox.getValue().getKey()));
-        }
-        
-        Message.setText(Enumeration.Database.DB_REQUEST_INITIATED);
-        Validator validator = Utility.UpdateBuyingOrder(order);
-        if (validator.isVerified())
-        {
-            PopulateBuyOrders();
-            Message.setText(Enumeration.Database.DB_UPDATE_SUCCESS);
-        }
-        else
-        {
-            Message.setText(validator.getStatus());
-        }  
-        BuyOrderListView.getSelectionModel().select(keyValue);  // keep the last edited item selected. 
-        
+    
     }
     
     @FXML
     private void handleShowCustomerInfo()
     {
-        if(
-                (CustomerNameComboBox.getValue().getKey() != null) &&
-                (!CustomerNameComboBox.getValue().getKey().equals("-1") )
-          )
-        {
-            int customerId = Integer.parseInt(CustomerNameComboBox.getValue().getKey());
-            CustomerInfo customer = Utility.GetCustomerInfo(customerId);
-            Email.setText(customer.getEmail());
-        }
-        else
-        {
-            Email.setText(null);
-        }        
     }
     
     @FXML
     private void handleShowStockInfo()
     {
-        if( 
-                (StockNameComboBox.getValue().getKey() != null  ) &&
-                (StockNameComboBox.getValue().getKey() != "-1"  )
-          )      
-        {
-            int stockId = Integer.parseInt(StockNameComboBox.getValue().getKey());
-            Stock stock = Utility.GetStockInfo(stockId);
-           
-            CurrentStockPrice.setText(Utility.FormatNumber(stock.getPrice()));
-        }
-        else
-        {
-            CurrentStockPrice.setText(null);
-        }  
     }
     
     @FXML
     public void ShowDetails()
     {
-        if (BuyOrderListView.getItems().isEmpty() || BuyOrderListView.getSelectionModel().getSelectedItem() == null)
-        {
-            return;
-        }
-        
-        KeyValuePair keyValue = BuyOrderListView.getSelectionModel().getSelectedItem();       
-       
-        Order order = Utility.GetBuyingOrder(Integer.parseInt( keyValue.getKey()));
-        
-        StockQuantity.setText(Integer.toString( order.getAmount()));
-        
-        StockBidPrice.setText(Double.toString( order.getPrice() ));        
-                
-        ExpirationDate.setText(new SimpleDateFormat("MM-dd-yyyy").format(order.getDateExpiration()));
-        IssueDate.setText(new SimpleDateFormat("MM-dd-yyyy").format(order.getDateIssued())); 
-        
-        Utility.SelectKey(CustomerNameComboBox, order.getCustomerId());
-        Utility.SelectKey(StockNameComboBox, order.getStockId());
-        
-
-        CustomerInfo customer = Utility.GetCustomerInfo(order.getCustomerId() );
-        Email.setText(customer.getEmail());                
-        
-        StatusChoiceBox.getSelectionModel().select(order.getStatusId());
-        
-        Message.setText(null);
-        
-        SetScreenModeEdit();   
-    }
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        PopulateBuyOrders();
-        PopulateCustomers();
-        PopulateStocks();
-        PopulateStatus();
-        SetScreenModeAddNew();              
     }
     
-    private void PopulateStatus()
-    {
-        Utility.PopulateStatus(StatusChoiceBox);        
-    }   
-    private void PopulateCustomers()
-    {        
-        Utility.PopulateCustomersOfFirm(CustomerNameComboBox);        
-    }      
     private void PopulateStocks()
     {
-        Utility.PopulateStocksActiveOnly(StockNameComboBox);        
     } 
-    private void PopulateBuyOrders()
+    private void PopulateSellOrders()
     {
-        Utility.PopulateBuyingOrdersByBrokerageFirm(BuyOrderListView);
-    }
-    private void SetScreenModeAddNew()
-    {
-        btnAdd.disableProperty().set(false);    // Add Enabled
-        btnSave.disableProperty().set(true);    // Save Disabled
-        
-        StatusChoiceBox.getSelectionModel().selectFirst();
-        if (BuyOrderListView.getItems().size()>0)
-        {
-            BuyOrderListView.getSelectionModel().select(null);
-        }
-        
-        CustomerNameComboBox.getSelectionModel().selectFirst();
-        StockNameComboBox.getSelectionModel().selectFirst();
     }
     
-    private void SetScreenModeEdit()
-    {
-        btnAdd.disableProperty().set(true);    // Add Disabled
-        btnSave.disableProperty().set(false);    // Save Enabled
+    
+    
+    
+    
+    
+    /**
+	 * SERVICE FUNCTIONS
+	 */
+	public static boolean isNumeric(String str) {
+		try {
+			int d = Integer.parseInt(str);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean isDouble(String str) {
+		try {
+			double d = Double.parseDouble(str);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+    
+    
+    private void SetScreenModeAddNew() {
+    	PopulatePendingOrders(orderTypeId);
+    	StockChoiceBox.setDisable(true);
+    	btnSave.setDisable(true);    	
+    }
+    
+    private void SetScreenModeEdit() {
+    	CustomerComboBox.setDisable(true);
+    	StockChoiceBox.setDisable(true);
+    	btnAdd.setDisable(true);
     }    
 }

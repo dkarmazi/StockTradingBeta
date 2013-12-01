@@ -1172,262 +1172,7 @@ public class DatabaseConnector {
 		return v;
 	}
 
-	/*
-	 * This functions returns an array list of all the orders
-	 */
-	public ArrayList<Order> selectOrdersAll() {
-		ArrayList<Order> ordersAll = new ArrayList<Order>();
-		Statement st = null;
-		ResultSet rs = null;
-		String query = "SELECT * FROM ORDERS WHERE STATUSID = 1";
 
-		try {
-			st = this.con.createStatement();
-			ResultSet res = st.executeQuery(query);
-
-			while (res.next()) {
-				int orderId = res.getInt(1);
-				int typeId = res.getInt(2);
-				int brokerId = res.getInt(3);
-				int customerId = res.getInt(4);
-				int stockId = res.getInt(5);
-				int amount = res.getInt(6);
-				double price = res.getDouble(7);
-				Timestamp dateIssued = res.getTimestamp(8);
-				Timestamp dateExpiration = res.getTimestamp(9);
-				int statusId = res.getInt(10);
-
-				Order order = new Order();
-				order.setOrderId(orderId);
-				order.setTypeId(typeId);
-				order.setBrokerId(brokerId);
-				order.setCustomerId(customerId);
-				order.setStockId(stockId);
-				order.setAmount(amount);
-				order.setPrice(price);
-				order.setDateIssued(dateIssued);
-				order.setDateExpiration(dateExpiration);
-				order.setStatusId(statusId);
-
-				ordersAll.add(order);
-			}
-		} catch (SQLException ex) {
-			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
-			lgr.log(Level.WARNING, ex.getMessage(), ex);
-		}
-
-		return ordersAll;
-	}
-
-	/*
-	 * This functions returns an array list of all the orders belongs to a
-	 * particular firm
-	 */
-	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) {
-		ArrayList<Order> ordersAll = new ArrayList<Order>();
-		Statement st = null;
-		ResultSet rs = null;
-		String query = "SELECT O.*, S.NAME, C.FIRSTNAME, C.LASTNAME "
-				+ " FROM ORDERS O " + " INNER JOIN HAS_FIRM_BROKERS HFB"
-				+ " ON (O.BROKERID = HFB.BROKERID)" + " INNER JOIN STOCKS S"
-				+ " ON (O.STOCKID = S.ID)" + " INNER JOIN CUSTOMER_INFO C"
-				+ " ON (O.CUSTOMERID = C.ID)" + " WHERE HFB.FIRMID = " + firmId
-				// + " AND O.STATUSID = 1"
-				+ " AND O.TYPEID = " + orderType;
-
-		try {
-			st = this.con.createStatement();
-			ResultSet res = st.executeQuery(query);
-
-			while (res.next()) {
-				int orderId = res.getInt(1);
-				int typeId = res.getInt(2);
-				int brokerId = res.getInt(3);
-				int customerId = res.getInt(4);
-				int stockId = res.getInt(5);
-				int amount = res.getInt(6);
-				double price = res.getDouble(7);
-				Timestamp dateIssued = res.getTimestamp(8);
-				Timestamp dateExpiration = res.getTimestamp(9);
-				int statusId = res.getInt(10);
-				String stockName = res.getString("NAME");
-				String customer = res.getString("FIRSTNAME") + " "
-						+ res.getString("LASTNAME");
-				String displaySummary = stockName + "["
-						+ new DecimalFormat("#,##0").format(amount) + " @ "
-						+ new DecimalFormat("#,##0.00").format(price) + "] ::"
-						+ customer;
-
-				Order order = new Order();
-				order.setOrderId(orderId);
-				order.setTypeId(typeId);
-				order.setBrokerId(brokerId);
-				order.setCustomerId(customerId);
-				order.setStockId(stockId);
-				order.setAmount(amount);
-				order.setPrice(price);
-				order.setDateIssued(dateIssued);
-				order.setDateExpiration(dateExpiration);
-				order.setStatusId(statusId);
-				order.setDisplaySummary(displaySummary);
-
-				ordersAll.add(order);
-			}
-		} catch (SQLException ex) {
-			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
-			lgr.log(Level.WARNING, ex.getMessage(), ex);
-		}
-
-		return ordersAll;
-	}
-
-	/*
-	 * This function returns a particular order
-	 */
-	public Order selectOrder(int idToSelect) {
-		Order order = new Order();
-
-		PreparedStatement st = null;
-		ResultSet rs = null;
-		String query = "SELECT * FROM ORDERS WHERE ORDERID = ?";
-
-		try {
-			st = this.con.prepareStatement(query);
-			st.setInt(1, idToSelect);
-			ResultSet res = st.executeQuery();
-
-			res.next();
-
-			int orderId = res.getInt(1);
-			int typeId = res.getInt(2);
-			int brokerId = res.getInt(3);
-			int customerId = res.getInt(4);
-			int stockId = res.getInt(5);
-			int amount = res.getInt(6);
-			double price = res.getDouble(7);
-			Timestamp dateIssued = res.getTimestamp(8);
-			Timestamp dateExpiration = res.getTimestamp(9);
-			int statusId = res.getInt(10);
-
-			order.setOrderId(orderId);
-			order.setTypeId(typeId);
-			order.setBrokerId(brokerId);
-			order.setCustomerId(customerId);
-			order.setStockId(stockId);
-			order.setAmount(amount);
-			order.setPrice(price);
-			order.setDateIssued(dateIssued);
-			order.setDateExpiration(dateExpiration);
-			order.setStatusId(statusId);
-
-		} catch (SQLException ex) {
-			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
-			lgr.log(Level.WARNING, ex.getMessage(), ex);
-		}
-
-		return order;
-	}
-
-	/*
-	 * This function inserts a new order to the database
-	 */
-	public Validator insertNewOrder(Order newOrder) {
-		Validator v = newOrder.validate();
-		if (!v.isVerified()) {
-			return v;
-		}
-
-		PreparedStatement st = null;
-		ResultSet rs = null;
-
-		String query = "INSERT INTO ORDERS (TYPEID, BROKERID, CUSTOMERID, STOCKID, AMOUNT, PRICE, DATEISSUED, DATEEXPIRATION, STATUSID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-		try {
-			st = this.con.prepareStatement(query,
-					Statement.RETURN_GENERATED_KEYS);
-			st.setInt(1, newOrder.getTypeId());
-			st.setInt(2, newOrder.getBrokerId());
-			st.setInt(3, newOrder.getCustomerId());
-			st.setInt(4, newOrder.getStockId());
-			st.setInt(5, newOrder.getAmount());
-			st.setDouble(6, newOrder.getPrice());
-			st.setTimestamp(7, newOrder.getDateIssued());
-			st.setTimestamp(8, newOrder.getDateExpiration());
-			st.setInt(9, newOrder.getStatusId());
-
-			System.out.println(st.toString());
-
-			int affectedRows = st.executeUpdate();
-
-			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
-			logger.logDatabaseActivity(st.toString());
-
-			if (affectedRows == 0) {
-				v.setVerified(false);
-				v.setStatus("Could not insert into the table");
-				return v;
-			}
-
-		} catch (SQLException ex) {
-			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
-			lgr.log(Level.WARNING, ex.getMessage(), ex);
-		}
-
-		v.setVerified(true);
-		v.setStatus("Success");
-
-		return v;
-	}
-
-	/*
-	 * This function updates an order
-	 */
-	public Validator updateOrder(int idToUpdate, Order order) {
-		Validator v = order.validate();
-		if (!v.isVerified()) {
-			return v;
-		}
-
-		PreparedStatement st = null;
-		ResultSet rs = null;
-
-		String query = "UPDATE ORDERS SET TYPEID = ?, BROKERID = ?, CUSTOMERID = ?, STOCKID = ?, AMOUNT = ?, PRICE = ?, DATEISSUED = ?, DATEEXPIRATION = ?, STATUSID = ? WHERE ORDERID = ?";
-
-		try {
-			st = this.con.prepareStatement(query,
-					Statement.RETURN_GENERATED_KEYS);
-			st.setInt(1, order.getTypeId());
-			st.setInt(2, order.getBrokerId());
-			st.setInt(3, order.getCustomerId());
-			st.setInt(4, order.getStockId());
-			st.setInt(5, order.getAmount());
-			st.setDouble(6, order.getPrice());
-			st.setTimestamp(7, order.getDateIssued());
-			st.setTimestamp(8, order.getDateExpiration());
-			st.setInt(9, order.getStatusId());
-			st.setInt(10, idToUpdate);
-
-			int affectedRows = st.executeUpdate();
-
-			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
-			logger.logDatabaseActivity(st.toString());
-
-			if (affectedRows == 0) {
-				v.setVerified(false);
-				v.setStatus("Could not update the table");
-				return v;
-			}
-
-		} catch (SQLException ex) {
-			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
-			lgr.log(Level.WARNING, ex.getMessage(), ex);
-		}
-
-		v.setVerified(true);
-		v.setStatus("Success");
-
-		return v;
-	}
 
 	/*
 	 * This function returns an array list of all active customers of a given
@@ -1580,13 +1325,15 @@ public class DatabaseConnector {
 				double pendingbalance = res.getDouble(7);
 				int statusId = res.getInt(8);
 	
+				
+				
 				customer.setId(id);
 				customer.setFirstName(firstName);
 				customer.setLastName(lastName);
 				customer.setEmail(email);
 				customer.setPhone(phone);
 				customer.setBalance(balance);
-				customer.setPendingbalance(pendingbalance);
+				customer.setPendingBalance(pendingbalance);
 				customer.setStatusId(statusId);
 			}
 		} catch (SQLException ex) {
@@ -2862,38 +2609,6 @@ public class DatabaseConnector {
 		}
 	}
 	
-	public boolean deleteOrder(int orderID){
-	
-		PreparedStatement st = null;
-		
-
-		String query = "DELETE FROM ORDERS WHERE ORDERID = ?";
-
-		try {
-			st = this.con.prepareStatement(query);
-			
-			st.setInt(1, orderID);
-			
-			
-			int res = st.executeUpdate();
-			
-			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
-			logger.logDatabaseActivity(st.toString());
-
-			if (res ==1 ){
-				return true;
-			}else{
-				return false;
-			}
-
-		} catch (SQLException ex) {
-			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
-			lgr.log(Level.WARNING, ex.getMessage(), ex);
-			return false;
-		}
-	}
-
-	
 	public boolean updateCustomerBalance(int customerID, double newBalance){
 		PreparedStatement st = null;
 		
@@ -3049,7 +2764,11 @@ public class DatabaseConnector {
 		newTransaction.setStockID(newOrder.getStockId());
 		newTransaction.setAmount(newOrder.getAmount());
 		newTransaction.setPrice(newOrder.getPrice());
-		newTransaction.setTime(newOrder.getDateIssued());
+		
+		java.util.Date date = new java.util.Date();
+		Timestamp currentDate = new Timestamp(date.getTime());
+		
+		newTransaction.setTime(currentDate);
 		newTransaction.setSessionID(tradingSessionID);
 		
 		result = insertNewTransaction(newTransaction);
@@ -3070,7 +2789,7 @@ public class DatabaseConnector {
 
 		//3-2-Update Buying Customer Balance:
 		newBalance = selectCustomerInfo(buyingCustomerID).getBalance() - (transactionAmount * price);
-		double newPendingbalance = selectCustomerInfo(buyingCustomerID).getPendingbalance() - (transactionAmount * price); 
+		double newPendingbalance = selectCustomerInfo(buyingCustomerID).getPendingBalance() - (transactionAmount * price); 
 		updateCustomerBalance(buyingCustomerID, newBalance);
 		updateCustomerPendingbalance(buyingCustomerID, newPendingbalance);
 		
@@ -3460,4 +3179,752 @@ public class DatabaseConnector {
         return transactionAll;
 	}        
 
+	public Validator insertHasCustomerStocks(Relationship r) {
+		Validator v = r.validate();
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "INSERT INTO HAS_CUSTOMERS_STOCKS (CUSTOMERID, STOCKID, AMOUNT, STATUSID) VALUES (?, ?, ?, ?)";
+
+		try {
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, r.getId1());
+			st.setInt(2, r.getId2());
+			st.setInt(3, r.getExtra());
+			st.setInt(4, r.getStatus());
+			
+			int affectedRows = st.executeUpdate();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not insert into the table");
+				return v;
+			}
+
+		} catch (SQLException ex) {
+			v.setVerified(false);
+			v.setStatus("Record already exists, select it on the left pane");
+			return v;			
+		}
+
+		v.setVerified(true);
+		v.setStatus("Record inserted");
+
+		return v;
+	}
+
+	
+	public Validator updateHasCustomerStocks(Relationship r) {
+		Validator v = r.validate();
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "UPDATE HAS_CUSTOMERS_STOCKS SET STATUSID = ?, AMOUNT = ? WHERE CUSTOMERID = ? AND STOCKID = ?";
+
+		try {
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, r.getStatus());
+			st.setInt(2, r.getExtra());
+			st.setInt(3, r.getId1());
+			st.setInt(4, r.getId2());
+			
+			int affectedRows = st.executeUpdate();		
+			
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not update record");
+				return v;
+			}
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+		} catch (SQLException ex) {
+			v.setVerified(false);
+			v.setStatus("Update failed");
+			return v;			
+		}
+
+		v.setVerified(true);
+		v.setStatus("Record updated");
+
+		return v;
+	}
+
+	public ArrayList<Stock> selectCustomerStocks(int customerId) {
+		ArrayList<Stock> stocks = new ArrayList<Stock>();
+		PreparedStatement st = null;
+		String query = "SELECT STOCKS.*, HAS_CUSTOMERS_STOCKS.AMOUNT FROM STOCKS, HAS_CUSTOMERS_STOCKS WHERE STOCKS.ID = HAS_CUSTOMERS_STOCKS.STOCKID AND HAS_CUSTOMERS_STOCKS.CUSTOMERID = ? ORDER BY STOCKS.NAME";
+		
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				Stock s = new Stock();
+				s.setId(res.getInt(1));
+				s.setName(res.getString(2));
+				s.setPrice(res.getInt(4));
+				s.setStatusId(res.getInt(5));
+				s.setAmount(res.getInt(6));
+
+				stocks.add(s);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return stocks;
+	}
+
+	public ArrayList<Stock> selectAllStocks() {
+		ArrayList<Stock> stocks = new ArrayList<Stock>();
+		PreparedStatement st = null;
+		String query = "SELECT * FROM STOCKS WHERE STATUSID = 1 ORDER BY NAME";
+		
+		try {
+			st = this.con.prepareStatement(query);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				Stock s = new Stock();
+				s.setId(res.getInt(1));
+				s.setName(res.getString(2));
+				s.setPrice(res.getInt(4));
+				s.setStatusId(res.getInt(5));
+				stocks.add(s);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return stocks;
+	}
+	
+	public Relationship selectHasCustomerStocks(int customerId, int stockId) {
+		Relationship r = new Relationship();
+		PreparedStatement st = null;
+		String query = "SELECT HAS_CUSTOMERS_STOCKS.* FROM HAS_CUSTOMERS_STOCKS WHERE CUSTOMERID = ? AND STOCKID = ?";
+		
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			st.setInt(2, stockId);
+			ResultSet res = st.executeQuery();
+
+			res.next();
+			r.setId1(res.getInt(1));
+			r.setId2(res.getInt(2));
+			r.setExtra(res.getInt(3));
+			r.setStatus(res.getInt(4));
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return r;
+	}
+
+	
+	
+	
+	
+	/*
+	 * This function inserts a new order to the database
+	 */
+	public Validator insertNewOrder(Order newOrder) {
+		Validator v = newOrder.validate();
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		String query = "INSERT INTO ORDERS_M (TYPEID, BROKERID, CUSTOMERID, STOCKID, AMOUNT, PRICE, STATUSID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+		try {
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, newOrder.getTypeId());
+			st.setInt(2, newOrder.getBrokerId());
+			st.setInt(3, newOrder.getCustomerId());
+			st.setInt(4, newOrder.getStockId());
+			st.setInt(5, newOrder.getAmount());
+			st.setDouble(6, newOrder.getPrice());
+			st.setInt(7, newOrder.getStatusId());
+
+			int affectedRows = st.executeUpdate();
+
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not insert into the table");
+				return v;
+			}
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			v.setVerified(false);
+			v.setStatus("Failed to insert into table");
+			return v;
+		}
+
+		v.setVerified(true);
+		v.setStatus("Success");
+		return v;
+	}
+
+	
+	
+	/*
+	 * This functions returns an array list of all the orders
+	 */
+	public ArrayList<Order> selectOrdersAll() {
+		ArrayList<Order> ordersAll = new ArrayList<Order>();
+		Statement st = null;
+		ResultSet rs = null;
+		String query = "SELECT * FROM ORDERS_M";
+		
+		try {
+			st = this.con.createStatement();
+			ResultSet res = st.executeQuery(query);
+
+			while (res.next()) {
+				int orderId = res.getInt(1);
+				int typeId = res.getInt(2);
+				int brokerId = res.getInt(3);
+				int customerId = res.getInt(4);
+				int stockId = res.getInt(5);
+				int amount = res.getInt(6);
+				double price = res.getDouble(7);
+				int statusId = res.getInt(8);
+
+				Order order = new Order();
+				order.setOrderId(orderId);
+				order.setTypeId(typeId);
+				order.setBrokerId(brokerId);
+				order.setCustomerId(customerId);
+				order.setStockId(stockId);
+				order.setAmount(amount);
+				order.setPrice(price);
+				order.setStatusId(statusId);
+
+				ordersAll.add(order);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return ordersAll;
+	}
+
+	/*
+	 * This functions returns an array list of all the orders belongs to a
+	 * particular firm
+	 */
+	public ArrayList<Order> selectOrdersByFirmByType(int firmId, int orderType) {
+		ArrayList<Order> ordersAll = new ArrayList<Order>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		
+		String query = "SELECT O.*, S.NAME, CI.FIRSTNAME, CI.LASTNAME"
+				     + " FROM ORDERS_M as O, HAS_FIRM_BROKERS as HFB, CUSTOMER_INFO as CI, STOCKS as S"
+				     + " WHERE O.BROKERID = HFB.BROKERID"
+				     + " AND O.CUSTOMERID = CI.ID"
+				     + " AND O.STOCKID = S.ID"
+				     + " AND O.TYPEID = ?"
+				     + " AND HFB.FIRMID = ?";
+		
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, orderType);
+			st.setInt(2, firmId);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				int orderId = res.getInt(1);
+				int typeId = res.getInt(2);
+				int brokerId = res.getInt(3);
+				int customerId = res.getInt(4);
+				int stockId = res.getInt(5);
+				int amount = res.getInt(6);
+				double price = res.getDouble(7);
+				int statusId = res.getInt(8);				
+				String displaySummary = res.getString(9) + "["
+						+ new DecimalFormat("#,##0").format(amount) + " @ "
+						+ new DecimalFormat("#,##0.00").format(price) + "] ::"
+						+ res.getString(10) + " " + res.getString(11);
+
+				Order order = new Order();
+				order.setOrderId(orderId);
+				order.setTypeId(typeId);
+				order.setBrokerId(brokerId);
+				order.setCustomerId(customerId);
+				order.setStockId(stockId);
+				order.setAmount(amount);
+				order.setPrice(price);
+				order.setStatusId(statusId);
+				order.setDisplaySummary(displaySummary);
+
+				ordersAll.add(order);
+			}
+			
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return ordersAll;
+	}
+
+	/*
+	 * This function returns a particular order
+	 */
+	public Order selectOrder(int idToSelect) {
+		Order order = new Order();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT * FROM ORDERS_M WHERE ORDERID = ?";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, idToSelect);
+			ResultSet res = st.executeQuery();
+
+			res.next();
+			int orderId = res.getInt(1);
+			int typeId = res.getInt(2);
+			int brokerId = res.getInt(3);
+			int customerId = res.getInt(4);
+			int stockId = res.getInt(5);
+			int amount = res.getInt(6);
+			double price = res.getDouble(7);
+			int statusId = res.getInt(8);
+
+			order.setOrderId(orderId);
+			order.setTypeId(typeId);
+			order.setBrokerId(brokerId);
+			order.setCustomerId(customerId);
+			order.setStockId(stockId);
+			order.setAmount(amount);
+			order.setPrice(price);
+			order.setStatusId(statusId);
+
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			
+		} catch (Exception e) {
+			return null;
+		}
+
+		return order;
+	}
+
+
+	/*
+	 * This function updates an order
+	 */
+	public Validator updateOrder(int idToUpdate, Order order) {
+		Validator v = order.validate();
+		if (!v.isVerified()) {
+			return v;
+		}
+
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		String query = "UPDATE ORDERS_M SET TYPEID = ?, BROKERID = ?, CUSTOMERID = ?, STOCKID = ?, AMOUNT = ?, PRICE = ?, STATUSID = ? WHERE ORDERID = ?";
+
+		try {
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, order.getTypeId());
+			st.setInt(2, order.getBrokerId());
+			st.setInt(3, order.getCustomerId());
+			st.setInt(4, order.getStockId());
+			st.setInt(5, order.getAmount());
+			st.setDouble(6, order.getPrice());
+			st.setInt(7, order.getStatusId());
+			st.setInt(8, idToUpdate);
+
+			int affectedRows = st.executeUpdate();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not update the table");
+				return v;
+			}
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			v.setVerified(false);
+			v.setStatus("Could not update the table");
+			return v;
+		}
+
+		v.setVerified(true);
+		v.setStatus("Success");
+		return v;
+	}
+
+	/*
+	 * This function updates an order
+	 */
+	public Validator deleteOrder(int idToDelete) {
+		Validator v = new Validator();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		String query = "DELETE FROM ORDERS_M WHERE ORDERID = ?";
+
+		try {
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, idToDelete);
+
+			int affectedRows = st.executeUpdate();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+
+			if (affectedRows == 0) {
+				v.setVerified(false);
+				v.setStatus("Could not delete record");
+				return v;
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			v.setVerified(false);
+			v.setStatus("Could not delete record");
+			return v;
+		}
+
+		v.setVerified(true);
+		v.setStatus("Success");
+		return v;
+	}
+	
+	
+	/**
+	 * Place selling order
+	 */
+	public Validator placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent) {
+		Validator v = new Validator();
+		
+		// 0. Input validation
+		Validator check0 = o.validate();
+		if(!check0.isVerified()) {
+			v.setVerified(false);
+			v.setStatus(check0.getStatus());
+			return v;			
+		}
+		
+		// 1. check if broker has access to customer
+		Validator check1 = hasBrokerCustomer(o.getBrokerId(), o.getCustomerId());
+		if(!check1.isVerified()) {
+			v.setVerified(false);
+			v.setStatus(check1.getStatus());
+			return v;
+		}
+
+		// 2. check if this customer possesses the stock
+		boolean check2 = isHasCustomerStock(o.getCustomerId(), o.getStockId());
+		if(!check2) {
+			v.setVerified(false);
+			v.setStatus("This customer does not have selected stock");
+			return v;
+		}
+		
+		// 3. check if this customer possesses enough amount
+		int curAmount = selectHasCustomerStockAmount(o.getCustomerId(), o.getStockId());
+		if(o.getAmount() > curAmount) {
+			v.setVerified(false);
+			v.setStatus("This customer does not have enough amount of selected stock");
+			return v;
+		}
+		
+		// 4. check if the price is in bounds
+		Stock s = selectStock(o.getStockId());
+		Validator check4 = priceInBounds(s.getPrice(), o.getPrice(), lBoundPercent, uBoundPercent);
+		if(!check4.isVerified()) {
+			v.setVerified(false);
+			v.setStatus(check4.getStatus());
+			return v;
+		}
+		
+		// 5. check if we can match the order right away
+		boolean matched = false;
+		if(matched) {
+			// do matching procedure
+			v.setVerified(true);
+			v.setStatus("Order matched");
+			return v;
+		} else {
+			// insert order to db
+			v = insertNewOrder(o);
+			return v;
+		}
+	}
+
+	
+	/**
+	 * Returns false with message in case broker is not associated with customer
+	 */
+	public Validator hasBrokerCustomer(int brokerId, int customerId) {
+		Validator v = new Validator();
+		
+		// get firmId for this broker
+		int firmId = selectBrokerageFirmForBroker(brokerId);
+		if(firmId == 0) {
+			v.setVerified(false);
+			v.setStatus("Could not identify firm for this broker");
+			return v;
+		}
+
+		// check if this firm can manage this customer
+		if(!isHasFirmCustomer(firmId, customerId)) {
+			v.setVerified(false);
+			v.setStatus("This company cannot manage this customer");
+			return v;
+		}
+
+		v.setVerified(true);
+		return v;	
+	}
+	
+	/**
+	 * Returns brokerage firmId for this customer
+	 */
+	public int selectBrokerageFirmForBroker(int brokerId) {
+		int firmId = 0;		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT FIRMID FROM HAS_FIRM_BROKERS WHERE BROKERID = ? AND STATUSID = 1";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, brokerId);
+			ResultSet res = st.executeQuery();
+
+			res.next();
+			firmId = res.getInt(1);
+
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			return firmId;
+		
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	/**
+	 * Returns true if this firm and customer relationship exists
+	 */
+	public boolean isHasFirmCustomer(int firmId, int customerId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT * FROM HAS_FIRM_CUSTOMERS WHERE FIRMID = ? AND CUSTOMERID = ?";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, firmId);
+			st.setInt(2, customerId);
+			ResultSet res = st.executeQuery();
+
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			
+			if(res.next()) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns true if this customer has this stock in posession
+	 */
+	public boolean isHasCustomerStock(int customerId, int stockId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT * FROM HAS_CUSTOMERS_STOCKS WHERE CUSTOMERID = ? AND STOCKID = ? AND STATUSID = 1";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			st.setInt(2, stockId);
+			ResultSet res = st.executeQuery();
+
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			
+			if(res.next()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns amount this customer has of this stock
+	 */
+	public int selectHasCustomerStockAmount(int customerId, int stockId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT AMOUNT FROM HAS_CUSTOMERS_STOCKS WHERE CUSTOMERID = ? AND STOCKID = ? AND STATUSID = 1";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			st.setInt(2, stockId);
+			ResultSet res = st.executeQuery();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			
+			if(res.next()) {
+				return res.getInt(1);
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	/**
+	 * Returns false with message in case the target price is out of specified bounds
+	 */
+	public Validator priceInBounds(double curPrice, double targetPrice, int lBoundPercent, int uBoundPercent) {
+		Validator v = new Validator();
+
+		double lBound = curPrice * (1 - ( lBoundPercent / 100.00 ));
+		double uBound = curPrice * (1 + ( uBoundPercent / 100.00 ));
+
+		if(targetPrice < lBound) {
+			v.setVerified(false);
+			v.setStatus("Price cannot be lower than " + String.format("%.2f", lBound));
+			return v;
+		}
+
+		if(targetPrice > uBound) {
+			v.setVerified(false);
+			v.setStatus("Price cannot be higher than " + String.format("%.2f", uBound));
+			return v;
+		}
+
+		v.setVerified(true);
+		return v;
+	}	
+	
+	
+	/**
+	 * Place buying order
+	 */
+	public Validator placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent) {
+		Validator v = new Validator();
+	
+		// 0. Input validation
+		Validator check0 = o.validate();
+		if(!check0.isVerified()) {
+			v.setVerified(false);
+			v.setStatus(check0.getStatus());
+			return v;			
+		}
+		
+		// 1. check if broker has access to customer
+		Validator check1 = hasBrokerCustomer(o.getBrokerId(), o.getCustomerId());
+		if(!check1.isVerified()) {
+			v.setVerified(false);
+			v.setStatus(check1.getStatus());
+			return v;
+		}
+
+		// 2. check if the price is in bounds
+		Stock s = selectStock(o.getStockId());
+		Validator check2 = priceInBounds(s.getPrice(), o.getPrice(), lBoundPercent, uBoundPercent);
+		if(!check2.isVerified()) {
+			v.setVerified(false);
+			v.setStatus(check2.getStatus());
+			return v;
+		}
+
+		// 3. check if this customer has enough money to buy this amount of this stock
+		CustomerInfo customer = selectCustomerInfo(o.getCustomerId());
+		
+		double customerBalance = customer.getBalance() - customer.getPendingBalance();
+		double requiredBalance = o.getPrice() * o.getAmount();
+
+		if(customerBalance < requiredBalance) {
+			v.setVerified(false);
+			v.setStatus("Insufficient balance to place this order");
+			return v;			
+		}
+		
+		// 4. check if we can match the order right away
+		boolean matched = false;
+		if(matched) {
+			// do matching procedure
+			v.setVerified(true);
+			v.setStatus("Order matched");
+		} else {
+			// insert order to db
+			v = insertNewOrder(o);
+		}
+		
+		// lock money
+		Validator check7 = lockAmountOnCustomerAccount(customer, requiredBalance);
+		if(!check7.isVerified()) {
+			v.setVerified(false);
+			v.setStatus("Locking money failed");
+			return v;
+		}
+					
+		return v;
+	}
+	
+	
+	
+	
+	public Validator lockAmountOnCustomerAccount(CustomerInfo c, double amount) {
+
+		double pendingSoFar = c.getPendingBalance();
+		pendingSoFar += amount;
+		c.setPendingBalance(pendingSoFar);
+
+		return updateCustomerInfo(c.getId(), c);
+	}
+	
+
+	
 }

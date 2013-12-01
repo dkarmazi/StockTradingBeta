@@ -8,7 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 import javax.mail.Session;
-
+import StockTradingServer.Relationship;
 import StockTradingServer.Authoriser;
 import StockTradingServer.ServerAuthRes;
 import StockTradingServer.BrokerageFirm;
@@ -55,6 +55,7 @@ public class TradingServer extends UnicastRemoteObject implements
 		return this.dbCon.getHello();
 	}
 
+	
         @Override
 	public ServerAuthRes selectAdministratorsAll(int pStatusId, String sessionID)
 			throws RemoteException 
@@ -110,6 +111,7 @@ public class TradingServer extends UnicastRemoteObject implements
             return auth;
 	}
 
+    
 	@Override
 	public ServerAuthRes updateAdmin(int idToUpdate, UserAdmin user, String sessionID)
 			throws RemoteException 
@@ -128,20 +130,20 @@ public class TradingServer extends UnicastRemoteObject implements
             auth.setHasAccess(allowed);
             return auth;
 	}
-        
-	@Override
-	public ServerAuthRes selectBrokerageFirmsAll(String clientSessionID) {
-		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
-		boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
-		ServerAuthRes auth = new ServerAuthRes();
-		if (allowed){
-			auth.setObject(this.dbCon.selectBrokerageFirmsAll());
-		}else{
-			auth.setObject(null);
-		}
-		auth.setHasAccess(allowed);
-		return auth;
-	}
+	
+    @Override
+    public ServerAuthRes selectBrokerageFirmsAll(String clientSessionID) {
+            String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+            boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+            ServerAuthRes auth = new ServerAuthRes();
+            if (allowed){
+                    auth.setObject(this.dbCon.selectBrokerageFirmsAll());
+            }else{
+                    auth.setObject(null);
+            }
+            auth.setHasAccess(allowed);
+            return auth;
+    }
 
 	@Override
 	public ServerAuthRes selectBrokerageFirmsByStatus(int status, String clientSessionID) {
@@ -772,4 +774,59 @@ public class TradingServer extends UnicastRemoteObject implements
         
         return auth;
     }
+
+	@Override
+	public ServerAuthRes selectCustomerStocks(int customerId, String sessionID) {
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.selectCustomerStocks(customerId));
+		auth.setHasAccess(true);    		
+		return auth;
+	}
+	@Override
+	public ServerAuthRes updateHasCustomerStocks(Relationship r, String sessionID) {
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.updateHasCustomerStocks(r));
+		auth.setHasAccess(true);    		
+		return auth;
+	}
+	@Override
+	public ServerAuthRes insertHasCustomerStocks(Relationship r, String sessionID) {
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.insertHasCustomerStocks(r));
+		auth.setHasAccess(true);    		
+		return auth;
+	}
+	@Override
+	public ServerAuthRes selectAllStocks(String sessionID) {
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.selectAllStocks());
+		auth.setHasAccess(true);    		
+		return auth;
+	}
+	@Override
+	public ServerAuthRes selectHasCustomerStocks(int customerId, int stockId, String sessionID) {
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.selectHasCustomerStocks(customerId, stockId));
+		auth.setHasAccess(true);    		
+		return auth;
+	}
+
+	@Override
+	public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) {
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.placeSellingOrder(o, lBoundPercent, uBoundPercent));
+		auth.setHasAccess(true);    		
+		return auth;
+	}
+   	@Override
+	public ServerAuthRes placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) {
+		ServerAuthRes auth = new ServerAuthRes();
+		auth.setObject(this.dbCon.placeBuyingOrder(o, lBoundPercent, uBoundPercent));
+		auth.setHasAccess(true);    		
+		return auth;
+	}
+
+	
+	
+	
 }
