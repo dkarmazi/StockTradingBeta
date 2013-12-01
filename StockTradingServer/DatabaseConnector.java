@@ -975,7 +975,7 @@ public class DatabaseConnector {
 			//st.setString(6, salt);
 			st.setInt(5, user.getRoleId());
 			st.setInt(6, user.getStatusId());
-			st.setInt(6, user.getBrokerFirmId());
+			st.setInt(7, user.getBrokerFirmId());
 			st.setInt(8, idToUpdate);
 
 			int affectedRows = st.executeUpdate();

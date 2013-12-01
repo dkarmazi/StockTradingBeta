@@ -1,5 +1,4 @@
 
-
 package StockTradingClient;
 
 import RMI.ServerInterface;
