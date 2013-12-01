@@ -1,6 +1,7 @@
 package StockTradingServer;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /*
  * Dmitriy Karmazin
@@ -13,10 +14,11 @@ public class CustomerInfo implements Serializable {
 	private String lastName;
 	private String email;
 	private String phone;
-        private int firmId;
-        private double balance;
-        private double pendingbalance;
+	private double balance;
+	private double pendingBalance;
 	private int statusId;
+	private int firmId;
+	private ArrayList<Stock> stocks;
 
 	public int getId() {
 		return id;
@@ -58,31 +60,13 @@ public class CustomerInfo implements Serializable {
 		this.phone = phone;
 	}
 
-        public int getFirmId() {
-            return firmId;
-        }
+	public int getFirmId() {
+		return firmId;
+	}
 
-        public void setFirmId(int firmId) {
-            this.firmId = firmId;
-        }
-        
-        
-        
-	public double getBalance() {
-			return balance;
-		}
-
-		public void setBalance(double balance) {
-			this.balance = balance;
-		}
-
-		public double getPendingbalance() {
-			return pendingbalance;
-		}
-
-		public void setPendingbalance(double pendingbalance) {
-			this.pendingbalance = pendingbalance;
-		}
+	public void setFirmId(int firmId) {
+		this.firmId = firmId;
+	}
 
 	public int getStatusId() {
 		return statusId;
@@ -91,12 +75,37 @@ public class CustomerInfo implements Serializable {
 	public void setStatusId(int statusId) {
 		this.statusId = statusId;
 	}
+	
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public double getPendingBalance() {
+		return pendingBalance;
+	}
+
+	public void setPendingBalance(double pendingBalance) {
+		this.pendingBalance = pendingBalance;
+	}
+
+	public ArrayList<Stock> getStocks() {
+		return stocks;
+	}
+
+	public void setStocks(ArrayList<Stock> stocks) {
+		this.stocks = stocks;
+	}
+
 
 	public Validator validate() {
 
 		InputValidation iv = new InputValidation();
 		Validator vResult = new Validator();
-		Validator vFirstName, vLastName, vEmail, vPhone, vStatusId;
+		Validator vFirstName, vLastName, vEmail, vPhone, vBalance, vPendingBalance, vStatusId;
 
 		Boolean verified = true;
 		String status = "";
@@ -121,7 +130,17 @@ public class CustomerInfo implements Serializable {
 		verified &= vPhone.isVerified();
 		status += vPhone.getStatus();
 
-		// 5. phone
+		// 5 balance
+		vBalance = iv.validateDoubleGeneralWithNull(this.getBalance(), "Balance");
+		verified &= vBalance.isVerified();
+		status += vBalance.getStatus();
+		
+		// 6 pending balance
+		vPendingBalance = iv.validateDoubleGeneralWithNull(this.getPendingBalance(), "Pending Balance");
+		verified &= vPendingBalance.isVerified();
+		status += vPendingBalance.getStatus();
+
+		// 7. status
 		vStatusId = iv.validateIntGeneral(this.getStatusId(), "StatusId");
 		verified &= vStatusId.isVerified();
 		status += vStatusId.getStatus();
@@ -143,6 +162,8 @@ public class CustomerInfo implements Serializable {
 		out += "LastName: " + this.getLastName() + delimiter;
 		out += "Email: " + this.getEmail() + delimiter;
 		out += "Phone: " + this.getPhone() + delimiter;
+		out += "Balance: " + this.getBalance() + delimiter;
+		out += "Pending Balance: " + this.getPendingBalance() + delimiter;
 		out += "StatusId: " + this.getStatusId() + delimiter;
 
 		out += endOfString;

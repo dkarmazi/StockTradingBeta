@@ -10,3 +10,7 @@
 /Enumeration$PasswordGrade.class
 /Enumeration$Security.class
 /Enumeration$Strings.class
+/Enumeration$MessageIcon.class
+/Enumeration$Password.class
+/Enumeration$Status.class
+/Enumeration$XmlFile.class

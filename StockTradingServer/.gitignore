@@ -20,3 +20,11 @@
 /SendEmail$1.class
 /DatabaseConnector.java
 /LoggerCustom.class
+/Authoriser.class
+/ReaderConfig.class
+/ReaderXml.class
+/Relationship.class
+/ServerAuthRes.class
+/TradingSession.class
+/Transaction.class
+/UserAdmin.class
