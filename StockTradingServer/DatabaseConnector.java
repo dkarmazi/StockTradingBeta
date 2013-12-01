@@ -2548,7 +2548,7 @@ public class DatabaseConnector {
 				query += " AND (STOCKID = ?)";
 				query += " AND (AMOUNT = ?)";
 				query += " AND (PRICE = ?))";
-				query += " ORDER BY DATEISSUED";
+				query += " ORDER BY ORDERID";
 
 		try {
 			st = this.con.prepareStatement(query);
