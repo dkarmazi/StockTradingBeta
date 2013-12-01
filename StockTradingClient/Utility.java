@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -1400,7 +1401,7 @@ public class  Utility
         Validator validator = new Validator();
         try
         {
-            validator = serverInterface.updateUserPassword(userid, newPassword1, newPassword2);
+            validator = (Validator) serverInterface.updateUserPassword(userid, newPassword1, newPassword2, getCurrentSessionId()).getObject();
         }
         catch (RemoteException e)
         {

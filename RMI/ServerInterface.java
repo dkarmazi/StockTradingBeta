@@ -129,8 +129,8 @@ public interface ServerInterface extends Remote {
 
 	public boolean isUserExists(String Email) throws RemoteException;
 
-	public Validator updateUserPassword(int userId, String plainPass,
-			String plainPassConfirm) throws RemoteException;
+	public ServerAuthRes updateUserPassword(int userId, String plainPass,
+			String plainPassConfirm, String clientSessionID) throws RemoteException;
         
 	public int GradePassword(String password) throws RemoteException;
 	

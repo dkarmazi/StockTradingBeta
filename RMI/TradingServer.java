@@ -617,9 +617,18 @@ public class TradingServer extends UnicastRemoteObject implements
 	}
 
 	@Override
-	public Validator updateUserPassword(int userId, String plainPass,
-			String plainPassConfirm) throws RemoteException {
-		return this.dbCon.updateUserPassword(userId, plainPass, plainPassConfirm);
+	public ServerAuthRes updateUserPassword(int userId, String plainPass,
+			String plainPassConfirm, String clientSessionID) throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+    	boolean allowed = RefMonitor.isAllowed(tradingSessions, clientSessionID, action);
+    	ServerAuthRes auth = new ServerAuthRes();
+    	if (allowed){
+    		auth.setObject(this.dbCon.updateUserPassword(userId, plainPass, plainPassConfirm));
+    	}else{
+    		auth.setObject(null);
+    	}
+    	auth.setHasAccess(allowed);
+    	return auth;
 	}
         
         @Override
