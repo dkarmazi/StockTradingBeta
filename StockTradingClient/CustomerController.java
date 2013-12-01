@@ -241,8 +241,6 @@ public class CustomerController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 
-		Message.setText("broker"+Utility.getCurrentUserFirmID());
-		
 		Utility.PopulateStatus(StatusChoiceBox);		
 		Utility.PopulateCustomers(CustomerListView,
 				Utility.getCurrentUser_BrokerageFirmID());
