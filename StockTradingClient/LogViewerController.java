@@ -21,7 +21,9 @@ public class LogViewerController implements Initializable {
 
     @FXML private RadioButton LogActivityRadioButton;
     @FXML private RadioButton DBActivityRadioButton;
-    @FXML private TextArea logText;
+    @FXML private TextArea LogText;
+    
+    
     ToggleGroup LogTypeToggleGroup = new ToggleGroup();
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -37,8 +39,8 @@ public class LogViewerController implements Initializable {
     @FXML
     private void ShowLog()
     {
-       logText.setScrollTop(Double.MAX_VALUE);
-       logText.setText(null);
+       //LogText.setText(" ");
+       LogText.clear();
        if (LogTypeToggleGroup.getSelectedToggle().equals(LogActivityRadioButton))
        {
            ShowLoginActivity();
@@ -47,16 +49,16 @@ public class LogViewerController implements Initializable {
        {
            ShowDbActivity();
        }
-       logText.appendText("");
+       LogText.appendText(" ");
     }
     
     private void ShowLoginActivity()
     {
-        logText.setText(Utility.getAuditLogLoginActivity());
+        LogText.setText(Utility.getAuditLogLoginActivity());
     }
     
     private void ShowDbActivity()
     {
-        logText.setText(Utility.getAuditLogDbActivity());
+        LogText.setText(Utility.getAuditLogDbActivity());
     }
 }

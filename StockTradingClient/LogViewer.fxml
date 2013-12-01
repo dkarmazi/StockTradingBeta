@@ -15,6 +15,7 @@
         <RadioButton fx:id="DBActivityRadioButton" mnemonicParsing="false" onAction="#ShowLog" text="DB Activity" />
       </children>
     </VBox>
-    <TextArea fx:id="logText" prefHeight="472.0" prefWidth="972.0" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="114.0" />
+    <Button mnemonicParsing="false" onAction="#ShowLog" prefWidth="100.0" text="Refresh" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0" />
+    <TextArea fx:id="LogText" prefHeight="472.0" prefWidth="972.0" wrapText="true" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="114.0" />
   </children>
 </AnchorPane>
