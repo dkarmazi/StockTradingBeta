@@ -3512,7 +3512,67 @@ public class DatabaseConnector {
 
 		return ordersAll;
 	}
+/*
+	 * This functions returns an array list of all the pending orders
+	 */
+	public ArrayList<Order> selectOrderDetailsByType( int orderType) {
+		ArrayList<Order> ordersAll = new ArrayList<Order>();
+		Statement st = null;
+		ResultSet rs = null;
+		String query = "SELECT O.*, S.NAME AS STOCK_NAME, C.FIRSTNAME, C.LASTNAME , F.NAME AS FIRM_NAME"
+				+ " FROM ORDERS_M O " 
+                                + " INNER JOIN USERS U"
+				+ " ON (O.BROKERID = U.ID)" 
+                                + " INNER JOIN BROKERAGE_FIRM_INFO F"
+                                + " ON (U.FIRMID = F.ID)" 
+                                + " INNER JOIN STOCKS S"
+				+ " ON (O.STOCKID = S.ID)" 
+                                + " INNER JOIN CUSTOMER_INFO C"
+				+ " ON (O.CUSTOMERID = C.ID)" 
+                                + " WHERE O.TYPEID = " + orderType;
 
+		try {
+			st = this.con.createStatement();
+			ResultSet res = st.executeQuery(query);
+
+			while (res.next()) {
+				int orderId = res.getInt("ORDERID");
+                                
+				int typeId = res.getInt("TYPEID");
+				int brokerId = res.getInt("BROKERID");
+				int customerId = res.getInt("CUSTOMERID");
+				int stockId = res.getInt("STOCKID");
+				int amount = res.getInt("AMOUNT");
+				double price = res.getDouble("PRICE");
+                                String stockName = res.getString("STOCK_NAME");
+				String customer = res.getString("FIRSTNAME") + " "
+						+ res.getString("LASTNAME");
+                                String firmName = res.getString("FIRM_NAME");
+                                
+				Order order = new Order();
+                                
+				order.setOrderId(orderId);
+				order.setTypeId(typeId);
+				order.setBrokerId(brokerId);
+				order.setCustomerId(customerId);
+				order.setStockId(stockId);
+				order.setAmount(amount);
+				order.setPrice(price);
+                                order.setDisplayCustomerName(customer);
+                                order.setDisplayStockName(stockName);
+                                order.setDisplayFirmName(firmName);
+
+
+				ordersAll.add(order);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return ordersAll;
+	}
+        
 	/*
 	 * This function returns a particular order
 	 */
