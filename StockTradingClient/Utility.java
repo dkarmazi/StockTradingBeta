@@ -1083,15 +1083,43 @@ public class  Utility
                                     );
         }
     }
-    public static void PopulateBuyingOrders(ListView listView)
+
+    public static void PopulateBuyingOrders(TableView tableView)
     {
-        listView.getItems().clear();
-        //TODO:
-//        ArrayList<Order> records = dbConnector.selectBuyingOrdersActiveOnly();        
-//        for(Order s : records)
-//        {
-//            listView.getItems().add(new KeyValuePair(Integer.toString(s.getOrderId()),Integer.toString(s.getOrderId()) ));
-//        }
+        tableView.getItems().clear();
+
+        ArrayList<Order> records = null;
+        try
+        {
+
+            ServerAuthRes results = serverInterface.selectOrderDetailsByType
+                    (
+                            Enumeration.OrderType.SELLING_ORDER
+                            ,getCurrentSessionId()
+                    );
+
+            if (results.isHasAccess()) {
+                    records = (ArrayList<Order>) results.getObject();
+            }else{
+                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    return;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        
+        ObservableList<Order> data;
+        data = FXCollections.observableArrayList();
+        
+        
+        for(Order s : records)
+        {
+            data.add(s); 
+        }
+
+        tableView.setItems(data);
     }
         
     // Selling Order
@@ -1209,16 +1237,45 @@ public class  Utility
                                     );
         }
     }
-    public static void PopulateSellingOrders(ListView listView)
+
+    public static void PopulateSellingOrders(TableView tableView)
     {
-        //TODO
-//        listView.getItems().clear();
-//        ArrayList<Order> records = dbConnector.selectSellingOrdersActiveOnly();        
-//        for(Order s : records)
-//        {
-//            listView.getItems().add(new KeyValuePair(Integer.toString(s.getOrderId()),Integer.toString(s.getOrderId()) ));
-//        }
+        tableView.getItems().clear();
+
+        ArrayList<Order> records = null;
+        try
+        {
+
+            ServerAuthRes results = serverInterface.selectOrderDetailsByType
+                    (
+                            Enumeration.OrderType.SELLING_ORDER
+                            ,getCurrentSessionId()
+                    );
+
+            if (results.isHasAccess()) {
+                    records = (ArrayList<Order>) results.getObject();
+            }else{
+                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    return;
+            }
+        }
+        catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+        
+        ObservableList<Order> data;
+        data = FXCollections.observableArrayList();
+        
+        
+        for(Order s : records)
+        {
+            data.add(s); 
+        }
+
+        tableView.setItems(data);
     }
+
     
     //User
     public static Validator AuthenticateUser(String userName, String password)
@@ -1532,6 +1589,13 @@ public class  Utility
         return results;
     }
     
+    public static boolean checkOrderDetailsViewPermission() throws RemoteException{
+        boolean results = true;
+        
+        results = results && serverInterface.checkPermission("selectOrderDetailsByType", getCurrentSessionId());
+
+        return results;
+    }
     public static String getAuditLogLoginActivity()
     {
         String logContent = null;
