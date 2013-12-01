@@ -65,7 +65,6 @@ public class BuyOrderController implements Initializable {
 
     	brokerId = Utility.getCurrentUserID();
     	brokerageFirmId = Utility.getCurrentUser_BrokerageFirmID();
-    	brokerageFirmId = 11;
     	
     	
     	try {
