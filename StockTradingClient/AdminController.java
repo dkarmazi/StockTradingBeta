@@ -215,7 +215,6 @@ public class AdminController implements Initializable {
         else
         {
             Message.setText("Check your password. Password should be non-empty and the confirmation should be matched.");
-            
         }
     }
     
@@ -241,7 +240,6 @@ public class AdminController implements Initializable {
     public void PopulateAdministrators()
     {
         clearScreen();
-        
         Utility.PopulateAdministrators(AdministratorsListView);
         SetScreenModeAddNew();
     }
@@ -254,6 +252,8 @@ public class AdminController implements Initializable {
         Email.clear();  
         Password1.clear();
         Password2.clear();
+        
+        StatusChoiceBox.getSelectionModel().selectFirst();
         
         Message.setText(null);
         

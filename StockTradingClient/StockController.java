@@ -185,7 +185,16 @@ public class StockController implements Initializable {
         PopulateStatus();       
         PopulateStocks();
     }    
-    
+    private void clearScreen()
+    {
+        StockName.clear();
+        Price.clear();
+        Quantity.clear();
+        
+        StatusChoiceBox.getSelectionModel().selectFirst();
+        
+        Message.setText(null);
+    }
     private void PopulateStatus()
     {
         Utility.PopulateStatus(StatusChoiceBox);        
@@ -193,7 +202,9 @@ public class StockController implements Initializable {
     
     private void PopulateStocks()
     {
+        clearScreen();
         Utility.PopulateStocks(StocksListView);
+        SetScreenModeAddNew();
     }
     
     private void SetScreenModeAddNew()

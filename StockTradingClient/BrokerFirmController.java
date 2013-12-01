@@ -107,14 +107,7 @@ public class BrokerFirmController implements Initializable {
     @FXML
     private void handleClearButtonAction(ActionEvent event) {
         
-        BrokerageFirmName.clear();
-        BrokerageFirmLicenseNumber.clear();
-        AddressStreet.clear();
-        AddressState.clear();
-        AddressCity.clear();
-        AddressZip.clear();
-                        
-        Message.setText(null);       
+        clearScreen();       
         
         SetScreenModeAddNew();
     }
@@ -134,12 +127,16 @@ public class BrokerFirmController implements Initializable {
     
     private void PopulateBrokerageFirms()
     {
-        Utility.PopulateBrokerageFirms(BrokerageFirmListView);          
+        clearScreen();
+        Utility.PopulateBrokerageFirms(BrokerageFirmListView);
+        SetScreenModeAddNew();
     }
     
     @FXML
     private void ShowDetails()
     {
+        clearScreen();
+        
         if (BrokerageFirmListView.getItems().isEmpty() || BrokerageFirmListView.getSelectionModel().getSelectedItem() == null)
         {
             return;
@@ -162,6 +159,20 @@ public class BrokerFirmController implements Initializable {
         StatusChoiceBox.getSelectionModel().select(brokerageFirm.getStatus());
         
         SetScreenModeEdit();
+    }
+    private void clearScreen()
+    {
+        BrokerageFirmName.clear();  
+        BrokerageFirmLicenseNumber.clear();  
+        SupervisorEmail.clear();  
+        AddressStreet.clear();  
+        AddressState.clear();
+        AddressCity.clear();
+        AddressZip.clear();
+        
+        StatusChoiceBox.getSelectionModel().selectFirst();
+        
+        Message.setText(null);
     }
     
     private void SetScreenModeAddNew()

@@ -13,7 +13,10 @@ public class Order implements Serializable {
 	private double price;
 	private int statusId;
 	private String displaySummary;
-
+        private String displayCustomerName;
+        private String displayStockName;
+        private String displayFirmName;
+        
 	public int getOrderId() {
 		return orderId;
 	}
@@ -78,6 +81,30 @@ public class Order implements Serializable {
 		this.displaySummary = displaySummary;
 	}
 
+        public String getDisplayCustomerName() {
+            return displayCustomerName;
+        }
+
+        public void setDisplayCustomerName(String displayCustomerName) {
+            this.displayCustomerName = displayCustomerName;
+        }
+
+        public String getDisplayStockName() {
+            return displayStockName;
+        }
+
+        public void setDisplayStockName(String displayStockName) {
+            this.displayStockName = displayStockName;
+        }
+
+        public String getDisplayFirmName() {
+            return displayFirmName;
+        }
+
+        public void setDisplayFirmName(String displayFirmName) {
+            this.displayFirmName = displayFirmName;
+        }
+        
 	public int getStatusId() {
 		return statusId;
 	}
