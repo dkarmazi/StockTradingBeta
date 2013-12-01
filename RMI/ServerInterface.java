@@ -79,6 +79,9 @@ public interface ServerInterface extends Remote {
 			throws RemoteException;
 
 	public ServerAuthRes selectOrdersAll(String clientSessionID) throws RemoteException;
+
+        public ServerAuthRes selectOrderDetailsByType(int orderType, String clientSessionID) 
+                        throws RemoteException;
               
 	public ServerAuthRes selectOrder(int idToSelect, String clientSessionID) throws RemoteException;
 
@@ -157,6 +160,6 @@ public interface ServerInterface extends Remote {
 	public ServerAuthRes selectAllStocks(String sessionID) throws RemoteException;
 	public ServerAuthRes selectHasCustomerStocks(int customerId, int stockId, String sessionID) throws RemoteException;
 	public ServerAuthRes selectOrdersByFirmByType(int firmId, int orderType, String sessionID) throws RemoteException; // delete one above
-	public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
+        public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
 	public ServerAuthRes placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
 }
