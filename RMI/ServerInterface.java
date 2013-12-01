@@ -79,6 +79,9 @@ public interface ServerInterface extends Remote {
 			throws RemoteException;
 
 	public ServerAuthRes selectOrdersAll(String clientSessionID) throws RemoteException;
+         
+        public ServerAuthRes selectOrderDetailsByType(int orderType, String clientSessionID) 
+                        throws RemoteException;
               
 	public ServerAuthRes selectOrder(int idToSelect, String clientSessionID) throws RemoteException;
 

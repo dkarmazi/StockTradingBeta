@@ -366,6 +366,21 @@ public class TradingServer extends UnicastRemoteObject implements
 		return auth;
 	}
 
+        @Override
+        public ServerAuthRes selectOrderDetailsByType(int orderType, String sessionID)
+			throws RemoteException {
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+		boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+		ServerAuthRes auth = new ServerAuthRes();
+		if (allowed){
+			auth.setObject(this.dbCon.selectOrderDetailsByType(orderType));
+		}else{
+			auth.setObject(null);
+		}
+		auth.setHasAccess(allowed);
+		return auth;
+	}
+
 	@Override
 	public ServerAuthRes selectOrder(int idToSelect, String sessionID) throws RemoteException {
 		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
