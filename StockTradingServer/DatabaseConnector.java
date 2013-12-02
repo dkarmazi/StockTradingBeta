@@ -4102,7 +4102,41 @@ public class DatabaseConnector {
 		}
 	}
 
-	
+	public ArrayList<Stock> selectCustomerStocksLimited(int customerId, int tsId) {
+		ArrayList<Stock> stocks = new ArrayList<Stock>();
+		PreparedStatement st = null;
+		String query = "SELECT STOCKS.*, HAS_CUSTOMERS_STOCKS.AMOUNT"
+				     + " FROM STOCKS, HAS_CUSTOMERS_STOCKS , HAS_TS_STOCKS"
+				     + " WHERE STOCKS.ID = HAS_CUSTOMERS_STOCKS.STOCKID "
+				     + " AND HAS_TS_STOCKS.STOCK_ID = STOCKS.ID"
+				     + " AND HAS_CUSTOMERS_STOCKS.CUSTOMERID = ?"
+				     + " AND HAS_TS_STOCKS.TS_ID = ?"
+				     + " ORDER BY STOCKS.NAME";
+		
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			st.setInt(2, tsId);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				Stock s = new Stock();
+				s.setId(res.getInt(1));
+				s.setName(res.getString(2));
+				s.setPrice(res.getInt(4));
+				s.setStatusId(res.getInt(5));
+				s.setAmount(res.getInt(6));
+
+				stocks.add(s);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return stocks;
+	}
+
 	
 	
 	
