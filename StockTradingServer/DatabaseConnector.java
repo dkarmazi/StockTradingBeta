@@ -3516,8 +3516,9 @@ public class DatabaseConnector {
 	 */
 	public ArrayList<Order> selectOrderDetailsByType( int orderType) {
 		ArrayList<Order> ordersAll = new ArrayList<Order>();
-		Statement st = null;
+		PreparedStatement st = null;
 		ResultSet rs = null;
+
 		String query = "SELECT O.*, S.NAME AS STOCK_NAME, C.FIRSTNAME, C.LASTNAME , F.NAME AS FIRM_NAME"
 				+ " FROM ORDERS_M O " 
                                 + " INNER JOIN USERS U"
@@ -3528,11 +3529,12 @@ public class DatabaseConnector {
 				+ " ON (O.STOCKID = S.ID)" 
                                 + " INNER JOIN CUSTOMER_INFO C"
 				+ " ON (O.CUSTOMERID = C.ID)" 
-                                + " WHERE O.TYPEID = " + orderType;
+                                + " WHERE O.TYPEID = ? ";
 
 		try {
-			st = this.con.createStatement();
-			ResultSet res = st.executeQuery(query);
+			st = this.con.prepareStatement(query);
+			st.setInt(1, orderType);
+			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
 				int orderId = res.getInt("ORDERID");
