@@ -3595,7 +3595,11 @@ public class DatabaseConnector {
 			int amount = res.getInt(6);
 			double price = res.getDouble(7);
 			int statusId = res.getInt(8);
-
+			String displaySummary = res.getString(9);
+	        String displayCustomerName = res.getString(10);
+	        String displayStockName = res.getString(11);
+	        String displayFirmName = res.getString(12);
+			
 			order.setOrderId(orderId);
 			order.setTypeId(typeId);
 			order.setBrokerId(brokerId);
@@ -3604,6 +3608,10 @@ public class DatabaseConnector {
 			order.setAmount(amount);
 			order.setPrice(price);
 			order.setStatusId(statusId);
+			order.setDisplaySummary(displaySummary);
+			order.setDisplayCustomerName(displayCustomerName);
+			order.setDisplayStockName(displayStockName);
+			order.setDisplayFirmName(displayFirmName);
 
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());

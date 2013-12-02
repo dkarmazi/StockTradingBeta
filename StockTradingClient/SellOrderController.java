@@ -50,6 +50,7 @@ public class SellOrderController implements Initializable {
     @FXML private TextField StockPrice;
     @FXML private Button btnAdd;
     @FXML private Button btnSave;
+    @FXML private Button btnDelete;
     @FXML private Button btnClear;
     
 
@@ -106,20 +107,21 @@ public class SellOrderController implements Initializable {
     public void onAddButtonClick() {
     	// raw input
     	String rCustomerId, rStockId, rAmount, rPrice;
-		rCustomerId = CustomerComboBox.getValue().getKey();
-		rStockId = StockChoiceBox.getValue().getKey();
+    	
+		rCustomerId = getComboBoxSelection(CustomerComboBox);
+		rStockId = getChoiceBoxSelection(StockChoiceBox);
 		rAmount = StockQuantity.getText();
 		rPrice = StockPrice.getText();
 
 		// initial input validation
 		if (!isNumeric(rCustomerId) || !isNumeric(rStockId) || !isNumeric(rAmount)) {
-			Message.setText("Quantity can be integer only");
+			Message.setText("Form fields cannot be empty or non-numeric");
 			return;
 		}
 		
 		// initial input validation
 		if (!isDouble(rPrice)) {
-			Message.setText("Price can be numeric only");
+			Message.setText("Price field cannot be non-numeric");
 			return;
 		}
 		
@@ -163,6 +165,21 @@ public class SellOrderController implements Initializable {
 			e.printStackTrace();
 		}
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -250,37 +267,35 @@ public class SellOrderController implements Initializable {
     
     @FXML
     private void handleClearButtonAction(ActionEvent event) {
-    	StockQuantity.setText(null);
-    	StockPrice.setText(null);
-    	PendingOrdersListView.getSelectionModel().clearSelection();
-    	CustomerComboBox.getSelectionModel().clearSelection();
-    	StockChoiceBox.getSelectionModel().clearSelection();
-    	btnSave.setDisable(true);    
+    	SetScreenModeAddNew();
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     @FXML 
-    private void handleAddButtonAction(ActionEvent event) throws Exception
-    {
+    private void handleAddButtonAction(ActionEvent event) throws Exception {
+
+    	
+    	
     }
+    
+    
+    
+    
     
     @FXML
     private void handleSaveButtonAction(ActionEvent event) throws Exception
     {            
     
+    }    
+    
+    @FXML
+    private void handleDeleteButtonAction(ActionEvent event) throws Exception
+    {            
+    
     }
+
+    
     
     @FXML
     private void handleShowCustomerInfo()
@@ -292,14 +307,39 @@ public class SellOrderController implements Initializable {
     {
     }
     
-    @FXML
-    public void ShowDetails()
-    {
-    }
+	@FXML
+	public void ShowDetails() {
+
+		if (PendingOrdersListView.getItems().isEmpty()
+				|| PendingOrdersListView.getSelectionModel().getSelectedItem() == null) {
+			return;
+		}
+
+		KeyValuePair keyValue = PendingOrdersListView.getSelectionModel()
+				.getSelectedItem();
+		int orderId = Integer.parseInt(keyValue.getKey());
+
+		try {
+			ServerAuthRes sar = si.selectOrder(orderId, clientSessionID);
+			if (sar.isHasAccess()) {
+				Order o = (Order) sar.getObject();
+
+				SelectKey(CustomerComboBox, "" + o.getOrderId());
+				SelectKey(StockChoiceBox, "" + o.getDisplayStockName());
+				StockQuantity.setText(""+o.getAmount());
+				StockPrice.setText(""+o.getPrice());
+			} else {
+				Message.setText("Unauthorized action");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		SetScreenModeEdit();
+	}    
     
     
-    
-    
+
     
     
     
@@ -325,7 +365,55 @@ public class SellOrderController implements Initializable {
 	}
 
     
-    
+	
+	
+	private String getChoiceBoxSelection(ChoiceBox<KeyValuePair> cbx) {
+		String out = "";
+		
+		if(cbx == null || cbx.getValue() == null || cbx.getValue().getKey() == null) {
+			return out;
+		} else {
+			out = cbx.getValue().getKey();
+			return out;			
+		}
+	}
+	
+	private String getComboBoxSelection(ComboBox<KeyValuePair> cbx) {
+		String out = "";
+		
+		if(cbx == null || cbx.getValue() == null || cbx.getValue().getKey() == null) {
+			return out;
+		} else {
+			out = cbx.getValue().getKey();
+			return out;			
+		}
+	}
+	
+	public static void SelectKey(ChoiceBox<KeyValuePair> comboBox, String key) {
+		for (KeyValuePair item : comboBox.getItems()) {
+			if (item.getKey() != null) {
+				if (item.getKey().equals(key)) {
+					comboBox.setValue(item);
+					break;
+				}
+			}
+		}
+	}
+
+	public static void SelectKey(ComboBox<KeyValuePair> comboBox, String key) {
+		for (KeyValuePair item : comboBox.getItems()) {
+			if (item.getKey() != null) {
+				if (item.getKey().equals(key)) {
+					comboBox.setValue(item);
+					break;
+				}
+			}
+		}
+	}
+
+	
+	
+	
 	
     private void SetScreenModeAddNew() {
     	PopulatePendingOrders(orderTypeId);
@@ -334,7 +422,7 @@ public class SellOrderController implements Initializable {
     	StockChoiceBox.setDisable(true);
     	StockPrice.setText(null);
     	StockQuantity.setText(null);    	
-    	btnSave.setDisable(true);    	
+    	btnSave.setDisable(true);  
     }
     
     private void SetScreenModeEdit() {
