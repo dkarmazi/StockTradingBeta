@@ -4027,4 +4027,41 @@ public class DatabaseConnector {
 		return tradingSessionID;
 	}
 	
+	
+	
+	public int getCustomerStockQuantityPending(int customerId, int stockId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT O.AMOUNT "
+				     + " FROM ORDERS_M as O"
+				     + " WHERE O.CUSTOMERID = ?"
+				      + " AND O.STOCKID = ?"
+				      + " AND O.TYPEID = 1";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			st.setInt(2, stockId);
+			ResultSet res = st.executeQuery();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			
+			if(res.next()) {
+				return res.getInt(1);
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }

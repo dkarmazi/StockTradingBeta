@@ -8,6 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 import javax.mail.Session;
+
 import StockTradingServer.Relationship;
 import StockTradingServer.Authoriser;
 import StockTradingServer.ServerAuthRes;
@@ -804,56 +805,148 @@ public class TradingServer extends UnicastRemoteObject implements
 
 	@Override
 	public ServerAuthRes selectCustomerStocks(int customerId, String sessionID) {
-		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.selectCustomerStocks(customerId));
-		auth.setHasAccess(true);    		
-		return auth;
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.selectCustomerStocks(customerId));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
 	}
 	@Override
 	public ServerAuthRes updateHasCustomerStocks(Relationship r, String sessionID) {
-		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.updateHasCustomerStocks(r));
-		auth.setHasAccess(true);    		
-		return auth;
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.updateHasCustomerStocks(r));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
 	}
 	@Override
 	public ServerAuthRes insertHasCustomerStocks(Relationship r, String sessionID) {
-		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.insertHasCustomerStocks(r));
-		auth.setHasAccess(true);    		
-		return auth;
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.insertHasCustomerStocks(r));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
 	}
 	@Override
 	public ServerAuthRes selectAllStocks(String sessionID) {
-		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.selectAllStocks());
-		auth.setHasAccess(true);    		
-		return auth;
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.selectAllStocks());
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
 	}
 	@Override
 	public ServerAuthRes selectHasCustomerStocks(int customerId, int stockId, String sessionID) {
-		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.selectHasCustomerStocks(customerId, stockId));
-		auth.setHasAccess(true);    		
-		return auth;
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.selectHasCustomerStocks(customerId, stockId));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
 	}
 
 	@Override
 	public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) {
-		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.placeSellingOrder(o, lBoundPercent, uBoundPercent, tradingSessionID));
-		auth.setHasAccess(true);    		
-		return auth;
+		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.placeSellingOrder(o, lBoundPercent, uBoundPercent, tradingSessionID));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
 	}
    	@Override
 	public ServerAuthRes placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) {
-		ServerAuthRes auth = new ServerAuthRes();
-		auth.setObject(this.dbCon.placeBuyingOrder(o, lBoundPercent, uBoundPercent, tradingSessionID));
-		auth.setHasAccess(true);    		
-		return auth;
+   		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.placeBuyingOrder(o, lBoundPercent, uBoundPercent, tradingSessionID));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
 	}
 
-	
-	
-	
+   	@Override
+	public ServerAuthRes getCustomerStockQuantityPending(int customerId, int stockId, String sessionID) {
+   		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.getCustomerStockQuantityPending(customerId, stockId));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
+	}
 }

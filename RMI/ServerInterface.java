@@ -162,4 +162,5 @@ public interface ServerInterface extends Remote {
 	public ServerAuthRes selectOrdersByFirmByType(int firmId, int orderType, String sessionID) throws RemoteException; // delete one above
 	public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
 	public ServerAuthRes placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
+	public ServerAuthRes getCustomerStockQuantityPending(int customerId, int stockId, String sessionID) throws RemoteException;
 }
