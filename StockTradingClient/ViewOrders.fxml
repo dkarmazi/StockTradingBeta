@@ -26,5 +26,6 @@
         <RowConstraints maxHeight="157.0" minHeight="8.0" prefHeight="14.0" vgrow="SOMETIMES" />
       </rowConstraints>
     </GridPane>
+    <Button layoutX="618.0" layoutY="24.0" mnemonicParsing="false" onAction="#PopulateOrders" text="Refresh" />
   </children>
 </AnchorPane>

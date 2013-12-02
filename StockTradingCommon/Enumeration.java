@@ -35,8 +35,8 @@ public class Enumeration {
 	}
 
 	public static class OrderType {
-		public final static int BUYING_ORDER = 1;
-		public final static int SELLING_ORDER = 2;
+		public final static int BUYING_ORDER = 2;
+		public final static int SELLING_ORDER = 1;
 	}
 
 	public static class Broker {

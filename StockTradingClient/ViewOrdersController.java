@@ -27,11 +27,15 @@ public class ViewOrdersController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initBuyingTable();
         initSellingTable();
-        populateBuyingOrders();
-        populateSellingOrders();
+        PopulateOrders();
     }    
     
-    
+    @FXML
+    public void PopulateOrders()
+    {
+        populateBuyingOrders();
+        populateSellingOrders();
+    }
     private void initBuyingTable()
     {
         BuyingOrdersTableView.setEditable(false);
@@ -51,7 +55,7 @@ public class ViewOrdersController implements Initializable {
         customerName.setCellValueFactory(
                 new PropertyValueFactory<Stock, String>("displayCustomerName"));
         
-        TableColumn stockPrice = new TableColumn("Asking Price");
+        TableColumn stockPrice = new TableColumn("Buying Price");
         stockPrice.setPrefWidth(100);
         stockPrice.setCellValueFactory(
                 new PropertyValueFactory<Stock, String>("price"));
@@ -91,7 +95,7 @@ public class ViewOrdersController implements Initializable {
         customerName.setCellValueFactory(
                 new PropertyValueFactory<Stock, String>("displayCustomerName"));
         
-        TableColumn stockPrice = new TableColumn("Asking Price");
+        TableColumn stockPrice = new TableColumn("Selling Price");
         stockPrice.setPrefWidth(100);
         stockPrice.setCellValueFactory(
                 new PropertyValueFactory<Stock, String>("price"));

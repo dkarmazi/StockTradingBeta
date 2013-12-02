@@ -1,6 +1,7 @@
 
 package StockTradingClient;
 
+import StockTradingCommon.Enumeration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -71,13 +72,8 @@ public class LoginController implements Initializable {
                 }
             }
         );
-        
-        // Admin
-        //        UserEmail.setText("dkarmazi@gwu.edu");
-        //        Password.setText("StocksTradingPassword");
-        // Broker
-        UserEmail.setText("dkarmazi@gwmail.gwu.edu");
-        Password.setText("StocksTradingPassword12");
+        UserEmail.setText("hirosh@gwu.edu");
+        Password.setText("StocksTradingPassword");
     }
     
     private void ResetScreenAppearance()
@@ -92,6 +88,20 @@ public class LoginController implements Initializable {
         
         if (loginStatus.isVerified())
         {
+            if (loginStatus.getSession() == null)
+            {
+                // user does not have valid session
+                MessageBox msgBox = new MessageBox(
+                        "Login Error"
+                        , "You have no valid session id assigned. Can not access the system without a valid session ID."
+                        , Enumeration.MessageIcon.ERROR);
+                msgBox.Show(event);
+                
+                ((Node)(event.getSource())).getScene().getWindow().hide(); // Hide the current window
+                
+                return;
+                
+            }
 
             System.out.println(loginStatus.getSession());
             Utility.setCurrentSessionId(loginStatus.getSession());
