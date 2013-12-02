@@ -3464,12 +3464,12 @@ public class DatabaseConnector {
 
 		
 		String query = "SELECT O.*, S.NAME, CI.FIRSTNAME, CI.LASTNAME"
-			        + " FROM ORDERS_M as O, USERS as U, CUSTOMER_INFO as CI, STOCKS as S"
-			        + " WHERE O.BROKERID = U.ID"
-			        + " AND O.CUSTOMERID = CI.ID"
-			        + " AND O.STOCKID = S.ID"
-			        + " AND O.TYPEID = ?"
-			        + " AND U.FIRMID = ?";
+				     + " FROM ORDERS_M as O, HAS_FIRM_BROKERS as HFB, CUSTOMER_INFO as CI, STOCKS as S"
+				     + " WHERE O.BROKERID = HFB.BROKERID"
+				     + " AND O.CUSTOMERID = CI.ID"
+				     + " AND O.STOCKID = S.ID"
+				     + " AND O.TYPEID = ?"
+				     + " AND HFB.FIRMID = ?";
 		
 		try {
 			st = this.con.prepareStatement(query);
@@ -3991,9 +3991,7 @@ public class DatabaseConnector {
 			return v;
 		}					
 	}
-	
-	
-	
+
 	
 	public Validator lockAmountOnCustomerAccount(CustomerInfo c, double amount) {
 
@@ -4004,6 +4002,30 @@ public class DatabaseConnector {
 		return updateCustomerInfo(c.getId(), c);
 	}
 	
+	public int getActiveTradingSessionID(){
+		int tradingSessionID = -1;
+		
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT * FROM TRADINGSESSIONS where ACTIVE = 1";
 
+		try {
+			st = this.con.prepareStatement(query);
+			
+			rs = st.executeQuery();
+
+			 if (rs.next()){
+				 tradingSessionID = rs.getInt("ID");
+			 }
+			
+			
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+	
+		
+		return tradingSessionID;
+	}
 	
 }

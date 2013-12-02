@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -1087,10 +1088,10 @@ public class  Utility
     {
         tableView.getItems().clear();
 
+        
         ArrayList<Order> records = null;
         try
         {
-
             ServerAuthRes results = serverInterface.selectOrderDetailsByType
                     (
                             Enumeration.OrderType.BUYING_ORDER
@@ -1241,10 +1242,10 @@ public class  Utility
     {
         tableView.getItems().clear();
 
+        
         ArrayList<Order> records = null;
         try
         {
-
             ServerAuthRes results = serverInterface.selectOrderDetailsByType
                     (
                             Enumeration.OrderType.SELLING_ORDER
@@ -1399,7 +1400,7 @@ public class  Utility
         Validator validator = new Validator();
         try
         {
-            validator = serverInterface.updateUserPassword(userid, newPassword1, newPassword2);
+            validator = (Validator) serverInterface.updateUserPassword(userid, newPassword1, newPassword2, getCurrentSessionId()).getObject();
         }
         catch (RemoteException e)
         {
