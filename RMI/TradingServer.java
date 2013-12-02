@@ -931,22 +931,4 @@ public class TradingServer extends UnicastRemoteObject implements
         return auth;
 	}
 
-   	@Override
-	public ServerAuthRes getCustomerStockQuantityPending(int customerId, int stockId, String sessionID) {
-   		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
-        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
-        ServerAuthRes auth = new ServerAuthRes();
-        if (allowed){
-        	if (tradingSessionID != -1){
-        		auth.setObject(this.dbCon.getCustomerStockQuantityPending(customerId, stockId));
-        	}else{
-        		auth.setObject(null);
-        	}
-        }else{
-            auth.setObject(null);
-        }
-        auth.setHasAccess(allowed);     
-        
-        return auth;
-	}
 }

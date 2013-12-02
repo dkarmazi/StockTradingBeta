@@ -3735,7 +3735,10 @@ public class DatabaseConnector {
 		
 		// 3. check if this customer possesses enough amount
 		int curAmount = selectHasCustomerStockAmount(o.getCustomerId(), o.getStockId());
-		if(o.getAmount() > curAmount) {
+		int pendingAmount = getCustomerStockQuantityPending(o.getCustomerId(), o.getStockId());
+		int availableAmount = curAmount - pendingAmount;
+		
+		if(o.getAmount() > availableAmount) {
 			v.setVerified(false);
 			v.setStatus("This customer does not have enough amount of selected stock");
 			return v;
