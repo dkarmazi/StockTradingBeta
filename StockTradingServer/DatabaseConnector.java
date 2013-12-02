@@ -3461,15 +3461,14 @@ public class DatabaseConnector {
 		ArrayList<Order> ordersAll = new ArrayList<Order>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
-
 		
 		String query = "SELECT O.*, S.NAME, CI.FIRSTNAME, CI.LASTNAME"
-				     + " FROM ORDERS_M as O, HAS_FIRM_BROKERS as HFB, CUSTOMER_INFO as CI, STOCKS as S"
-				     + " WHERE O.BROKERID = HFB.BROKERID"
-				     + " AND O.CUSTOMERID = CI.ID"
-				     + " AND O.STOCKID = S.ID"
-				     + " AND O.TYPEID = ?"
-				     + " AND HFB.FIRMID = ?";
+                     + " FROM ORDERS_M as O, USERS as U, CUSTOMER_INFO as CI, STOCKS as S"
+				     + " WHERE O.BROKERID = U.ID"
+				      + " AND O.CUSTOMERID = CI.ID"
+				      + " AND O.STOCKID = S.ID"
+				      + " AND O.TYPEID = ?"
+				      + " AND U.FIRMID = ?";
 		
 		try {
 			st = this.con.prepareStatement(query);
@@ -3718,6 +3717,15 @@ public class DatabaseConnector {
 			return v;			
 		}
 		
+		// 0.5 check if this firm has access to this session
+		int firmId = selectBrokerageFirmForBroker(o.getBrokerId());
+		boolean check05 = checkBrokerageFirmTransactionPermission(tradingSessionID, firmId);
+		if(!check05) {
+			v.setVerified(false);
+			v.setStatus("Error. Your Brokerage Firm cannot participate in this Trading Session");
+			return v;
+		}
+		
 		// 1. check if broker has access to customer
 		Validator check1 = hasBrokerCustomer(o.getBrokerId(), o.getCustomerId());
 		if(!check1.isVerified()) {
@@ -3736,7 +3744,10 @@ public class DatabaseConnector {
 		
 		// 3. check if this customer possesses enough amount
 		int curAmount = selectHasCustomerStockAmount(o.getCustomerId(), o.getStockId());
-		if(o.getAmount() > curAmount) {
+		int pendingAmount = getCustomerStockQuantityPending(o.getCustomerId(), o.getStockId());
+		int availableAmount = curAmount - pendingAmount;
+		
+		if(o.getAmount() > availableAmount) {
 			v.setVerified(false);
 			v.setStatus("This customer does not have enough amount of selected stock");
 			return v;
@@ -3939,7 +3950,16 @@ public class DatabaseConnector {
 			v.setStatus(check0.getStatus());
 			return v;			
 		}
-		
+
+		// 0.5 check if this firm has access to this session
+		int firmId = selectBrokerageFirmForBroker(o.getBrokerId());
+		boolean check05 = checkBrokerageFirmTransactionPermission(tradingSessionID, firmId);
+		if(!check05) {
+			v.setVerified(false);
+			v.setStatus("Error. Your Brokerage Firm cannot participate in this Trading Session");
+			return v;
+		}
+
 		// 1. check if broker has access to customer
 		Validator check1 = hasBrokerCustomer(o.getBrokerId(), o.getCustomerId());
 		if(!check1.isVerified()) {
@@ -4027,5 +4047,99 @@ public class DatabaseConnector {
 		
 		return tradingSessionID;
 	}
+	
+	
+	
+	public int getCustomerStockQuantityPending(int customerId, int stockId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT sum(O.AMOUNT) "
+				     + " FROM ORDERS_M as O"
+				     + " WHERE O.CUSTOMERID = ?"
+				      + " AND O.STOCKID = ?"
+				      + " AND O.TYPEID = 1";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			st.setInt(2, stockId);
+			ResultSet res = st.executeQuery();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			
+			if(res.next()) {
+				return res.getInt(1);
+			} else {
+				return 0;
+			}
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	public boolean checkBrokerageFirmTransactionPermission(int tsId, int firmId) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String query = "SELECT ID FROM HAS_TS_BROKERAGEFIRMS WHERE FIRM_ID = ? AND TS_ID = ?";
+
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, firmId);
+			st.setInt(2, tsId);
+			ResultSet res = st.executeQuery();
+			
+			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
+			logger.logDatabaseActivity(st.toString());
+			
+			if(res.next()) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public ArrayList<Stock> selectCustomerStocksLimited(int customerId, int tsId) {
+		ArrayList<Stock> stocks = new ArrayList<Stock>();
+		PreparedStatement st = null;
+		String query = "SELECT STOCKS.*, HAS_CUSTOMERS_STOCKS.AMOUNT"
+				     + " FROM STOCKS, HAS_CUSTOMERS_STOCKS , HAS_TS_STOCKS"
+				     + " WHERE STOCKS.ID = HAS_CUSTOMERS_STOCKS.STOCKID "
+				     + " AND HAS_TS_STOCKS.STOCK_ID = STOCKS.ID"
+				     + " AND HAS_CUSTOMERS_STOCKS.CUSTOMERID = ?"
+				     + " AND HAS_TS_STOCKS.TS_ID = ?"
+				     + " ORDER BY STOCKS.NAME";
+		
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, customerId);
+			st.setInt(2, tsId);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				Stock s = new Stock();
+				s.setId(res.getInt(1));
+				s.setName(res.getString(2));
+				s.setPrice(res.getInt(4));
+				s.setStatusId(res.getInt(5));
+				s.setAmount(res.getInt(6));
+
+				stocks.add(s);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return stocks;
+	}
+
+	
+	
+	
+	
 	
 }
