@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,31 +31,31 @@ import java.util.HashSet;
 public class DatabaseConnector {
 	private Connection con = null;
 
-        private String encryption_iv = null;
-        private String encryption_key = null;
-        
-	// connect to DB
-	public DatabaseConnector() {                
-		try {
-                        String url = "jdbc:mysql://" + ReaderConfig.getDbHostIp() 
-                               + ":" + ReaderConfig.getDbPort()
-                               + "/" + ReaderConfig.getDbSchema();
+	private String encryption_iv = null;
+	private String encryption_key = null;
 
-                       String user = ReaderConfig.getDbUser();
-                       String password = ReaderConfig.getDbPassword();                   
-                    
+	// connect to DB
+	public DatabaseConnector() {
+		try {
+			String url = "jdbc:mysql://" + ReaderConfig.getDbHostIp() + ":"
+					+ ReaderConfig.getDbPort() + "/"
+					+ ReaderConfig.getDbSchema();
+
+			String user = ReaderConfig.getDbUser();
+			String password = ReaderConfig.getDbPassword();
 
 			Connection con = DriverManager.getConnection(url, user, password);
 			setCon(con);
-                        
-                        // Set the encyrption parameters from the config file
-                        encryption_iv = ReaderConfig.getEncryptionIV();
-                        encryption_key = ReaderConfig.getEncryptionKey();
-                        
+
+			// Set the encyrption parameters from the config file
+			encryption_iv = ReaderConfig.getEncryptionIV();
+			encryption_key = ReaderConfig.getEncryptionKey();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-                        System.out.println("Error : Filed to establish the Database connection.");
+			System.out
+					.println("Error : Filed to establish the Database connection.");
 		}
 	}
 
@@ -62,7 +64,7 @@ public class DatabaseConnector {
 		BrokerageFirm brokerageFirm = new BrokerageFirm();
 
 		try {
-                        PreparedStatement st = null;
+			PreparedStatement st = null;
 			String query = "SELECT * FROM BROKERAGE_FIRM_INFO WHERE ID = ?;";
 
 			st = this.con.prepareStatement(query);
@@ -105,7 +107,7 @@ public class DatabaseConnector {
 		this.con = con;
 	}
 
-        /*
+	/*
 	 * This function returns all admin users 0 - all 1,2 - with certain status
 	 */
 	public ArrayList<User> selectAdministratorsAll(int pStatusId) {
@@ -174,8 +176,8 @@ public class DatabaseConnector {
 
 		return usersAll;
 	}
-	
-        /*
+
+	/*
 	 * This function returns a broker for a given userid
 	 */
 	public UserAdmin selectAdminUser(int idToSelect) {
@@ -240,7 +242,7 @@ public class DatabaseConnector {
 		return user;
 	}
 
-        	/*
+	/*
 	 * This function inserts a new broker MySQL injection checked
 	 */
 	public Validator insertNewAdmin(UserAdmin newUser) {
@@ -317,8 +319,8 @@ public class DatabaseConnector {
 
 	public Validator updateAdmin(int idToUpdate, UserAdmin user) {
 		// validate input
-            
-                user.setBrokerFirmId(-1);
+
+		user.setBrokerFirmId(-1);
 		Validator v = user.validate();
 		if (!v.isVerified()) {
 			return v;
@@ -388,7 +390,7 @@ public class DatabaseConnector {
 		return v;
 	}
 
-        /*
+	/*
 	 * This function returns an array list of the brokerage firms
 	 */
 	public ArrayList<BrokerageFirm> selectBrokerageFirmsAll() {
@@ -433,20 +435,20 @@ public class DatabaseConnector {
 		return brokerageFirms;
 	}
 
-        /*
+	/*
 	 * This function returns an array list of the brokerage firms by status
 	 */
 	public ArrayList<BrokerageFirm> selectBrokerageFirmsByStatus(int statusId) {
 		ArrayList<BrokerageFirm> brokerageFirms = new ArrayList<BrokerageFirm>();
 		ResultSet rs = null;
-                PreparedStatement st = null;
-                
-		String query = "SELECT * FROM BROKERAGE_FIRM_INFO WHERE STATUSID = ?;"; 
+		PreparedStatement st = null;
+
+		String query = "SELECT * FROM BROKERAGE_FIRM_INFO WHERE STATUSID = ?;";
 
 		try {
-                        st = this.con.prepareStatement(query);
+			st = this.con.prepareStatement(query);
 			st.setInt(1, statusId);
-                    
+
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
@@ -480,7 +482,7 @@ public class DatabaseConnector {
 
 		return brokerageFirms;
 	}
-        
+
 	/*
 	 * This function returns a single brokerage firm based on a given id MySQL
 	 * injection protection
@@ -939,8 +941,9 @@ public class DatabaseConnector {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
-		//String query = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, PASSWORD = ?, SALT = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
-                String query = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
+		// String query =
+		// "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, PASSWORD = ?, SALT = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
+		String query = "UPDATE USERS SET FIRSTNAME = ?, LASTNAME = ?, EMAIL = ?, SSN = ?, ROLEID = ?, STATUSID = ?, FIRMID = ? WHERE ID = ?";
 		try {
 
 			// Password hashing
@@ -971,8 +974,8 @@ public class DatabaseConnector {
 			st.setString(2, user.getLastName());
 			st.setString(3, user.getEmail());
 			st.setBytes(4, ssnCipher);
-			//st.setString(5, passwordHashed);
-			//st.setString(6, salt);
+			// st.setString(5, passwordHashed);
+			// st.setString(6, salt);
 			st.setInt(5, user.getRoleId());
 			st.setInt(6, user.getStatusId());
 			st.setInt(7, user.getBrokerFirmId());
@@ -1172,8 +1175,6 @@ public class DatabaseConnector {
 		return v;
 	}
 
-
-
 	/*
 	 * This function returns an array list of all active customers of a given
 	 * brokerage firm
@@ -1314,7 +1315,7 @@ public class DatabaseConnector {
 
 			ResultSet res = st.executeQuery();
 
-			if (res.next()){
+			if (res.next()) {
 
 				int id = res.getInt(1);
 				String firstName = res.getString(2);
@@ -1324,9 +1325,7 @@ public class DatabaseConnector {
 				double balance = res.getDouble(6);
 				double pendingbalance = res.getDouble(7);
 				int statusId = res.getInt(8);
-	
-				
-				
+
 				customer.setId(id);
 				customer.setFirstName(firstName);
 				customer.setLastName(lastName);
@@ -1341,8 +1340,7 @@ public class DatabaseConnector {
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
 
-		
-                return customer;
+		return customer;
 	}
 
 	/**
@@ -1375,20 +1373,17 @@ public class DatabaseConnector {
 			rs = st.getGeneratedKeys();
 			rs.next();
 			int insertId = rs.getInt(1);
-			
 
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			
 			// insert firm
 			st2 = this.con.prepareStatement(query2,
-					Statement.RETURN_GENERATED_KEYS);			
+					Statement.RETURN_GENERATED_KEYS);
 			st2.setInt(1, newCustomer.getFirmId());
 			st2.setInt(2, insertId);
 			int affectedRows2 = st2.executeUpdate();
-			
-	
+
 			if (affectedRows == 0 || affectedRows2 == 0) {
 				v.setVerified(false);
 				v.setStatus("Could not insert into the table");
@@ -1435,10 +1430,9 @@ public class DatabaseConnector {
 				v.setStatus("Could not update the record");
 				return v;
 			}
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-
 
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
@@ -1521,7 +1515,7 @@ public class DatabaseConnector {
 				user.setTempPassword(tempPassword);
 				user.setTempPasswordSalt(tempPasswordSalt);
 				user.setBrokerFirmId(firmId);
-				
+
 				user.setId(id);
 				user.setRoleId(roleId);
 			} else {
@@ -2059,16 +2053,15 @@ public class DatabaseConnector {
 	@SuppressWarnings("deprecation")
 	public boolean isUserPasswordExpired(int UserID) {
 		boolean result = false;
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * from USERPASSWORDHISTORY where USERID = ? order by SETON DESC";
 
 		try {
-			st = this.con.prepareStatement(query);			
+			st = this.con.prepareStatement(query);
 			st.setInt(1, UserID);
 			rs = st.executeQuery();
-			
 
 			if (rs.next()) {
 				Timestamp setOnDate = rs.getTimestamp("SETON");
@@ -2101,7 +2094,7 @@ public class DatabaseConnector {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, userID);
 			rs = st.executeQuery();
-			
+
 			for (int count = 0; count < numberOfPasswordsToLookUp; count++) {
 				if (rs.next()) {
 					PasswordHasher ph = new PasswordHasher();
@@ -2127,7 +2120,7 @@ public class DatabaseConnector {
 		String query = "SELECT COUNT(*) FROM USERPASSWORDHISTORY WHERE USERID = ?";
 
 		try {
-			
+
 			st = this.con.prepareStatement(query);
 			st.setInt(1, UserID);
 			rs = st.executeQuery();
@@ -2153,11 +2146,11 @@ public class DatabaseConnector {
 		ResultSet rs2 = null;
 
 		String query1 = "SELECT FIRMID FROM USERS where ID = ?";
-		String query2 = "SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = ?";		
-		
+		String query2 = "SELECT SUPER_EMAIL FROM BROKERAGE_FIRM_INFO where ID = ?";
+
 		try {
-			
-			st1 = this.con.prepareStatement(query1);			
+
+			st1 = this.con.prepareStatement(query1);
 			st1.setInt(1, UserID);
 			rs1 = st1.executeQuery();
 
@@ -2167,11 +2160,11 @@ public class DatabaseConnector {
 				st2 = this.con.prepareStatement(query2);
 				st2.setInt(1, firmID);
 				rs2 = st2.executeQuery();
-				
+
 				if (rs2.next()) {
 					superEmail = rs2.getString("SUPER_EMAIL");
 				}
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2187,7 +2180,7 @@ public class DatabaseConnector {
 		String query = "SELECT ID FROM USERS WHERE EMAIL = ?";
 
 		try {
-			st = this.con.prepareStatement(query);			
+			st = this.con.prepareStatement(query);
 			st.setString(1, Email);
 			rs = st.executeQuery();
 
@@ -2199,9 +2192,7 @@ public class DatabaseConnector {
 		}
 		return result;
 	}
-	
-	
-	
+
 	public Validator updateUserPassword(int userId, String plainPass,
 			String plainPassConfirm) {
 		Validator v = new Validator();
@@ -2277,13 +2268,13 @@ public class DatabaseConnector {
 
 		return v;
 	}
-	
-	public int getActionID(String Action){
+
+	public int getActionID(String Action) {
 		int actionID = -1;
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		String query = "SELECT * from ACTIONS WHERE ACTIONS.DESC = ?";
 
 		try {
@@ -2299,87 +2290,87 @@ public class DatabaseConnector {
 		}
 		return actionID;
 	}
-	
-	public boolean isUserAllowedToDoAction (int userID, int actionID){
+
+	public boolean isUserAllowedToDoAction(int userID, int actionID) {
 		boolean result = false;
 
-		//find the user role:
+		// find the user role:
 		int UserRoleID = 0;
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT ROLEID from USERS where ID= ?";
-		try{
+		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, userID);
 			rs = st.executeQuery();
- 	        rs = st.getResultSet();
-	        result = rs.next();	        
-	        if (!result){
-	        	return result;
-	        }	        
-	        UserRoleID = rs.getInt("ROLEID");
-		}catch (Exception e) {
+			rs = st.getResultSet();
+			result = rs.next();
+			if (!result) {
+				return result;
+			}
+			UserRoleID = rs.getInt("ROLEID");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		//find if the user role got the right to perform the action
+		// find if the user role got the right to perform the action
 		query = "SELECT * FROM ROLERIGHTS where (ROLEID = ? and ACTIONID = ?)";
-		try{
+		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, UserRoleID);
 			st.setInt(2, actionID);
 			rs = st.executeQuery();
- 	        rs = st.getResultSet();
-	        result = rs.next();
-	        return result;
-		}catch (Exception e) {
-			
+			rs = st.getResultSet();
+			result = rs.next();
+			return result;
+		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
 		return result;
 	}
-        
 
-    public int insertNewTradingSession(TradingSession TS){
+	public int insertNewTradingSession(TradingSession TS) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		int TSID = -1;
 		String query = "INSERT INTO TRADINGSESSIONS (START, LIMIT_UP, LIMIT_DOWN, ACTIVE) VALUES (?, ?, ?, ?)";
-		
+
 		try {
 
-			st = this.con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			st = this.con.prepareStatement(query,
+					Statement.RETURN_GENERATED_KEYS);
 			st.setTimestamp(1, TS.getStartTime());
 			st.setInt(2, TS.getLimitUp());
 			st.setInt(3, TS.getLimitDown());
 			st.setInt(4, TS.getActive());
-			
+
 			st.executeUpdate();
 			rs = st.getGeneratedKeys();
-			if (rs.next()){
+			if (rs.next()) {
 				TSID = rs.getInt(1);
 			}
-			
-			for (int i=0; i < TS.getAvailableStocksID().size(); i++){
+
+			for (int i = 0; i < TS.getAvailableStocksID().size(); i++) {
 				query = "INSERT INTO HAS_TS_STOCKS (TS_ID, STOCK_ID) VALUES (?, ?)";
 				st = this.con.prepareStatement(query);
 				st.setInt(1, TSID);
 				st.setInt(2, TS.getAvailableStocksID().get(i));
-				
+
 				st.executeUpdate();
-				
+
 			}
-			
-			for (int i=0; i < TS.getAvailableFirmsID().size(); i++){
+
+			for (int i = 0; i < TS.getAvailableFirmsID().size(); i++) {
 				query = "INSERT INTO HAS_TS_BROKERAGEFIRMS (TS_ID, FIRM_ID) VALUES (?, ?)";
 				st = this.con.prepareStatement(query);
 				st.setInt(1, TSID);
 				st.setInt(2, TS.getAvailableFirmsID().get(i));
-				
+
 				st.executeUpdate();
-				
+
 			}
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
@@ -2388,30 +2379,28 @@ public class DatabaseConnector {
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
 
-
 		return TSID;
-	
+
 	}
-	
-	public boolean endTradingSession(int tradingSessionID){
+
+	public boolean endTradingSession(int tradingSessionID) {
 		boolean result = false;
-		
+
 		PreparedStatement st = null;
-		
 
 		String query = "UPDATE TRADINGSESSIONS SET END_TIME=?, ACTIVE=? WHERE ID=?";
-		
+
 		try {
 
 			st = this.con.prepareStatement(query);
-			
+
 			java.util.Date date = new java.util.Date();
-	    	Timestamp currentDate = new Timestamp(date.getTime());
-	    	
-	    	st.setTimestamp(1, currentDate);
-	    	st.setInt(2, 0);
-	    	st.setInt(3, tradingSessionID);
-			
+			Timestamp currentDate = new Timestamp(date.getTime());
+
+			st.setTimestamp(1, currentDate);
+			st.setInt(2, 0);
+			st.setInt(3, tradingSessionID);
+
 			st.executeUpdate();
 			result = true;
 
@@ -2422,66 +2411,63 @@ public class DatabaseConnector {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
-		
-		
+
 		return result;
 	}
-	
-	public TradingSession getTradingSessionInfo(int tradingSessionID){
+
+	public TradingSession getTradingSessionInfo(int tradingSessionID) {
 		TradingSession TS = new TradingSession();
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
 		String query = "SELECT * FROM TRADINGSESSIONS WHERE ID = ?";
-		
+
 		try {
 
 			st = this.con.prepareStatement(query);
-	    	st.setInt(1, tradingSessionID);
-			
+			st.setInt(1, tradingSessionID);
+
 			rs = st.executeQuery();
-			
-			if (rs.next()){
+
+			if (rs.next()) {
 				TS.setStartTime(rs.getTimestamp("START"));
 				TS.setLimitUp(rs.getInt("LIMIT_UP"));
 				TS.setLimitDown(rs.getInt("LIMIT_DOWN"));
 			}
-			
+
 			query = "SELECT STOCK_ID FROM HAS_TS_STOCKS WHERE TS_ID = ?";
 			st = this.con.prepareStatement(query);
-	    	st.setInt(1, tradingSessionID);
-			
-	    	Vector <Integer> stocksID = new Vector<Integer>();
-	    	Vector <String> stocksNames = new Vector<String>();
-	    	int stockID;
+			st.setInt(1, tradingSessionID);
+
+			Vector<Integer> stocksID = new Vector<Integer>();
+			Vector<String> stocksNames = new Vector<String>();
+			int stockID;
 			rs = st.executeQuery();
-			while (rs.next()){
+			while (rs.next()) {
 				stockID = rs.getInt("STOCK_ID");
 				stocksID.add(stockID);
 				stocksNames.add(getStockNameByID(stockID));
 			}
 			TS.setAvailableStocksID(stocksID);
 			TS.setAvailableStocksNames(stocksNames);
-			
-			
+
 			query = "SELECT FIRM_ID FROM HAS_TS_BROKERAGEFIRMS WHERE TS_ID = ?";
 			st = this.con.prepareStatement(query);
-	    	st.setInt(1, tradingSessionID);
-			
-	    	Vector <Integer> firmsID = new Vector<Integer>();
-	    	Vector <String> firmsNames = new Vector<String>();
-	    	int firmID;
+			st.setInt(1, tradingSessionID);
+
+			Vector<Integer> firmsID = new Vector<Integer>();
+			Vector<String> firmsNames = new Vector<String>();
+			int firmID;
 			rs = st.executeQuery();
-			while (rs.next()){
+			while (rs.next()) {
 				firmID = rs.getInt("FIRM_ID");
 				firmsID.add(firmID);
 				firmsNames.add(getBrokerageFirmNameByID(firmID));
 			}
 			TS.setAvailableFirmsID(firmsID);
 			TS.setAvailableFirmsNames(firmsNames);
-			
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
@@ -2489,13 +2475,12 @@ public class DatabaseConnector {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
-		
-		
+
 		return TS;
 	}
 
 	private String getStockNameByID(int stockID) {
-		String stockName="";
+		String stockName = "";
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -2515,9 +2500,9 @@ public class DatabaseConnector {
 		return stockName;
 
 	}
-	
+
 	private String getBrokerageFirmNameByID(int firmID) {
-		String stockName="";
+		String stockName = "";
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -2537,67 +2522,61 @@ public class DatabaseConnector {
 		return stockName;
 
 	}
-	
-	public int isThereMatch(Order newOrder){
+
+	public int isThereMatch(Order newOrder) {
 		int matchID = -1;
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM ORDERS_M WHERE ( (TYPEID = ?)";
-				query += " AND (CUSTOMERID != ?)";
-				query += " AND (STOCKID = ?)";
-				query += " AND (AMOUNT = ?)";
-				query += " AND (PRICE = ?))";
-				query += " ORDER BY ORDERID";
+		query += " AND (CUSTOMERID != ?)";
+		query += " AND (STOCKID = ?)";
+		query += " AND (AMOUNT = ?)";
+		query += " AND (PRICE = ?))";
+		query += " ORDER BY ORDERID";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
-			if (newOrder.getTypeId() == 1){
+
+			if (newOrder.getTypeId() == 1) {
 				st.setInt(1, 2);
-			}else{
+			} else {
 				st.setInt(1, 1);
 			}
-			
+
 			st.setInt(2, newOrder.getCustomerId());
 			st.setInt(3, newOrder.getStockId());
 			st.setInt(4, newOrder.getAmount());
 			st.setDouble(5, newOrder.getPrice());
-			
+
 			rs = st.executeQuery();
-			//System.out.println(st.toString());
+			// System.out.println(st.toString());
 			if (rs.next()) {
 				matchID = rs.getInt("ORDERID");
-				LoggerCustom.logLoginActivity("Matching Engine", "Order match found.");
+				LoggerCustom.logLoginActivity("Matching Engine",
+						"Order match found.");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return matchID;
 	}
 
-	
 	public boolean insertNewTransaction(Transaction newTransaction) {
 
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
-		String query = "INSERT INTO TRANSACTIONS ("
-				+ "SELLINGBROKERID, "
-				+ "SELLINGCUSTOMERID, "
-				+ "BUYINGBROKERID, "
-				+ "BUYINGCUSTOMERID, "
-				+ "STOCKID, "
-				+ "AMOUNT, "
-				+ "PRICE, "
-				+ "TRANSACTIONS.TIME, "
-				+ "SESSIONID) "
+		String query = "INSERT INTO TRANSACTIONS (" + "SELLINGBROKERID, "
+				+ "SELLINGCUSTOMERID, " + "BUYINGBROKERID, "
+				+ "BUYINGCUSTOMERID, " + "STOCKID, " + "AMOUNT, " + "PRICE, "
+				+ "TRANSACTIONS.TIME, " + "SESSIONID) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			st.setInt(1, newTransaction.getSellingBrokerID());
 			st.setInt(2, newTransaction.getSellingCustomerID());
 			st.setInt(3, newTransaction.getBuyingBrokerID());
@@ -2607,15 +2586,15 @@ public class DatabaseConnector {
 			st.setDouble(7, newTransaction.getPrice());
 			st.setTimestamp(8, newTransaction.getTime());
 			st.setInt(9, newTransaction.getSessionID());
-			
+
 			int res = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (res ==1 ){
+			if (res == 1) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 
@@ -2625,27 +2604,26 @@ public class DatabaseConnector {
 			return false;
 		}
 	}
-	
-	public boolean updateCustomerBalance(int customerID, double newBalance){
+
+	public boolean updateCustomerBalance(int customerID, double newBalance) {
 		PreparedStatement st = null;
-		
 
 		String query = "UPDATE CUSTOMER_INFO SET BALANCE = ? WHERE ID = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			st.setDouble(1, newBalance);
 			st.setInt(2, customerID);
-			
+
 			int res = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (res ==1 ){
+			if (res == 1) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 
@@ -2654,29 +2632,29 @@ public class DatabaseConnector {
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 			return false;
 		}
-			
+
 	}
 
-	public boolean updateCustomerPendingbalance(int customerID, double newPendingbalance){
+	public boolean updateCustomerPendingbalance(int customerID,
+			double newPendingbalance) {
 		PreparedStatement st = null;
-		
 
 		String query = "UPDATE CUSTOMER_INFO SET PENDINGBALANCE = ? WHERE ID = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			st.setDouble(1, newPendingbalance);
 			st.setInt(2, customerID);
-			
+
 			int res = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (res ==1 ){
+			if (res == 1) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 
@@ -2685,13 +2663,12 @@ public class DatabaseConnector {
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 			return false;
 		}
-			
+
 	}
 
-	
-	public int selectCustomerStockAmount(int customerID, int stockID){
+	public int selectCustomerStockAmount(int customerID, int stockID) {
 		int amount = -1;
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
@@ -2699,130 +2676,146 @@ public class DatabaseConnector {
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			st.setInt(1, customerID);
 			st.setInt(2, stockID);
-			
+
 			rs = st.executeQuery();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (rs.next()){
+			if (rs.next()) {
 				amount = rs.getInt("AMOUNT");
-			}	
-			
+			}
 
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
-		
+
 		return amount;
 	}
 
-	public boolean updateCustomerStockAmount(int customerID, int stockID, int newAmount){
+	public boolean updateCustomerStockAmount(int customerID, int stockID,
+			int newAmount) {
 		boolean result = false;
-		
+
 		PreparedStatement st = null;
-		
+
 		String query = "UPDATE HAS_CUSTOMERS_STOCKS SET AMOUNT = ? WHERE STOCKID = ? and CUSTOMERID = ?;";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			st.setInt(1, newAmount);
 			st.setInt(2, stockID);
 			st.setInt(3, customerID);
-			
+
 			int res = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (res == 1){
+			if (res == 1) {
 				result = true;
-			}	
-			
+			}
 
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
-		
+
 		return result;
 	}
 
-	public boolean makeTransaction(Order newOrder, int matchedOrderID, int tradingSessionID){
+	public boolean makeTransaction(Order newOrder, int matchedOrderID,
+			int tradingSessionID) {
 		boolean result = false;
 
-		//1-Creating new transaction:
+		// 1-Creating new transaction:
 		Order matchedOrder = selectOrder(matchedOrderID);
 		Transaction newTransaction = new Transaction();
-		
-		if (newOrder.getTypeId() == 1){
-			//newOrder is the selling order:
+
+		if (newOrder.getTypeId() == 1) {
+			// newOrder is the selling order:
 			newTransaction.setSellingBrokerID(newOrder.getBrokerId());
 			newTransaction.setSellingCustomerID(newOrder.getCustomerId());
-			
-			//matchedOrder is the buying order:
+
+			// matchedOrder is the buying order:
 			newTransaction.setBuyingBrokerID(matchedOrder.getBrokerId());
 			newTransaction.setBuyingCustomerID(matchedOrder.getCustomerId());
-		}else{
-			//matchedOrder is the selling order:
+		} else {
+			// matchedOrder is the selling order:
 			newTransaction.setSellingBrokerID(matchedOrder.getBrokerId());
 			newTransaction.setSellingCustomerID(matchedOrder.getCustomerId());
-			
-			//newOrder is the buying order:
+
+			// newOrder is the buying order:
 			newTransaction.setBuyingBrokerID(newOrder.getBrokerId());
 			newTransaction.setBuyingCustomerID(newOrder.getCustomerId());
 		}
-		
+
 		newTransaction.setStockID(newOrder.getStockId());
 		newTransaction.setAmount(newOrder.getAmount());
 		newTransaction.setPrice(newOrder.getPrice());
-		
+
 		java.util.Date date = new java.util.Date();
 		Timestamp currentDate = new Timestamp(date.getTime());
-		
+
 		newTransaction.setTime(currentDate);
 		newTransaction.setSessionID(tradingSessionID);
-		
+
 		result = insertNewTransaction(newTransaction);
-		
-		//2-Delete the matched order:
+
+		// 2-Delete the matched order:
 		deleteOrder(matchedOrderID);
-		
-		//3-Update Customers Info:
+
+		// 3-Update Customers Info:
 		int sellingCustomerID = newTransaction.getSellingCustomerID();
 		int buyingCustomerID = newTransaction.getBuyingCustomerID();
 		int stockID = newTransaction.getStockID();
 		int transactionAmount = newTransaction.getAmount();
 		double price = newTransaction.getPrice();
-		
-		//3-1-Update Selling Customer Balance:
-		double newBalance = selectCustomerInfo(sellingCustomerID).getBalance() + (transactionAmount * price);
+
+		// 3-1-Update Selling Customer Balance:
+		double newBalance = selectCustomerInfo(sellingCustomerID).getBalance()
+				+ (getProperProduct(price, transactionAmount));
 		updateCustomerBalance(sellingCustomerID, newBalance);
 
-		//3-2-Update Buying Customer Balance:
-		newBalance = selectCustomerInfo(buyingCustomerID).getBalance() - (transactionAmount * price);
-		double newPendingbalance = selectCustomerInfo(buyingCustomerID).getPendingBalance() - (transactionAmount * price); 
+		// 3-2-Update Buying Customer Balance:
+		newBalance = selectCustomerInfo(buyingCustomerID).getBalance()
+				- (getProperProduct(price, transactionAmount));
+		// double newPendingbalance =
+		// selectCustomerInfo(buyingCustomerID).getPendingBalance() -
+		// (getProperProduct(price, transactionAmount));
 		updateCustomerBalance(buyingCustomerID, newBalance);
-		updateCustomerPendingbalance(buyingCustomerID, newPendingbalance);
-		
-		//3-3-Update Selling Customer Stocks:
+		// updateCustomerPendingbalance(buyingCustomerID, newPendingbalance);
+
+		// 3-3-Update Selling Customer Stocks:
 		int ownedAmount = selectCustomerStockAmount(sellingCustomerID, stockID);
 		int newAmount = ownedAmount - transactionAmount;
 		updateCustomerStockAmount(sellingCustomerID, stockID, newAmount);
-		
-		//3-4-Update Buying Customer Stocks:
+
+		// 3-4-Update Buying Customer Stocks:
 		ownedAmount = selectCustomerStockAmount(buyingCustomerID, stockID);
-		newAmount = ownedAmount + transactionAmount;
-		updateCustomerStockAmount(buyingCustomerID, stockID, newAmount);
-		
-		//4-Log the transaction:
-		LoggerCustom.logLoginActivity("Matching Enging", "Transaction completed - " + newTransaction.toString());
-		
+		if (ownedAmount == -1) {
+			// buyer has no stocks
+			Relationship res = new Relationship();
+			res.setId1(buyingCustomerID);
+			res.setId2(stockID);
+			res.setExtra(transactionAmount);
+			res.setStatus(1);
+			insertHasCustomerStocks(res);
+		} else {
+			// buyer already has stocks
+			newAmount = ownedAmount + transactionAmount;
+			updateCustomerStockAmount(buyingCustomerID, stockID, newAmount);
+		}
+
+		// 4-Log the transaction:
+		LoggerCustom.logLoginActivity("Matching Enging",
+				"Transaction completed - " + newTransaction.toString());
+
 		return result;
 	}
 
@@ -2836,13 +2829,13 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, transactionID);
-			
+
 			rs = st.executeQuery();
 
-			if (rs.next()){
-				
+			if (rs.next()) {
+
 				int SellingBrokerID = rs.getInt("SELLINGBROKERID");
-				int SellingCustomerID  = rs.getInt("SELLINGCUSTOMERID");
+				int SellingCustomerID = rs.getInt("SELLINGCUSTOMERID");
 				int BuyingBrokerID = rs.getInt("BUYINGBROKERID");
 				int BuyingCustomerID = rs.getInt("BUYINGCUSTOMERID");
 				int StockID = rs.getInt("STOCKID");
@@ -2851,7 +2844,6 @@ public class DatabaseConnector {
 				Timestamp Time = rs.getTimestamp("TIME");
 				int SessionID = rs.getInt("SESSIONID");
 
-				
 				String sellingBrokerName;
 				String sellingCustomerName;
 				String buyingBrokerName;
@@ -2859,19 +2851,23 @@ public class DatabaseConnector {
 				String stockName;
 
 				User user = selectBrokerUser(SellingBrokerID);
-				sellingBrokerName = user.getFirstName() + " " + user.getLastName();
-				
+				sellingBrokerName = user.getFirstName() + " "
+						+ user.getLastName();
+
 				user = selectBrokerUser(BuyingBrokerID);
-				buyingBrokerName = user.getFirstName() + " " + user.getLastName();
-				
+				buyingBrokerName = user.getFirstName() + " "
+						+ user.getLastName();
+
 				CustomerInfo customer = selectCustomerInfo(SellingCustomerID);
-				sellingCustomerName = customer.getFirstName() + " " + customer.getLastName();
-				
+				sellingCustomerName = customer.getFirstName() + " "
+						+ customer.getLastName();
+
 				customer = selectCustomerInfo(BuyingCustomerID);
-				buyingCustomerName = customer.getFirstName() + " " + customer.getLastName();
-				
+				buyingCustomerName = customer.getFirstName() + " "
+						+ customer.getLastName();
+
 				stockName = selectStock(StockID).getName();
-				
+
 				trans.setSellingBrokerID(SellingBrokerID);
 				trans.setSellingCustomerID(SellingCustomerID);
 				trans.setBuyingBrokerID(BuyingBrokerID);
@@ -2888,8 +2884,6 @@ public class DatabaseConnector {
 				trans.setStockName(stockName);
 			}
 
-
-
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
@@ -2898,27 +2892,25 @@ public class DatabaseConnector {
 		return trans;
 	}
 
-	public boolean deleteTransaction(int transactionID){
-		
+	public boolean deleteTransaction(int transactionID) {
+
 		PreparedStatement st = null;
-		
 
 		String query = "DELETE FROM TRANSACTIONS WHERE ID = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			st.setInt(1, transactionID);
-			
-			
+
 			int res = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (res ==1 ){
+			if (res == 1) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 
@@ -2929,50 +2921,53 @@ public class DatabaseConnector {
 		}
 	}
 
-	public boolean rollBackTransaction(int transactionID){
+	public boolean rollBackTransaction(int transactionID) {
 		boolean result = false;
-		
+
 		Transaction trans = selectTransaction(transactionID);
-		
-		//1-Update Customers Info:
+
+		// 1-Update Customers Info:
 		int sellingCustomerID = trans.getSellingCustomerID();
 		int buyingCustomerID = trans.getBuyingCustomerID();
 		int stockID = trans.getStockID();
 		int transactionAmount = trans.getAmount();
 		double price = trans.getPrice();
-		
-		//1-1-Update Selling Customer Balance:
-		double newBalance = selectCustomerInfo(sellingCustomerID).getBalance() - (transactionAmount * price);
+
+		// 1-1-Update Selling Customer Balance:
+		double newBalance = selectCustomerInfo(sellingCustomerID).getBalance()
+				- (getProperProduct(price, transactionAmount));
 		updateCustomerBalance(sellingCustomerID, newBalance);
 
-		//1-2-Update Buying Customer Balance:
-		newBalance = selectCustomerInfo(buyingCustomerID).getBalance() + (transactionAmount * price);
+		// 1-2-Update Buying Customer Balance:
+		newBalance = selectCustomerInfo(buyingCustomerID).getBalance()
+				+ (getProperProduct(price, transactionAmount));
 		updateCustomerBalance(buyingCustomerID, newBalance);
-		
-		//1-3-Update Selling Customer Stocks:
+
+		// 1-3-Update Selling Customer Stocks:
 		int ownedAmount = selectCustomerStockAmount(sellingCustomerID, stockID);
 		int newAmount = ownedAmount + transactionAmount;
 		updateCustomerStockAmount(sellingCustomerID, stockID, newAmount);
-		
-		//1-4-Update Buying Customer Stocks:
+
+		// 1-4-Update Buying Customer Stocks:
 		ownedAmount = selectCustomerStockAmount(buyingCustomerID, stockID);
 		newAmount = ownedAmount - transactionAmount;
 		updateCustomerStockAmount(buyingCustomerID, stockID, newAmount);
-		
-		//4-Log the transaction:
-		LoggerCustom.logLoginActivity("Matching Engine", "Transaction rollback completed: " + trans.toString());
-		
-		//5-Remove the transaction:
+
+		// 4-Log the transaction:
+		LoggerCustom.logLoginActivity("Matching Engine",
+				"Transaction rollback completed: " + trans.toString());
+
+		// 5-Remove the transaction:
 		result = deleteTransaction(transactionID);
-		
+
 		return result;
 	}
-	
-	public boolean flushPendingOrders(){
+
+	public boolean flushPendingOrders() {
 		boolean result = false;
-		
+
 		PreparedStatement st = null;
-		
+
 		String query = "TRUNCATE TABLE ORDERS_M";
 
 		try {
@@ -2980,20 +2975,20 @@ public class DatabaseConnector {
 			int res = st.executeUpdate();
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-			if (res == 1){
+			if (res == 1) {
 				result = true;
-			}	
+			}
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
-		
+
 		return result;
 	}
-	
-	public boolean calculateStockClosingPrice(int tradingSessionID, int stockID){
+
+	public boolean calculateStockClosingPrice(int tradingSessionID, int stockID) {
 		boolean result = false;
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM TRANSACTIONS where SESSIONID = ? and STOCKID = ?";
@@ -3002,27 +2997,29 @@ public class DatabaseConnector {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, tradingSessionID);
 			st.setInt(2, stockID);
-			
+
 			rs = st.executeQuery();
 
 			int stocksAmount = 0;
 			double totalValue = 0;
-			
+
 			boolean found = false;
-			while (rs.next()){
+			while (rs.next()) {
 				found = true;
 				stocksAmount += rs.getInt("AMOUNT");
 				totalValue += rs.getInt("AMOUNT") * rs.getDouble("PRICE");
 			}
 
-			if (found){
+			if (found) {
 				double closingPrice = totalValue / stocksAmount;
 				result = updateStockPrice(stockID, closingPrice);
-				if (result){
-					LoggerCustom.logLoginActivity("Matching Engine", "Stock Price updated: StockID: " + stockID + ", new price: " + closingPrice);
+				if (result) {
+					LoggerCustom.logLoginActivity("Matching Engine",
+							"Stock Price updated: StockID: " + stockID
+									+ ", new price: " + closingPrice);
 				}
 			}
-			
+
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
@@ -3031,26 +3028,25 @@ public class DatabaseConnector {
 		return result;
 	}
 
-	public boolean updateStockPrice (int stockID, double newPrice){
+	public boolean updateStockPrice(int stockID, double newPrice) {
 		PreparedStatement st = null;
-		
 
 		String query = "UPDATE STOCKS SET PRICE = ? WHERE ID = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			st.setDouble(1, newPrice);
 			st.setInt(2, stockID);
-			
+
 			int res = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
-			if (res ==1 ){
+			if (res == 1) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 
@@ -3062,9 +3058,9 @@ public class DatabaseConnector {
 
 	}
 
-	public boolean calculateClosingPrices(int tradingSessionID){
+	public boolean calculateClosingPrices(int tradingSessionID) {
 		boolean result = false;
-	
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM HAS_TS_STOCKS WHERE TS_ID = ?";
@@ -3072,17 +3068,16 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, tradingSessionID);
-			
-			
+
 			rs = st.executeQuery();
 
-			int stockID; 
-			while (rs.next()){
+			int stockID;
+			while (rs.next()) {
 				stockID = rs.getInt("STOCK_ID");
 				calculateStockClosingPrice(tradingSessionID, stockID);
 				result = true;
 			}
-			
+
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
@@ -3091,9 +3086,9 @@ public class DatabaseConnector {
 		return result;
 	}
 
-	public TradingSession selectTradingSession(int tradingSessionID){
+	public TradingSession selectTradingSession(int tradingSessionID) {
 		TradingSession tradingSession = new TradingSession();
-	
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM TRADINGSESSIONS WHERE ID = ?";
@@ -3101,24 +3096,23 @@ public class DatabaseConnector {
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, tradingSessionID);
-			
+
 			rs = st.executeQuery();
 
-			 if (rs.next()){
-				 Timestamp start = rs.getTimestamp(2);
-				 Timestamp end = rs.getTimestamp(3);
-				 int limitUp = rs.getInt(4);
-				 int limitDown = rs.getInt(5);
-				 int active = rs.getInt(6);
-				 
-				 tradingSession.setStartTime(start);
-				 tradingSession.setEndTime(end);
-				 tradingSession.setLimitUp(limitUp);
-				 tradingSession.setLimitDown(limitDown);
-				 tradingSession.setActive(active);
-			 }
-			
-			
+			if (rs.next()) {
+				Timestamp start = rs.getTimestamp(2);
+				Timestamp end = rs.getTimestamp(3);
+				int limitUp = rs.getInt(4);
+				int limitDown = rs.getInt(5);
+				int active = rs.getInt(6);
+
+				tradingSession.setStartTime(start);
+				tradingSession.setEndTime(end);
+				tradingSession.setLimitUp(limitUp);
+				tradingSession.setLimitDown(limitDown);
+				tradingSession.setActive(active);
+			}
+
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
@@ -3126,75 +3120,76 @@ public class DatabaseConnector {
 
 		return tradingSession;
 	}
-	
+
 	public ArrayList<Transaction> selectTransactionAll(int tradingSessionID) {
-        ArrayList<Transaction> transactionAll = new ArrayList<Transaction>();
-        PreparedStatement st = null;
+		ArrayList<Transaction> transactionAll = new ArrayList<Transaction>();
+		PreparedStatement st = null;
 
-        String query = "SELECT * FROM TRANSACTIONS WHERE SESSIONID = ?";
+		String query = "SELECT * FROM TRANSACTIONS WHERE SESSIONID = ?";
 
-        try {
-                st = this.con.prepareStatement(query);
-                st.setInt(1, tradingSessionID);
-                
-                ResultSet rs = st.executeQuery();
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, tradingSessionID);
 
-                while (rs.next()) {
-                	Transaction trans = new Transaction();
-                	
-                	
-                	int id = rs.getInt("ID");
-                	int SellingBrokerID = rs.getInt("SELLINGBROKERID");
-    				int SellingCustomerID  = rs.getInt("SELLINGCUSTOMERID");
-    				int BuyingBrokerID = rs.getInt("BUYINGBROKERID");
-    				int BuyingCustomerID = rs.getInt("BUYINGCUSTOMERID");
-    				int StockID = rs.getInt("STOCKID");
-    				int Amount = rs.getInt("AMOUNT");
-    				double Price = rs.getDouble("PRICE");
-    				Timestamp Time = rs.getTimestamp("TIME");
-    				int SessionID = rs.getInt("SESSIONID");
-    				
-    				User user = selectBrokerUser(SellingBrokerID);
-    				String sellingBrokerName = user.getFirstName() + " " + user.getLastName();
-    				
-    				user = selectBrokerUser(BuyingBrokerID);
-    				String buyingBrokerName = user.getFirstName() + " " + user.getLastName();
-    				
-    				CustomerInfo customer = selectCustomerInfo(SellingCustomerID);
-    				String sellingCustomerName = customer.getFirstName() + " " + customer.getLastName();
-    				
-    				customer = selectCustomerInfo(BuyingCustomerID);
-    				String buyingCustomerName = customer.getFirstName() + " " + customer.getLastName();
-    				
-    				String stockName = selectStock(StockID).getName();
-    				
-    				
+			ResultSet rs = st.executeQuery();
 
-    				trans.setID(id);
-    				trans.setSellingBrokerID(SellingBrokerID);
-    				trans.setSellingCustomerID(SellingCustomerID);
-    				trans.setBuyingBrokerID(BuyingBrokerID);
-    				trans.setBuyingCustomerID(BuyingCustomerID);
-    				trans.setStockID(StockID);
-    				trans.setAmount(Amount);
-    				trans.setPrice(Price);
-    				trans.setTime(Time);
-    				trans.setSessionID(SessionID);
-    				trans.setBuyingBrokerName(buyingBrokerName);
-    				trans.setBuyingCustomerName(buyingCustomerName);
-    				trans.setSellingBrokerName(sellingBrokerName);
-    				trans.setSellingCustomerName(sellingCustomerName);
-    				trans.setStockName(stockName);
+			while (rs.next()) {
+				Transaction trans = new Transaction();
 
-    				transactionAll.add(trans);
-                }
-        } catch (SQLException ex) {
-                Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
-                lgr.log(Level.WARNING, ex.getMessage(), ex);
-        }
+				int id = rs.getInt("ID");
+				int SellingBrokerID = rs.getInt("SELLINGBROKERID");
+				int SellingCustomerID = rs.getInt("SELLINGCUSTOMERID");
+				int BuyingBrokerID = rs.getInt("BUYINGBROKERID");
+				int BuyingCustomerID = rs.getInt("BUYINGCUSTOMERID");
+				int StockID = rs.getInt("STOCKID");
+				int Amount = rs.getInt("AMOUNT");
+				double Price = rs.getDouble("PRICE");
+				Timestamp Time = rs.getTimestamp("TIME");
+				int SessionID = rs.getInt("SESSIONID");
 
-        return transactionAll;
-	}        
+				User user = selectBrokerUser(SellingBrokerID);
+				String sellingBrokerName = user.getFirstName() + " "
+						+ user.getLastName();
+
+				user = selectBrokerUser(BuyingBrokerID);
+				String buyingBrokerName = user.getFirstName() + " "
+						+ user.getLastName();
+
+				CustomerInfo customer = selectCustomerInfo(SellingCustomerID);
+				String sellingCustomerName = customer.getFirstName() + " "
+						+ customer.getLastName();
+
+				customer = selectCustomerInfo(BuyingCustomerID);
+				String buyingCustomerName = customer.getFirstName() + " "
+						+ customer.getLastName();
+
+				String stockName = selectStock(StockID).getName();
+
+				trans.setID(id);
+				trans.setSellingBrokerID(SellingBrokerID);
+				trans.setSellingCustomerID(SellingCustomerID);
+				trans.setBuyingBrokerID(BuyingBrokerID);
+				trans.setBuyingCustomerID(BuyingCustomerID);
+				trans.setStockID(StockID);
+				trans.setAmount(Amount);
+				trans.setPrice(Price);
+				trans.setTime(Time);
+				trans.setSessionID(SessionID);
+				trans.setBuyingBrokerName(buyingBrokerName);
+				trans.setBuyingCustomerName(buyingCustomerName);
+				trans.setSellingBrokerName(sellingBrokerName);
+				trans.setSellingCustomerName(sellingCustomerName);
+				trans.setStockName(stockName);
+
+				transactionAll.add(trans);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return transactionAll;
+	}
 
 	public Validator insertHasCustomerStocks(Relationship r) {
 		Validator v = r.validate();
@@ -3213,9 +3208,9 @@ public class DatabaseConnector {
 			st.setInt(2, r.getId2());
 			st.setInt(3, r.getExtra());
 			st.setInt(4, r.getStatus());
-			
+
 			int affectedRows = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
@@ -3228,7 +3223,7 @@ public class DatabaseConnector {
 		} catch (SQLException ex) {
 			v.setVerified(false);
 			v.setStatus("Record already exists, select it on the left pane");
-			return v;			
+			return v;
 		}
 
 		v.setVerified(true);
@@ -3237,7 +3232,6 @@ public class DatabaseConnector {
 		return v;
 	}
 
-	
 	public Validator updateHasCustomerStocks(Relationship r) {
 		Validator v = r.validate();
 		if (!v.isVerified()) {
@@ -3255,22 +3249,22 @@ public class DatabaseConnector {
 			st.setInt(2, r.getExtra());
 			st.setInt(3, r.getId1());
 			st.setInt(4, r.getId2());
-			
-			int affectedRows = st.executeUpdate();		
-			
+
+			int affectedRows = st.executeUpdate();
+
 			if (affectedRows == 0) {
 				v.setVerified(false);
 				v.setStatus("Could not update record");
 				return v;
 			}
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
 		} catch (SQLException ex) {
 			v.setVerified(false);
 			v.setStatus("Update failed");
-			return v;			
+			return v;
 		}
 
 		v.setVerified(true);
@@ -3283,7 +3277,7 @@ public class DatabaseConnector {
 		ArrayList<Stock> stocks = new ArrayList<Stock>();
 		PreparedStatement st = null;
 		String query = "SELECT STOCKS.*, HAS_CUSTOMERS_STOCKS.AMOUNT FROM STOCKS, HAS_CUSTOMERS_STOCKS WHERE STOCKS.ID = HAS_CUSTOMERS_STOCKS.STOCKID AND HAS_CUSTOMERS_STOCKS.CUSTOMERID = ? ORDER BY STOCKS.NAME";
-		
+
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, customerId);
@@ -3311,7 +3305,7 @@ public class DatabaseConnector {
 		ArrayList<Stock> stocks = new ArrayList<Stock>();
 		PreparedStatement st = null;
 		String query = "SELECT * FROM STOCKS WHERE STATUSID = 1 ORDER BY NAME";
-		
+
 		try {
 			st = this.con.prepareStatement(query);
 			ResultSet res = st.executeQuery();
@@ -3331,12 +3325,12 @@ public class DatabaseConnector {
 
 		return stocks;
 	}
-	
+
 	public Relationship selectHasCustomerStocks(int customerId, int stockId) {
 		Relationship r = new Relationship();
 		PreparedStatement st = null;
 		String query = "SELECT HAS_CUSTOMERS_STOCKS.* FROM HAS_CUSTOMERS_STOCKS WHERE CUSTOMERID = ? AND STOCKID = ?";
-		
+
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, customerId);
@@ -3356,10 +3350,6 @@ public class DatabaseConnector {
 		return r;
 	}
 
-	
-	
-	
-	
 	/*
 	 * This function inserts a new order to the database
 	 */
@@ -3408,8 +3398,6 @@ public class DatabaseConnector {
 		return v;
 	}
 
-	
-	
 	/*
 	 * This functions returns an array list of all the orders
 	 */
@@ -3418,7 +3406,7 @@ public class DatabaseConnector {
 		Statement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM ORDERS_M";
-		
+
 		try {
 			st = this.con.createStatement();
 			ResultSet res = st.executeQuery(query);
@@ -3461,15 +3449,13 @@ public class DatabaseConnector {
 		ArrayList<Order> ordersAll = new ArrayList<Order>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+
 		String query = "SELECT O.*, S.NAME, CI.FIRSTNAME, CI.LASTNAME"
-                     + " FROM ORDERS_M as O, USERS as U, CUSTOMER_INFO as CI, STOCKS as S"
-				     + " WHERE O.BROKERID = U.ID"
-				      + " AND O.CUSTOMERID = CI.ID"
-				      + " AND O.STOCKID = S.ID"
-				      + " AND O.TYPEID = ?"
-				      + " AND U.FIRMID = ?";
-		
+				+ " FROM ORDERS_M as O, USERS as U, CUSTOMER_INFO as CI, STOCKS as S"
+				+ " WHERE O.BROKERID = U.ID" + " AND O.CUSTOMERID = CI.ID"
+				+ " AND O.STOCKID = S.ID" + " AND O.TYPEID = ?"
+				+ " AND U.FIRMID = ?";
+
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, orderType);
@@ -3484,7 +3470,7 @@ public class DatabaseConnector {
 				int stockId = res.getInt(5);
 				int amount = res.getInt(6);
 				double price = res.getDouble(7);
-				int statusId = res.getInt(8);				
+				int statusId = res.getInt(8);
 				String displaySummary = res.getString(9) + "["
 						+ new DecimalFormat("#,##0").format(amount) + " @ "
 						+ new DecimalFormat("#,##0.00").format(price) + "] ::"
@@ -3503,7 +3489,7 @@ public class DatabaseConnector {
 
 				ordersAll.add(order);
 			}
-			
+
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
@@ -3511,25 +3497,26 @@ public class DatabaseConnector {
 
 		return ordersAll;
 	}
-/*
+
+	/*
 	 * This functions returns an array list of all the pending orders
 	 */
-	public ArrayList<Order> selectOrderDetailsByType( int orderType) {
+	public ArrayList<Order> selectOrderDetailsByType(int orderType) {
 		ArrayList<Order> ordersAll = new ArrayList<Order>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
 
 		String query = "SELECT O.*, S.NAME AS STOCK_NAME, C.FIRSTNAME, C.LASTNAME , F.NAME AS FIRM_NAME"
-				+ " FROM ORDERS_M O " 
-                                + " INNER JOIN USERS U"
-				+ " ON (O.BROKERID = U.ID)" 
-                                + " INNER JOIN BROKERAGE_FIRM_INFO F"
-                                + " ON (U.FIRMID = F.ID)" 
-                                + " INNER JOIN STOCKS S"
-				+ " ON (O.STOCKID = S.ID)" 
-                                + " INNER JOIN CUSTOMER_INFO C"
-				+ " ON (O.CUSTOMERID = C.ID)" 
-                                + " WHERE O.TYPEID = ? ";
+				+ " FROM ORDERS_M O "
+				+ " INNER JOIN USERS U"
+				+ " ON (O.BROKERID = U.ID)"
+				+ " INNER JOIN BROKERAGE_FIRM_INFO F"
+				+ " ON (U.FIRMID = F.ID)"
+				+ " INNER JOIN STOCKS S"
+				+ " ON (O.STOCKID = S.ID)"
+				+ " INNER JOIN CUSTOMER_INFO C"
+				+ " ON (O.CUSTOMERID = C.ID)"
+				+ " WHERE O.TYPEID = ? ";
 
 		try {
 			st = this.con.prepareStatement(query);
@@ -3538,20 +3525,20 @@ public class DatabaseConnector {
 
 			while (res.next()) {
 				int orderId = res.getInt("ORDERID");
-                                
+
 				int typeId = res.getInt("TYPEID");
 				int brokerId = res.getInt("BROKERID");
 				int customerId = res.getInt("CUSTOMERID");
 				int stockId = res.getInt("STOCKID");
 				int amount = res.getInt("AMOUNT");
 				double price = res.getDouble("PRICE");
-                                String stockName = res.getString("STOCK_NAME");
+				String stockName = res.getString("STOCK_NAME");
 				String customer = res.getString("FIRSTNAME") + " "
 						+ res.getString("LASTNAME");
-                                String firmName = res.getString("FIRM_NAME");
-                                
+				String firmName = res.getString("FIRM_NAME");
+
 				Order order = new Order();
-                                
+
 				order.setOrderId(orderId);
 				order.setTypeId(typeId);
 				order.setBrokerId(brokerId);
@@ -3559,10 +3546,9 @@ public class DatabaseConnector {
 				order.setStockId(stockId);
 				order.setAmount(amount);
 				order.setPrice(price);
-                                order.setDisplayCustomerName(customer);
-                                order.setDisplayStockName(stockName);
-                                order.setDisplayFirmName(firmName);
-
+				order.setDisplayCustomerName(customer);
+				order.setDisplayStockName(stockName);
+				order.setDisplayFirmName(firmName);
 
 				ordersAll.add(order);
 			}
@@ -3573,7 +3559,7 @@ public class DatabaseConnector {
 
 		return ordersAll;
 	}
-        
+
 	/*
 	 * This function returns a particular order
 	 */
@@ -3582,10 +3568,10 @@ public class DatabaseConnector {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT O.*, CONCAT(CI.FIRSTNAME, ' ', CI.LASTNAME), S.NAME"
-                     + " FROM ORDERS_M as O, CUSTOMER_INFO as CI,  STOCKS as S"
-				     + " WHERE O.CUSTOMERID = CI.ID"
-				     + " AND O.STOCKID = S.ID"
-				     + " AND O.ORDERID = ?";
+				+ " FROM ORDERS_M as O, CUSTOMER_INFO as CI,  STOCKS as S"
+				+ " WHERE O.CUSTOMERID = CI.ID"
+				+ " AND O.STOCKID = S.ID"
+				+ " AND O.ORDERID = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
@@ -3601,9 +3587,9 @@ public class DatabaseConnector {
 			int amount = res.getInt(6);
 			double price = res.getDouble(7);
 			int statusId = res.getInt(8);
-	        String displayCustomerName = res.getString(9);
-	        String displayStockName = res.getString(10);
-			
+			String displayCustomerName = res.getString(9);
+			String displayStockName = res.getString(10);
+
 			order.setOrderId(orderId);
 			order.setTypeId(typeId);
 			order.setBrokerId(brokerId);
@@ -3617,14 +3603,13 @@ public class DatabaseConnector {
 
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-			
+
 		} catch (Exception e) {
 			return null;
 		}
 
 		return order;
 	}
-
 
 	/*
 	 * This function updates an order
@@ -3653,7 +3638,7 @@ public class DatabaseConnector {
 			st.setInt(8, idToUpdate);
 
 			int affectedRows = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
@@ -3687,13 +3672,13 @@ public class DatabaseConnector {
 
 		try {
 			Order o = selectOrder(idToDelete);
-			
+
 			st = this.con.prepareStatement(query,
 					Statement.RETURN_GENERATED_KEYS);
 			st.setInt(1, idToDelete);
 
 			int affectedRows = st.executeUpdate();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 
@@ -3703,7 +3688,8 @@ public class DatabaseConnector {
 				return v;
 			} else {
 				// return pending balance
-				double pendingBalance = -1 * o.getPrice() * o.getAmount();
+				double pendingBalance = -1
+						* getProperProduct(o.getPrice(), o.getAmount());
 				CustomerInfo c = selectCustomerInfo(o.getCustomerId());
 				lockAmountOnCustomerAccount(c, pendingBalance);
 			}
@@ -3718,34 +3704,35 @@ public class DatabaseConnector {
 		v.setStatus("Success");
 		return v;
 	}
-	
-	
+
 	/**
 	 * Place selling order
 	 */
-	public Validator placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, int tradingSessionID) {
+	public Validator placeSellingOrder(Order o, int lBoundPercent,
+			int uBoundPercent, int tradingSessionID) {
 		Validator v = new Validator();
-		
+
 		// 0. Input validation
 		Validator check0 = o.validate();
-		if(!check0.isVerified()) {
+		if (!check0.isVerified()) {
 			v.setVerified(false);
 			v.setStatus(check0.getStatus());
-			return v;			
+			return v;
 		}
-		
+
 		// 0.5 check if this firm has access to this session
 		int firmId = selectBrokerageFirmForBroker(o.getBrokerId());
-		boolean check05 = checkBrokerageFirmTransactionPermission(tradingSessionID, firmId);
-		if(!check05) {
+		boolean check05 = checkBrokerageFirmTransactionPermission(
+				tradingSessionID, firmId);
+		if (!check05) {
 			v.setVerified(false);
 			v.setStatus("Error. Your Brokerage Firm cannot participate in this Trading Session");
 			return v;
 		}
-		
+
 		// 1. check if broker has access to customer
 		Validator check1 = hasBrokerCustomer(o.getBrokerId(), o.getCustomerId());
-		if(!check1.isVerified()) {
+		if (!check1.isVerified()) {
 			v.setVerified(false);
 			v.setStatus(check1.getStatus());
 			return v;
@@ -3753,35 +3740,38 @@ public class DatabaseConnector {
 
 		// 2. check if this customer possesses the stock
 		boolean check2 = isHasCustomerStock(o.getCustomerId(), o.getStockId());
-		if(!check2) {
+		if (!check2) {
 			v.setVerified(false);
 			v.setStatus("This customer does not have selected stock");
 			return v;
 		}
-		
+
 		// 3. check if this customer possesses enough amount
-		int curAmount = selectHasCustomerStockAmount(o.getCustomerId(), o.getStockId());
-		int pendingAmount = getCustomerStockQuantityPending(o.getCustomerId(), o.getStockId());
+		int curAmount = selectHasCustomerStockAmount(o.getCustomerId(),
+				o.getStockId());
+		int pendingAmount = getCustomerStockQuantityPending(o.getCustomerId(),
+				o.getStockId());
 		int availableAmount = curAmount - pendingAmount;
-		
-		if(o.getAmount() > availableAmount) {
+
+		if (o.getAmount() > availableAmount) {
 			v.setVerified(false);
 			v.setStatus("This customer does not have enough amount of selected stock");
 			return v;
 		}
-		
+
 		// 4. check if the price is in bounds
 		Stock s = selectStock(o.getStockId());
-		Validator check4 = priceInBounds(s.getPrice(), o.getPrice(), lBoundPercent, uBoundPercent);
-		if(!check4.isVerified()) {
+		Validator check4 = priceInBounds(s.getPrice(), o.getPrice(),
+				lBoundPercent, uBoundPercent);
+		if (!check4.isVerified()) {
 			v.setVerified(false);
 			v.setStatus(check4.getStatus());
 			return v;
 		}
-		
+
 		// 5. check if we can match the order right away
 		int matchedOrderId = isThereMatch(o);
-		if(matchedOrderId == -1) {
+		if (matchedOrderId == -1) {
 			// no match, insert order to db
 			v = insertNewOrder(o);
 			return v;
@@ -3794,37 +3784,36 @@ public class DatabaseConnector {
 		}
 	}
 
-	
 	/**
 	 * Returns false with message in case broker is not associated with customer
 	 */
 	public Validator hasBrokerCustomer(int brokerId, int customerId) {
 		Validator v = new Validator();
-		
+
 		// get firmId for this broker
 		int firmId = selectBrokerageFirmForBroker(brokerId);
-		if(firmId == 0) {
+		if (firmId == 0) {
 			v.setVerified(false);
 			v.setStatus("Could not identify firm for this broker");
 			return v;
 		}
 
 		// check if this firm can manage this customer
-		if(!isHasFirmCustomer(firmId, customerId)) {
+		if (!isHasFirmCustomer(firmId, customerId)) {
 			v.setVerified(false);
 			v.setStatus("This company cannot manage this customer");
 			return v;
 		}
 
 		v.setVerified(true);
-		return v;	
+		return v;
 	}
-	
+
 	/**
 	 * Returns brokerage firmId for this customer
 	 */
 	public int selectBrokerageFirmForBroker(int brokerId) {
-		int firmId = 0;		
+		int firmId = 0;
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT FIRMID FROM USERS WHERE ID = ?";
@@ -3840,12 +3829,12 @@ public class DatabaseConnector {
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
 			return firmId;
-		
+
 		} catch (Exception e) {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Returns true if this firm and customer relationship exists
 	 */
@@ -3862,8 +3851,8 @@ public class DatabaseConnector {
 
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-			
-			if(res.next()) {
+
+			if (res.next()) {
 				return true;
 			} else {
 				return false;
@@ -3873,7 +3862,7 @@ public class DatabaseConnector {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns true if this customer has this stock in posession
 	 */
@@ -3890,8 +3879,8 @@ public class DatabaseConnector {
 
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-			
-			if(res.next()) {
+
+			if (res.next()) {
 				return true;
 			} else {
 				return false;
@@ -3900,7 +3889,7 @@ public class DatabaseConnector {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns amount this customer has of this stock
 	 */
@@ -3914,11 +3903,11 @@ public class DatabaseConnector {
 			st.setInt(1, customerId);
 			st.setInt(2, stockId);
 			ResultSet res = st.executeQuery();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-			
-			if(res.next()) {
+
+			if (res.next()) {
 				return res.getInt(1);
 			} else {
 				return 0;
@@ -3929,95 +3918,103 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Returns false with message in case the target price is out of specified bounds
+	 * Returns false with message in case the target price is out of specified
+	 * bounds
 	 */
-	public Validator priceInBounds(double curPrice, double targetPrice, int lBoundPercent, int uBoundPercent) {
+	public Validator priceInBounds(double curPrice, double targetPrice,
+			int lBoundPercent, int uBoundPercent) {
 		Validator v = new Validator();
 
-		double lBound = curPrice * (1 - ( lBoundPercent / 100.00 ));
-		double uBound = curPrice * (1 + ( uBoundPercent / 100.00 ));
+		double lBound = curPrice * (1 - (lBoundPercent / 100.00));
+		double uBound = curPrice * (1 + (uBoundPercent / 100.00));
 
-		if(targetPrice < lBound) {
+		if (targetPrice < lBound) {
 			v.setVerified(false);
-			v.setStatus("Price cannot be lower than " + String.format("%.2f", lBound));
+			v.setStatus("Price cannot be lower than "
+					+ String.format("%.2f", lBound));
 			return v;
 		}
 
-		if(targetPrice > uBound) {
+		if (targetPrice > uBound) {
 			v.setVerified(false);
-			v.setStatus("Price cannot be higher than " + String.format("%.2f", uBound));
+			v.setStatus("Price cannot be higher than "
+					+ String.format("%.2f", uBound));
 			return v;
 		}
 
 		v.setVerified(true);
 		return v;
-	}	
-	
-	
+	}
+
 	/**
 	 * Place buying order
 	 */
-	public Validator placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, int tradingSessionID) {
+	public Validator placeBuyingOrder(Order o, int lBoundPercent,
+			int uBoundPercent, int tradingSessionID) {
 		Validator v = new Validator();
-	
+
 		// 0. Input validation
 		Validator check0 = o.validate();
-		if(!check0.isVerified()) {
+		if (!check0.isVerified()) {
 			v.setVerified(false);
 			v.setStatus(check0.getStatus());
-			return v;			
+			return v;
 		}
 
-		// 0.5 check if this firm has access to this session
+		// 1 check if this firm has access to this session
 		int firmId = selectBrokerageFirmForBroker(o.getBrokerId());
-		boolean check05 = checkBrokerageFirmTransactionPermission(tradingSessionID, firmId);
-		if(!check05) {
+		boolean check05 = checkBrokerageFirmTransactionPermission(
+				tradingSessionID, firmId);
+		if (!check05) {
 			v.setVerified(false);
 			v.setStatus("Error. Your Brokerage Firm cannot participate in this Trading Session");
 			return v;
 		}
 
-		// 1. check if broker has access to customer
+		// 2. check if broker has access to customer
 		Validator check1 = hasBrokerCustomer(o.getBrokerId(), o.getCustomerId());
-		if(!check1.isVerified()) {
+		if (!check1.isVerified()) {
 			v.setVerified(false);
 			v.setStatus(check1.getStatus());
 			return v;
 		}
 
-		// 2. check if the price is in bounds
+		// 3. check if the price is in bounds
 		Stock s = selectStock(o.getStockId());
-		Validator check2 = priceInBounds(s.getPrice(), o.getPrice(), lBoundPercent, uBoundPercent);
-		if(!check2.isVerified()) {
+		Validator check2 = priceInBounds(s.getPrice(), o.getPrice(),
+				lBoundPercent, uBoundPercent);
+		if (!check2.isVerified()) {
 			v.setVerified(false);
 			v.setStatus(check2.getStatus());
 			return v;
 		}
 
-		// 3. check if this customer has enough money to buy this amount of this stock
+		// 4. check if this customer has enough money to buy this amount of this
+		// stock
 		CustomerInfo customer = selectCustomerInfo(o.getCustomerId());
-		
-		double customerBalance = customer.getBalance() - customer.getPendingBalance();
-		double requiredBalance = o.getPrice() * o.getAmount();
 
-		if(customerBalance < requiredBalance) {
+		double customerBalance = customer.getBalance()
+				- customer.getPendingBalance();
+		double requiredBalance = getProperProduct(o.getPrice(), o.getAmount());
+
+		if (customerBalance < requiredBalance) {
 			v.setVerified(false);
 			v.setStatus("Insufficient balance to place this order");
-			return v;			
-		}
-		
-		// 4. lock money
-		Validator check7 = lockAmountOnCustomerAccount(customer, requiredBalance);
-		if(!check7.isVerified()) {
-			v.setVerified(false);
-			v.setStatus("Locking money failed");
 			return v;
 		}
 
 		// 5. check if we can match the order right away
 		int matchedOrderId = isThereMatch(o);
-		if(matchedOrderId == -1) {
+		if (matchedOrderId == -1) {
 			// no match, insert order to db
+			Validator check7 = lockAmountOnCustomerAccount(customer,
+					requiredBalance);
+			if (!check7.isVerified()) {
+				v.setVerified(false);
+				v.setStatus("Locking money failed");
+				return v;
+			}
+
 			v = insertNewOrder(o);
 			return v;
 		} else {
@@ -4026,10 +4023,9 @@ public class DatabaseConnector {
 			v.setVerified(true);
 			v.setStatus("Order has been matched");
 			return v;
-		}					
+		}
 	}
 
-	
 	public Validator lockAmountOnCustomerAccount(CustomerInfo c, double amount) {
 
 		double pendingSoFar = c.getPendingBalance();
@@ -4038,54 +4034,48 @@ public class DatabaseConnector {
 
 		return updateCustomerInfo(c.getId(), c);
 	}
-	
-	public int getActiveTradingSessionID(){
+
+	public int getActiveTradingSessionID() {
 		int tradingSessionID = -1;
-		
+
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String query = "SELECT * FROM TRADINGSESSIONS where ACTIVE = 1";
 
 		try {
 			st = this.con.prepareStatement(query);
-			
+
 			rs = st.executeQuery();
 
-			 if (rs.next()){
-				 tradingSessionID = rs.getInt("ID");
-			 }
-			
-			
+			if (rs.next()) {
+				tradingSessionID = rs.getInt("ID");
+			}
+
 		} catch (SQLException ex) {
 			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
 			lgr.log(Level.WARNING, ex.getMessage(), ex);
 		}
-	
-		
+
 		return tradingSessionID;
 	}
-	
-	
-	
+
 	public int getCustomerStockQuantityPending(int customerId, int stockId) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT sum(O.AMOUNT) "
-				     + " FROM ORDERS_M as O"
-				     + " WHERE O.CUSTOMERID = ?"
-				      + " AND O.STOCKID = ?"
-				      + " AND O.TYPEID = 1";
+		String query = "SELECT sum(O.AMOUNT) " + " FROM ORDERS_M as O"
+				+ " WHERE O.CUSTOMERID = ?" + " AND O.STOCKID = ?"
+				+ " AND O.TYPEID = 1";
 
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, customerId);
 			st.setInt(2, stockId);
 			ResultSet res = st.executeQuery();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-			
-			if(res.next()) {
+
+			if (res.next()) {
 				return res.getInt(1);
 			} else {
 				return 0;
@@ -4094,7 +4084,7 @@ public class DatabaseConnector {
 			return 0;
 		}
 	}
-	
+
 	public boolean checkBrokerageFirmTransactionPermission(int tsId, int firmId) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
@@ -4105,11 +4095,11 @@ public class DatabaseConnector {
 			st.setInt(1, firmId);
 			st.setInt(2, tsId);
 			ResultSet res = st.executeQuery();
-			
+
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
-			
-			if(res.next()) {
+
+			if (res.next()) {
 				return true;
 			} else {
 				return false;
@@ -4123,13 +4113,12 @@ public class DatabaseConnector {
 		ArrayList<Stock> stocks = new ArrayList<Stock>();
 		PreparedStatement st = null;
 		String query = "SELECT STOCKS.*, HAS_CUSTOMERS_STOCKS.AMOUNT"
-				     + " FROM STOCKS, HAS_CUSTOMERS_STOCKS , HAS_TS_STOCKS"
-				     + " WHERE STOCKS.ID = HAS_CUSTOMERS_STOCKS.STOCKID "
-				     + " AND HAS_TS_STOCKS.STOCK_ID = STOCKS.ID"
-				     + " AND HAS_CUSTOMERS_STOCKS.CUSTOMERID = ?"
-				     + " AND HAS_TS_STOCKS.TS_ID = ?"
-				     + " ORDER BY STOCKS.NAME";
-		
+				+ " FROM STOCKS, HAS_CUSTOMERS_STOCKS , HAS_TS_STOCKS"
+				+ " WHERE STOCKS.ID = HAS_CUSTOMERS_STOCKS.STOCKID "
+				+ " AND HAS_TS_STOCKS.STOCK_ID = STOCKS.ID"
+				+ " AND HAS_CUSTOMERS_STOCKS.CUSTOMERID = ?"
+				+ " AND HAS_TS_STOCKS.TS_ID = ?" + " ORDER BY STOCKS.NAME";
+
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, customerId);
@@ -4157,12 +4146,10 @@ public class DatabaseConnector {
 	public ArrayList<Stock> selectBuyerCustomerStocksLimited(int tsId) {
 		ArrayList<Stock> stocks = new ArrayList<Stock>();
 		PreparedStatement st = null;
-		String query = "SELECT STOCKS.*"
-				+ " FROM STOCKS, HAS_TS_STOCKS"
+		String query = "SELECT STOCKS.*" + " FROM STOCKS, HAS_TS_STOCKS"
 				+ " WHERE HAS_TS_STOCKS.STOCK_ID = STOCKS.ID"
-				+ " AND HAS_TS_STOCKS.TS_ID = ?"
-				+ " ORDER BY STOCKS.NAME";
-		
+				+ " AND HAS_TS_STOCKS.TS_ID = ?" + " ORDER BY STOCKS.NAME";
+
 		try {
 			st = this.con.prepareStatement(query);
 			st.setInt(1, tsId);
@@ -4184,9 +4171,16 @@ public class DatabaseConnector {
 
 		return stocks;
 	}
-	
-	
-	
-	
-	
+
+	/**
+	 * This function is a fix for JAVA double multiplication flaw which will not
+	 * allow any of the brokers to have extra cash
+	 */
+	private double getProperProduct(double price, int amount) {
+		BigInteger fAmount = new BigInteger(Integer.toString(amount));
+		BigDecimal ffAmount = new BigDecimal(fAmount);
+		BigDecimal result = ffAmount.multiply(BigDecimal.valueOf(price));
+
+		return result.doubleValue();
+	}
 }

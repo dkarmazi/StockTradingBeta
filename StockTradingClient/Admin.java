@@ -76,7 +76,7 @@ public class Admin extends Application {
 		try {
 			// Make reference to SSL-based registry
 			String host = (args.length < 1) ? "127.0.0.1" : args[0];
-   //                        host = "128.164.92.161";
+                        //   host = "128.164.194.55";
 			Registry registry = LocateRegistry.getRegistry(InetAddress
 					.getByName(host).getHostName(), PORT,
 					new RMISSLClientSocketFactory());

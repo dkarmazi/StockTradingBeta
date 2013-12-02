@@ -1,16 +1,20 @@
 package StockTradingServer;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class Main {
 
+
+	
 	public static void main(String[] args) {
 		System.out.println("This is the Stock Trading Systems - Server");
 
-		DatabaseConnector dc = new DatabaseConnector();
+		
+		//double requiredBalance = o.getPrice() * o.getAmount();
+
+		
+		//DatabaseConnector dc = new DatabaseConnector();
 
 		//System.out.println(dc.selectOrder(1));
 		//System.out.println(dc.getCustomerStockQuantityPending(0, 2));
