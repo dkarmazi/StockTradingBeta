@@ -4035,7 +4035,7 @@ public class DatabaseConnector {
 	public int getCustomerStockQuantityPending(int customerId, int stockId) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT O.AMOUNT "
+		String query = "SELECT sum(O.AMOUNT) "
 				     + " FROM ORDERS_M as O"
 				     + " WHERE O.CUSTOMERID = ?"
 				      + " AND O.STOCKID = ?"
