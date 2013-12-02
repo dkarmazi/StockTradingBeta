@@ -41,6 +41,21 @@ public class CustomerController implements Initializable {
 	private ServerInterface si = (ServerInterface) Utility.serverInterface;
 	private String clientSessionID = Utility.getCurrentSessionId();
 	private int brokerageFirmId = Utility.getCurrentUserFirmID();
+	private static int sCustomerId;
+	private static String sCustomerInfo;
+		
+	public static String getsCustomerInfo() {
+		return sCustomerInfo;
+	}
+	public static void setsCustomerInfo(String sCustomerInfo) {
+		CustomerController.sCustomerInfo = sCustomerInfo;
+	}
+	public static int getCustomerId() {
+		return sCustomerId;
+	}
+	public static void setCustomerId(int _sCustomerId) {
+		sCustomerId = _sCustomerId;
+	}
 	
 	
 
@@ -70,6 +85,7 @@ public class CustomerController implements Initializable {
 	private Button btnCustomerStocks;
 	
 	
+	
 	/**
 	 * SHOW STOCKS SCREEN
 	 */
@@ -79,11 +95,13 @@ public class CustomerController implements Initializable {
 
 			// get customer id for which the button has been clicked
 			int customerId = (int) btnCustomerStocks.getUserData();
+			setCustomerId(customerId);
+			
 			
 	        Stage stage = new Stage();
 	        Parent root = FXMLLoader.load(MainController.class.getResource("CustomerStocks.fxml"));
 	        root.setUserData(customerId);
-	        	        
+
 	        stage.setScene(new Scene(root));
 	        stage.setTitle("Customers");
 	        stage.initModality(Modality.NONE);
@@ -257,7 +275,7 @@ public class CustomerController implements Initializable {
 	@FXML
 	public void ShowDetails() {
 		ClearScreen();
-
+		
 		if (CustomerListView.getItems().isEmpty()
 				|| CustomerListView.getSelectionModel().getSelectedItem() == null) {
 			return;
@@ -278,7 +296,9 @@ public class CustomerController implements Initializable {
 		
 		btnCustomerStocks.setDisable(false);
 		btnCustomerStocks.setUserData(customer.getId());
-		
+
+		sCustomerInfo = customer.getFirstName() + " " + customer.getLastName();
+
 		Message.setText(null);
 		SetScreenModeEdit();
 	}

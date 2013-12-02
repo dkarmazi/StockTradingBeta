@@ -89,7 +89,7 @@
         </AnchorPane>
       </items>
     </SplitPane>
-    <Label alignment="CENTER_LEFT" contentDisplay="LEFT" text="Customer Stock Details" textAlignment="CENTER" textFill="#292929" textOverrun="ELLIPSIS" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="6.0">
+    <Label fx:id="screenTitleBar" alignment="CENTER_LEFT" contentDisplay="LEFT" text="Customer Stock Details" textAlignment="CENTER" textFill="#292929" textOverrun="ELLIPSIS" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="6.0">
       <font>
         <Font name="Candara Bold" size="16.0" />
       </font>
