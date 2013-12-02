@@ -40,15 +40,14 @@ public class SellOrderController implements Initializable {
 	private String startTime;
 
 
-
+    @FXML private ListView<KeyValuePair> PendingOrdersListView = new ListView<>();  
+    @FXML private ComboBox<KeyValuePair> CustomerComboBox = new ComboBox<>();
+    @FXML private ChoiceBox<KeyValuePair> StockChoiceBox = new ChoiceBox<>();
     @FXML private Label SessionStart;
     @FXML private Label SessionParams;
     @FXML private Label Message;
     @FXML private TextField StockQuantity;
     @FXML private TextField StockPrice;
-    @FXML private ListView<KeyValuePair> PendingOrdersListView = new ListView<>();  
-    @FXML private ComboBox<KeyValuePair> CustomerComboBox = new ComboBox<>();
-    @FXML private ChoiceBox<KeyValuePair> StockChoiceBox = new ChoiceBox<>();
     @FXML private Button btnAdd;
     @FXML private Button btnSave;
     @FXML private Button btnClear;
@@ -64,7 +63,6 @@ public class SellOrderController implements Initializable {
 
     	brokerId = Utility.getCurrentUserID();
     	brokerageFirmId = Utility.getCurrentUser_BrokerageFirmID();
-
     	
     	try {
 			ServerAuthRes sar = si.getTradingSessionInfo(clientSessionID);
@@ -86,13 +84,10 @@ public class SellOrderController implements Initializable {
     	
     	// SESSION PARAMETERS
     	String sessStart = "Start: " + startTime;
-    	String sessParams = "Price increase: " + uBound + "% | Price decrease " + lBound + "%";
-    	
+    	String sessParams = "Price increase: " + uBound + "% | Price decrease " + lBound + "%";    	
     	SessionStart.setText(sessStart);
     	SessionParams.setText(sessParams);
     	    	
-    	PopulatePendingOrders(orderTypeId);
-    	PopulateCustomers();
     	SetScreenModeAddNew();
     }
 
@@ -175,11 +170,10 @@ public class SellOrderController implements Initializable {
     
     
 	public void PopulatePendingOrders(int typeId) {
-
-		ServerAuthRes sar;
+		PendingOrdersListView.getItems().clear();
 		
 		try {
-			sar = si.selectOrdersByFirmByType(brokerageFirmId, typeId, clientSessionID);
+			ServerAuthRes sar = si.selectOrdersByFirmByType(brokerageFirmId, typeId, clientSessionID);
 
 			if(sar.isHasAccess()) {
 				ArrayList<Order> allPendingOrders = (ArrayList<Order>) sar.getObject();			 
@@ -198,14 +192,14 @@ public class SellOrderController implements Initializable {
 	}
 
 	public void PopulateCustomers() {
+		CustomerComboBox.getItems().clear();
+
 		try {
 			ServerAuthRes sar = si.selectCustomersByFirm(brokerageFirmId, clientSessionID);
 
 			if(sar.isHasAccess()) {
 				ArrayList<CustomerInfo> allCustomers = (ArrayList<CustomerInfo>) sar.getObject();
-				
-				CustomerComboBox.getItems().clear();
-		        
+						        
 		        for(CustomerInfo c : allCustomers) {
 		        	CustomerComboBox.getItems().add(new KeyValuePair(Integer.toString(c.getId()), c.getFirstName() + " " + c.getLastName()));
 		        }
@@ -218,14 +212,13 @@ public class SellOrderController implements Initializable {
 	}
 	
 	public void PopulateStocks(int customerId) {
-		try {
-			ServerAuthRes sar = si.selectCustomerStocks(customerId, clientSessionID);
-			
+        StockChoiceBox.getItems().clear();
 
+        try {
+			ServerAuthRes sar = si.selectCustomerStocksLimited(customerId, clientSessionID);
+			
 			if(sar.isHasAccess()) {
               ArrayList<Stock> allStocks = (ArrayList<Stock>) sar.getObject();
-				
-              StockChoiceBox.getItems().clear();
 		        
 		        for(Stock c : allStocks) {
 		        	StockChoiceBox.getItems().add(new KeyValuePair(Integer.toString(c.getId()), c.getName()));
@@ -257,7 +250,6 @@ public class SellOrderController implements Initializable {
     
     @FXML
     private void handleClearButtonAction(ActionEvent event) {
-
     	StockQuantity.setText(null);
     	StockPrice.setText(null);
     	PendingOrdersListView.getSelectionModel().clearSelection();
@@ -305,12 +297,6 @@ public class SellOrderController implements Initializable {
     {
     }
     
-    private void PopulateStocks()
-    {
-    } 
-    private void PopulateSellOrders()
-    {
-    }
     
     
     
@@ -340,9 +326,14 @@ public class SellOrderController implements Initializable {
 
     
     
+	
     private void SetScreenModeAddNew() {
     	PopulatePendingOrders(orderTypeId);
+    	PopulateCustomers();
+    	StockChoiceBox.getItems().clear();    	
     	StockChoiceBox.setDisable(true);
+    	StockPrice.setText(null);
+    	StockQuantity.setText(null);    	
     	btnSave.setDisable(true);    	
     }
     
