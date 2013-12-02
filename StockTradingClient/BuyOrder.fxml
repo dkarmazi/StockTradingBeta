@@ -43,7 +43,7 @@
                 <Label font="$x1" text="Quantity to buy" GridPane.columnIndex="0" GridPane.rowIndex="8" />
                 <HBox id="HBox" alignment="CENTER_RIGHT" maxWidth="+Infinity" prefWidth="-1.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="15">
                   <children>
-                    <Button fx:id="btnSave" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefWidth="80.0" rotate="0.0" text="Save" />
+                    <Button fx:id="btnDelete" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDeleteButtonAction" prefWidth="80.0" rotate="0.0" text="Delete" />
                     <Button fx:id="btnAdd" alignment="CENTER" defaultButton="true" minWidth="-Infinity" mnemonicParsing="false" onAction="#onAddButtonClick" prefWidth="80.0" rotate="0.0" text="Add" />
                     <Button fx:id="btnClear" cancelButton="true" contentDisplay="LEFT" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleClearButtonAction" prefWidth="80.0" text="Clear" />
                   </children>
@@ -54,8 +54,6 @@
                   </font>
                 </Label>
                 <Label fx:id="SessionStart" prefWidth="432.0" text="Session start:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Label fx:id="SessionEnd" prefWidth="432.0" text="Session end:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Label fx:id="SessionParams" prefWidth="432.0" text="Price increase: 5% | Price decrease: 5%" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                 <Label text="Select Stock" GridPane.columnIndex="0" GridPane.rowIndex="6" />
                 <Label text="Select Customer" GridPane.columnIndex="0" GridPane.rowIndex="5">
                   <font>
@@ -82,10 +80,11 @@
                     </FXCollections>
                   </items>
                 </ComboBox>
-                <Label text="Buying Price" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-                <TextField id="StockAskPrice" fx:id="StockPrice" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <Label fx:id="SessionParams" prefWidth="432.0" text="Price increase: 5% | Price decrease: 5%" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Label text="Quantity of Stocks" GridPane.columnIndex="0" GridPane.rowIndex="9" />
                 <TextField fx:id="StockQuantity" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                <Label text="Buying Price" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                <TextField id="StockAskPrice" fx:id="StockPrice" alignment="CENTER_RIGHT" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="134.0" prefWidth="153.0" />

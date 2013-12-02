@@ -948,5 +948,58 @@ public class TradingServer extends UnicastRemoteObject implements
         
         return auth;
 	}
-
+   	@Override
+	public ServerAuthRes deleteOrder(int idToDelete, String sessionID) {
+   		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.deleteOrder(idToDelete));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
+	}
+   	@Override
+   	public ServerAuthRes selectBuyerCustomerStocksLimited(String sessionID) {
+   		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.selectBuyerCustomerStocksLimited(tradingSessionID));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
+	}
+   	@Override
+	public ServerAuthRes lockAmountOnCustomerAccount(CustomerInfo c, double amount, String sessionID) {
+   		String action = Thread.currentThread().getStackTrace()[1].getMethodName();
+        boolean allowed = RefMonitor.isAllowed(tradingSessions, sessionID, action);
+        ServerAuthRes auth = new ServerAuthRes();
+        if (allowed){
+        	if (tradingSessionID != -1){
+        		auth.setObject(this.dbCon.lockAmountOnCustomerAccount(c,  amount));
+        	}else{
+        		auth.setObject(null);
+        	}
+        }else{
+            auth.setObject(null);
+        }
+        auth.setHasAccess(allowed);     
+        
+        return auth;
+	}
 }

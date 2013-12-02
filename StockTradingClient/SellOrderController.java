@@ -49,7 +49,6 @@ public class SellOrderController implements Initializable {
     @FXML private TextField StockQuantity;
     @FXML private TextField StockPrice;
     @FXML private Button btnAdd;
-    @FXML private Button btnSave;
     @FXML private Button btnDelete;
     @FXML private Button btnClear;
     
@@ -89,6 +88,7 @@ public class SellOrderController implements Initializable {
     	SessionStart.setText(sessStart);
     	SessionParams.setText(sessParams);
     	    	
+    	PopulateCustomers();
     	SetScreenModeAddNew();
     }
 
@@ -96,12 +96,14 @@ public class SellOrderController implements Initializable {
     
     
     
-    public void onCustomerSelected() {
-    	StockChoiceBox.setDisable(false);
-    	int customerId = Integer.parseInt(CustomerComboBox.getValue().getKey());
-    	PopulateStocks(customerId);
-    }
-    
+	public void onCustomerSelected() {
+		String sCustomerId = getComboBoxSelection(CustomerComboBox);
+		if (isNumeric(sCustomerId)) {
+			int customerId = Integer.parseInt(sCustomerId);
+			PopulateStocks(customerId);
+			StockChoiceBox.setDisable(false);
+		}
+	}    
     
     
     public void onAddButtonClick() {
@@ -270,29 +272,42 @@ public class SellOrderController implements Initializable {
     	SetScreenModeAddNew();
     }
     
-    
-
-    @FXML 
-    private void handleAddButtonAction(ActionEvent event) throws Exception {
-
-    	
-    	
-    }
-    
-    
-    
-    
-    
+        
     @FXML
-    private void handleSaveButtonAction(ActionEvent event) throws Exception
-    {            
-    
-    }    
-    
-    @FXML
-    private void handleDeleteButtonAction(ActionEvent event) throws Exception
-    {            
-    
+    private void handleDeleteButtonAction(ActionEvent event) throws Exception { 
+    	if (PendingOrdersListView.getItems().isEmpty() || PendingOrdersListView.getSelectionModel().getSelectedItem() == null) {
+    		return;
+    	}
+    	String rOrderId = PendingOrdersListView.getSelectionModel().getSelectedItem().getKey();
+    	if (!isNumeric(rOrderId)) {
+    		return;
+    	}
+		// get proper formating
+		int orderId = Integer.parseInt(rOrderId);
+		
+		try {
+			ServerAuthRes sar = si.deleteOrder(orderId, clientSessionID);
+
+			if(sar.isHasAccess()) {
+				Validator v = (Validator) sar.getObject();
+				
+				if(!v.isVerified()) {
+					Message.setText(v.getStatus());
+					SetScreenModeAddNew();
+					return;
+				} else {
+					Message.setText("Record deleted");
+					SetScreenModeAddNew();
+					return;
+				}				
+			} else {
+				Message.setText("Authorization failed");
+				return;				
+			}		
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			SetScreenModeAddNew();
+		}
     }
 
     
@@ -324,8 +339,13 @@ public class SellOrderController implements Initializable {
 			if (sar.isHasAccess()) {
 				Order o = (Order) sar.getObject();
 
-				SelectKey(CustomerComboBox, "" + o.getOrderId());
+				SelectKey(CustomerComboBox, "" + o.getCustomerId());
 				SelectKey(StockChoiceBox, "" + o.getDisplayStockName());
+				
+				StockChoiceBox.getItems().clear();
+				StockChoiceBox.getItems().add(new KeyValuePair(Integer.toString(o.getStockId()), o.getDisplayStockName()));				
+				StockChoiceBox.getSelectionModel().selectFirst();
+
 				StockQuantity.setText(""+o.getAmount());
 				StockPrice.setText(""+o.getPrice());
 			} else {
@@ -343,27 +363,34 @@ public class SellOrderController implements Initializable {
     
     
     
-    /**
+	/**
 	 * SERVICE FUNCTIONS
 	 */
 	public static boolean isNumeric(String str) {
 		try {
 			int d = Integer.parseInt(str);
+			if(d > 0) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (NumberFormatException nfe) {
 			return false;
 		}
-		return true;
 	}
 
 	public static boolean isDouble(String str) {
 		try {
 			double d = Double.parseDouble(str);
+			if(d > 0) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (Exception e) {
 			return false;
 		}
-		return true;
 	}
-
     
 	
 	
@@ -417,17 +444,20 @@ public class SellOrderController implements Initializable {
 	
     private void SetScreenModeAddNew() {
     	PopulatePendingOrders(orderTypeId);
-    	PopulateCustomers();
-    	StockChoiceBox.getItems().clear();    	
+    	CustomerComboBox.getSelectionModel().clearSelection();
+    	CustomerComboBox.setDisable(false);
+    	StockChoiceBox.getItems().clear();
     	StockChoiceBox.setDisable(true);
     	StockPrice.setText(null);
     	StockQuantity.setText(null);    	
-    	btnSave.setDisable(true);  
+    	btnAdd.setDisable(false);
+    	btnDelete.setDisable(true);
     }
     
     private void SetScreenModeEdit() {
     	CustomerComboBox.setDisable(true);
     	StockChoiceBox.setDisable(true);
     	btnAdd.setDisable(true);
+    	btnDelete.setDisable(false);
     }    
 }

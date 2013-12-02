@@ -163,4 +163,7 @@ public interface ServerInterface extends Remote {
 	public ServerAuthRes placeSellingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
 	public ServerAuthRes placeBuyingOrder(Order o, int lBoundPercent, int uBoundPercent, String sessionID) throws RemoteException;
 	public ServerAuthRes selectCustomerStocksLimited(int customerId, String sessionID) throws RemoteException;
+	public ServerAuthRes deleteOrder(int idToDelete, String sessionID) throws RemoteException;
+	public ServerAuthRes selectBuyerCustomerStocksLimited(String sessionID) throws RemoteException;
+	public ServerAuthRes lockAmountOnCustomerAccount(CustomerInfo c, double amount, String sessionID) throws RemoteException;
 }

@@ -3579,7 +3579,11 @@ public class DatabaseConnector {
 		Order order = new Order();
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String query = "SELECT * FROM ORDERS_M WHERE ORDERID = ?";
+		String query = "SELECT O.*, CONCAT(CI.FIRSTNAME, ' ', CI.LASTNAME), S.NAME"
+                     + " FROM ORDERS_M as O, CUSTOMER_INFO as CI,  STOCKS as S"
+				     + " WHERE O.CUSTOMERID = CI.ID"
+				     + " AND O.STOCKID = S.ID"
+				     + " AND O.ORDERID = ?";
 
 		try {
 			st = this.con.prepareStatement(query);
@@ -3595,10 +3599,8 @@ public class DatabaseConnector {
 			int amount = res.getInt(6);
 			double price = res.getDouble(7);
 			int statusId = res.getInt(8);
-			String displaySummary = res.getString(9);
-	        String displayCustomerName = res.getString(10);
-	        String displayStockName = res.getString(11);
-	        String displayFirmName = res.getString(12);
+	        String displayCustomerName = res.getString(9);
+	        String displayStockName = res.getString(10);
 			
 			order.setOrderId(orderId);
 			order.setTypeId(typeId);
@@ -3608,10 +3610,8 @@ public class DatabaseConnector {
 			order.setAmount(amount);
 			order.setPrice(price);
 			order.setStatusId(statusId);
-			order.setDisplaySummary(displaySummary);
 			order.setDisplayCustomerName(displayCustomerName);
 			order.setDisplayStockName(displayStockName);
-			order.setDisplayFirmName(displayFirmName);
 
 			StockTradingServer.LoggerCustom logger = new StockTradingServer.LoggerCustom();
 			logger.logDatabaseActivity(st.toString());
@@ -3684,6 +3684,8 @@ public class DatabaseConnector {
 		String query = "DELETE FROM ORDERS_M WHERE ORDERID = ?";
 
 		try {
+			Order o = selectOrder(idToDelete);
+			
 			st = this.con.prepareStatement(query,
 					Statement.RETURN_GENERATED_KEYS);
 			st.setInt(1, idToDelete);
@@ -3697,6 +3699,11 @@ public class DatabaseConnector {
 				v.setVerified(false);
 				v.setStatus("Could not delete record");
 				return v;
+			} else {
+				// return pending balance
+				double pendingBalance = -1 * o.getPrice() * o.getAmount();
+				CustomerInfo c = selectCustomerInfo(o.getCustomerId());
+				lockAmountOnCustomerAccount(c, pendingBalance);
 			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();
@@ -4145,6 +4152,36 @@ public class DatabaseConnector {
 		return stocks;
 	}
 
+	public ArrayList<Stock> selectBuyerCustomerStocksLimited(int tsId) {
+		ArrayList<Stock> stocks = new ArrayList<Stock>();
+		PreparedStatement st = null;
+		String query = "SELECT STOCKS.*"
+				+ " FROM STOCKS, HAS_TS_STOCKS"
+				+ " WHERE HAS_TS_STOCKS.STOCK_ID = STOCKS.ID"
+				+ " AND HAS_TS_STOCKS.TS_ID = ?"
+				+ " ORDER BY STOCKS.NAME";
+		
+		try {
+			st = this.con.prepareStatement(query);
+			st.setInt(1, tsId);
+			ResultSet res = st.executeQuery();
+
+			while (res.next()) {
+				Stock s = new Stock();
+				s.setId(res.getInt(1));
+				s.setName(res.getString(2));
+				s.setPrice(res.getInt(4));
+				s.setStatusId(res.getInt(5));
+
+				stocks.add(s);
+			}
+		} catch (SQLException ex) {
+			Logger lgr = Logger.getLogger(DatabaseConnector.class.getName());
+			lgr.log(Level.WARNING, ex.getMessage(), ex);
+		}
+
+		return stocks;
+	}
 	
 	
 	

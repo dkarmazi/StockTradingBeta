@@ -12,6 +12,7 @@ public class Main {
 
 		DatabaseConnector dc = new DatabaseConnector();
 
+		//System.out.println(dc.selectOrder(1));
 		//System.out.println(dc.getCustomerStockQuantityPending(0, 2));
 		//System.out.println(dc.checkIfUsernamePasswordActivationCodeMatch(email, plainPass, "74f2qm78db"));
 		//System.out.println(dc.checkIfUsernamePasswordMatch(email, plainPass));
