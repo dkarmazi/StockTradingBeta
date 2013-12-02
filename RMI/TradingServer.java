@@ -584,8 +584,9 @@ public class TradingServer extends UnicastRemoteObject implements
 			
 			
 		} catch (Exception e) {
-			System.out.println("TradingServer err: " + e.getMessage());
-			e.printStackTrace();
+			System.out.println("Error, could not start the server instanced...");
+			System.out.println(e.getMessage());
+			//e.printStackTrace();
 		}
 	}
 
