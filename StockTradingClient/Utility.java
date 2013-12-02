@@ -4,20 +4,12 @@ package StockTradingClient;
 import RMI.ServerInterface;
 import StockTradingCommon.Enumeration;
 import StockTradingServer.*;
-
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import javax.swing.JOptionPane;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -175,7 +167,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				statuses = (ArrayList<StatusesOptions>) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectAllStatuses");
+				System.out.println("You are not allowed to perfom this action: selectAllStatuses");
 				return;
 			}
 			//System.out.println("asdasds" + statuses.toString());
@@ -227,7 +219,7 @@ public class  Utility
             if (results.isHasAccess()) {
             	validator = (Validator) results.getObject();
             }else{
-            	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewStock");
+            	System.out.println("You are not allowed to perfom this action: insertNewStock");
             	return null;
             }
         }
@@ -249,7 +241,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewStock");
+				System.out.println("You are not allowed to perfom this action: insertNewStock");
 				return null;
 			}
         	
@@ -278,7 +270,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				records = (ArrayList<Stock>) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+				System.out.println("You are not allowed to perfom this action: selectStockAll");
 				return;
 			}
         }
@@ -313,7 +305,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				records = (ArrayList<Stock>) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+				System.out.println("You are not allowed to perfom this action: selectStockAll");
 				return;
 			}
         }
@@ -345,7 +337,7 @@ public class  Utility
             if (results.isHasAccess()) {
                     records = (ArrayList<Stock>) results.getObject();
             }else{
-                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    System.out.println("You are not allowed to perfom this action: selectStockAll");
                     return;
             }
         }
@@ -376,7 +368,7 @@ public class  Utility
             if (results.isHasAccess()) {
                     records = (ArrayList<Stock>) results.getObject();
             }else{
-                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    System.out.println("You are not allowed to perfom this action: selectStockAll");
                     return;
             }
         }
@@ -402,7 +394,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				stock = (Stock) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStock");
+				System.out.println("You are not allowed to perfom this action: selectStock");
 				return null;
 			}
         }
@@ -429,7 +421,7 @@ public class  Utility
             if (results.isHasAccess()) {
                     records = (ArrayList<Stock>) results.getObject();
             }else{
-                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    System.out.println("You are not allowed to perfom this action: selectStockAll");
                     return;
             }
         }
@@ -469,7 +461,7 @@ public class  Utility
             }
             else
             {
-                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectAdministratorsAll");
+                    System.out.println("You are not allowed to perfom this action: selectAdministratorsAll");
                     return;
             }
         }
@@ -497,7 +489,7 @@ public class  Utility
             }
             else
             {
-                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectAdminUser ");
+                    System.out.println("You are not allowed to perfom this action: selectAdminUser ");
                     return null;
             }
         }
@@ -521,7 +513,7 @@ public class  Utility
             }
             else
             {
-                JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewAdmin");
+                System.out.println("You are not allowed to perfom this action: insertNewAdmin");
                 return null;
             }
         }
@@ -545,7 +537,7 @@ public class  Utility
             } 
             else 
             {
-                JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateAdmin");
+                System.out.println("You are not allowed to perfom this action: updateAdmin");
                 return null;
             }
         }
@@ -571,7 +563,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewBroker");
+				System.out.println("You are not allowed to perfom this action: insertNewBroker");
 				return null;
 			}
         }
@@ -593,7 +585,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateBroker");
+				System.out.println("You are not allowed to perfom this action: updateBroker");
 				return null;
 			}
         }
@@ -619,7 +611,7 @@ public class  Utility
     			if (results.isHasAccess()) {
     				records = (ArrayList<User>) results.getObject();
     			}else{
-    				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokersAll");
+    				System.out.println("You are not allowed to perfom this action: selectBrokersAll");
     				return;
     			}
             }
@@ -638,7 +630,7 @@ public class  Utility
     			if (results.isHasAccess()) {
     				records = (ArrayList<User>) results.getObject();
     			}else{
-    				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokersAllbyFirm");
+    				System.out.println("You are not allowed to perfom this action: selectBrokersAllbyFirm");
     				return;
     			}
 
@@ -665,7 +657,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				user = (User) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokerUser ");
+				System.out.println("You are not allowed to perfom this action: selectBrokerUser ");
 				return null;
 			}
         }
@@ -688,7 +680,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				brokerageFirm = (BrokerageFirm) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokerageFirm");
+				System.out.println("You are not allowed to perfom this action: selectBrokerageFirm");
 				//return null;
 			}
         }
@@ -709,7 +701,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewBrokerageFirm");
+				System.out.println("You are not allowed to perfom this action: insertNewBrokerageFirm");
 				return null;
 			}
         }
@@ -731,7 +723,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateBrokerageFirm");
+				System.out.println("You are not allowed to perfom this action: updateBrokerageFirm");
 				return null;
 			}
 
@@ -757,7 +749,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				records = (ArrayList<BrokerageFirm>) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectBrokerageFirmsAll");
+				System.out.println("You are not allowed to perfom this action: selectBrokerageFirmsAll");
 				return;
 			}
         }
@@ -828,7 +820,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				customerInfo = (CustomerInfo) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomerInfo");
+				System.out.println("You are not allowed to perfom this action: selectCustomerInfo");
 				return null;
 			}
         }
@@ -851,7 +843,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewCustomerInfo");
+				System.out.println("You are not allowed to perfom this action: insertNewCustomerInfo");
 				return null;
 			}
         }
@@ -874,7 +866,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateCustomerInfo");
+				System.out.println("You are not allowed to perfom this action: updateCustomerInfo");
 				return null;
 			}
 
@@ -897,7 +889,7 @@ public class  Utility
 			 if (results.isHasAccess()) {
 				 records = (ArrayList<CustomerInfo>) results.getObject();
 			 }else{
-			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomerInfoAll");
+			 	System.out.println("You are not allowed to perfom this action: selectCustomerInfoAll");
 			 	return;
 			 }
 
@@ -927,7 +919,7 @@ public class  Utility
 			 if (results.isHasAccess()) {
 				 records = (ArrayList<CustomerInfo>) results.getObject();
 			 }else{
-			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomersByFirm");
+			 	System.out.println("You are not allowed to perfom this action: selectCustomersByFirm");
 			 	return;
 			 }
 
@@ -954,7 +946,7 @@ public class  Utility
 			 if (results.isHasAccess()) {
 				 records = (ArrayList<CustomerInfo>) results.getObject();
 			 }else{
-			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectCustomersByFirm");
+			 	System.out.println("You are not allowed to perfom this action: selectCustomersByFirm");
 			 	return;
 			 }
 
@@ -989,7 +981,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewOrder");
+				System.out.println("You are not allowed to perfom this action: insertNewOrder");
 				return null;
 			}
 
@@ -1015,7 +1007,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateOrder");
+				System.out.println("You are not allowed to perfom this action: updateOrder");
 				return null;
 			}
 
@@ -1038,7 +1030,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				order = (Order) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrder");
+				System.out.println("You are not allowed to perfom this action: selectOrder");
 				return null;
 			}
         }
@@ -1066,7 +1058,7 @@ public class  Utility
 			 if (results.isHasAccess()) {
 				 records = (ArrayList<Order>) results.getObject();
 			 }else{
-			 	JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrdersByFirmByType");
+			 	System.out.println("You are not allowed to perfom this action: selectOrdersByFirmByType");
 			 	return;
 			 }
 
@@ -1101,7 +1093,7 @@ public class  Utility
             if (results.isHasAccess()) {
                     records = (ArrayList<Order>) results.getObject();
             }else{
-                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    System.out.println("You are not allowed to perfom this action: selectStockAll");
                     return;
             }
         }
@@ -1138,7 +1130,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: insertNewOrder");
+				System.out.println("You are not allowed to perfom this action: insertNewOrder");
 				return null;
 			}
 
@@ -1163,7 +1155,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				validator = (Validator) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: updateOrder");
+				System.out.println("You are not allowed to perfom this action: updateOrder");
 				return null;
 			}
 
@@ -1186,7 +1178,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				order = (Order) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrder");
+				System.out.println("You are not allowed to perfom this action: selectOrder");
 				return null;
 			}
 
@@ -1218,7 +1210,7 @@ public class  Utility
 			if (results.isHasAccess()) {
 				records = (ArrayList<Order>) results.getObject();
 			}else{
-				JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectOrdersByFirmByType");
+				System.out.println("You are not allowed to perfom this action: selectOrdersByFirmByType");
 				return;
 			}
         
@@ -1255,7 +1247,7 @@ public class  Utility
             if (results.isHasAccess()) {
                     records = (ArrayList<Order>) results.getObject();
             }else{
-                    JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                    System.out.println("You are not allowed to perfom this action: selectStockAll");
                     return;
             }
         }

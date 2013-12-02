@@ -5,21 +5,16 @@ package StockTradingClient;
 
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import javax.swing.JOptionPane;
-
-import StockTradingCommon.Enumeration;
 import StockTradingServer.ServerAuthRes;
 import StockTradingServer.Transaction;
-import StockTradingServer.Stock;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -29,13 +24,16 @@ public class TransactionsController implements Initializable {
 	@FXML private TableView transactionsTable;
 	@FXML private Button rollBackButton;
 	@FXML private Button refresh;
+	@FXML private Label lblErrorMessage;
 
 	@FXML void handleRollBackButton(){
 		
 		if (transactionsTable.getSelectionModel().isEmpty()){
-			JOptionPane.showMessageDialog(null, "No transaction selected.");
+			lblErrorMessage.setText("No transaction selected.");
+			lblErrorMessage.setVisible(true);
 		}else{
 			
+			lblErrorMessage.setVisible(false);
 			Transaction t = (Transaction) transactionsTable.getSelectionModel().getSelectedItem();
 			int transID = t.getID();
 			try{
@@ -43,11 +41,12 @@ public class TransactionsController implements Initializable {
 		           if (results.isHasAccess()) {
 		                   boolean done = (boolean) results.getObject();
 		                   if (done){
-		                	   JOptionPane.showMessageDialog(null, "Transaction rolled back successfully.");
-		                	   handleRefreshButton();
+		           				lblErrorMessage.setText("Transaction rolled back successfully.");
+		           				lblErrorMessage.setVisible(true);
+		           				handleRefreshButton();
 		                   }
 		           }else{
-		                   JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+		                   System.out.println("You are not allowed to perfom this action: selectStockAll");
 		                   return;
 		           }
 		       }
@@ -80,7 +79,7 @@ public class TransactionsController implements Initializable {
            if (results.isHasAccess()) {
                    records = (ArrayList<Transaction>) results.getObject();
            }else{
-                   JOptionPane.showMessageDialog(null, "You are not allowed to perfom this action: selectStockAll");
+                   System.out.println("You are not allowed to perfom this action: selectStockAll");
                    return;
            }
        }

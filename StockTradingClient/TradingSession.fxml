@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="596.0" prefWidth="456.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.TradingSessionController">
+
+<AnchorPane prefHeight="568.0" prefWidth="456.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="StockTradingClient.TradingSessionController">
   <!-- TODO Add Nodes -->
   <children>
     <Label layoutX="30.0" layoutY="17.0" text="Limit UP:" />
@@ -28,5 +29,6 @@
     <Label layoutX="255.0" layoutY="301.0" text="Available Firms to this session:" />
     <Button fx:id="startTradingSession" layoutX="253.0" layoutY="495.0" mnemonicParsing="false" onAction="#handlestartTradingSessionButton" text="Start Session" />
     <Button fx:id="endTradingSession" disable="true" layoutX="348.0" layoutY="495.0" mnemonicParsing="false" onAction="#handleendTradingSessionButton" prefWidth="88.0" text="End Session" />
+    <Label fx:id="lblErrorMessage" alignment="CENTER" layoutX="13.0" layoutY="498.0" prefWidth="235.0" text="Label" textFill="RED" visible="false" />
   </children>
 </AnchorPane>

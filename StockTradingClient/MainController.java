@@ -4,19 +4,10 @@
  */
 package StockTradingClient;
 
-import RMI.ServerInterface;
 import StockTradingCommon.Enumeration;
-import StockTradingServer.ServerAuthRes;
-import StockTradingServer.Transaction;
-
 import java.io.IOException;
 import java.net.URL;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import javax.swing.JOptionPane;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,7 +19,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 /**
@@ -58,16 +48,18 @@ public class MainController implements Initializable {
     // Common to all users
     @FXML private Button ChangePassword;    
     @FXML private ToggleButton HackMode;
+    @FXML private Label lblErrorMessage;
     
     @FXML
     private void handleButtonAction_btnAddBrokerageFirm(ActionEvent event) throws IOException{
 
     	
     	if (!Utility.checkBrokerageFirmWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("BrokerFirm.fxml"));
@@ -83,9 +75,11 @@ public class MainController implements Initializable {
     @FXML
     private void handleButtonAction_btnAddAdmin(ActionEvent event) throws IOException{
         if (!Utility.checkBrokerWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
+        lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("Admin.fxml"));
@@ -103,10 +97,11 @@ public class MainController implements Initializable {
     private void handleButtonAction_btnAddBroker(ActionEvent event) throws IOException{
 
     	if (!Utility.checkBrokerWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("Broker.fxml"));
@@ -124,10 +119,11 @@ public class MainController implements Initializable {
     private void handleButtonAction_btnAddStock(ActionEvent event) throws IOException{
         
     	if (!Utility.checkStockWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("Stock.fxml"));
@@ -143,7 +139,8 @@ public class MainController implements Initializable {
     private void handleButtonAction_btnAddCustomer(ActionEvent event) throws IOException{
         
     	if (!Utility.checkCustomerWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		
                 /*MessageBox msgBox = new MessageBox("Permision Denied"
                         , "You do not have sufficient permission to access this page."
@@ -152,7 +149,7 @@ public class MainController implements Initializable {
                 msgBox.Show(event);*/
                 return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("Customer.fxml"));
@@ -169,18 +166,18 @@ public class MainController implements Initializable {
         
 
     	if (!Utility.checkSellingOrderWindowPermission()){
-    		JOptionPane.showMessageDialog (null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
     	
      	boolean isThereTradingSession = (boolean) Utility.serverInterface.isThereActiveTradingSession(Utility.getCurrentSessionId()).getObject(); 
     	if (!isThereTradingSession){
-    		MessageBox msgBox = new MessageBox("No active trading session.", Enumeration.MessageIcon.ERROR);
-    		msgBox.Show(event);
-    		//JOptionPane.showMessageDialog(null, "No active trading session.");
+    		lblErrorMessage.setText("No active trading session.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("SellOrder.fxml"));
@@ -196,18 +193,18 @@ public class MainController implements Initializable {
     private void handleButtonAction_btnAddBuyOrder(ActionEvent event) throws IOException{
         
     	if (!Utility.checkBuyingOrderWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
     	
      	boolean isThereTradingSession = (boolean) Utility.serverInterface.isThereActiveTradingSession(Utility.getCurrentSessionId()).getObject(); 
     	if (!isThereTradingSession){
-    		MessageBox msgBox = new MessageBox("No active trading session.", Enumeration.MessageIcon.ERROR);
-    		msgBox.Show(event);
-    		//JOptionPane.showMessageDialog(null, "No active trading session.");
+    		lblErrorMessage.setText("No active trading session.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("BuyOrder.fxml"));
@@ -223,10 +220,11 @@ public class MainController implements Initializable {
     private void handleButtonAction_btnStockView(ActionEvent event) throws IOException{
         
     	if (!Utility.checkStockViewPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("StockView.fxml"));
@@ -242,10 +240,11 @@ public class MainController implements Initializable {
     private void handleButtonAction_btnLogView(ActionEvent event) throws IOException{
         
     	if (!Utility.checkLogViewPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("LogViewer.fxml"));
@@ -261,10 +260,11 @@ public class MainController implements Initializable {
     private void handleButtonAction_btnOrderView(ActionEvent event) throws IOException{
         
     	if (!Utility.checkOrderDetailsViewPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
             MainController.class.getResource("ViewOrders.fxml"));
@@ -305,6 +305,18 @@ public class MainController implements Initializable {
         stage.setTitle("Change Password");
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(  ((Node)event.getSource()).getScene().getWindow() );
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+                {
+                    public void handle(WindowEvent we) 
+                    {
+                        // Unset the session id of the current user
+                        Utility.unSetCurrentSessionId();
+                        
+                    }
+                });
+        
+        
         stage.show();
         
         
@@ -328,6 +340,7 @@ public class MainController implements Initializable {
         SellOrder.setVisible(false);  
         StockView.setVisible(false);
         ViewSessionInfo.setVisible(false);
+        lblErrorMessage.setVisible(false);
     }
     
     private void SetScreenForBroker()
@@ -341,6 +354,7 @@ public class MainController implements Initializable {
         Transactions.setVisible(false);
         LogView.setVisible(false);
         OrderView.setVisible(false);
+        lblErrorMessage.setVisible(false);
         
         // Show
         Customer.setVisible(true);
@@ -367,6 +381,7 @@ public class MainController implements Initializable {
         SellOrder.setVisible(true);  
         StockView.setVisible(true);
         ViewSessionInfo.setVisible(true);
+        lblErrorMessage.setVisible(false);
     }
     
     private void SetScreenForUserRole()
@@ -391,10 +406,11 @@ public class MainController implements Initializable {
     public void handleTradingSessionButton(ActionEvent event) throws IOException{
     	
     	if (!Utility.checkTradingSessionWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
-    	
+    	lblErrorMessage.setVisible(false);
         Stage stage = new Stage();
         Parent root = FXMLLoader.load(
                                 MainController.class.getResource("TradingSession.fxml")
@@ -433,15 +449,19 @@ public class MainController implements Initializable {
     public void handleTransactionButton(ActionEvent event) throws IOException{
     	
     	if (!Utility.checkTransactionWindowPermission()){
-    		JOptionPane.showMessageDialog(null, "You don't have enough permission to access this page.");
+    		lblErrorMessage.setText("You don't have enough permission to access this page.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
     	
     	boolean isThereTradingSession = (boolean) Utility.serverInterface.isThereActiveTradingSession(Utility.getCurrentSessionId()).getObject(); 
     	if (!isThereTradingSession){
-    		JOptionPane.showMessageDialog(null, "No active trading session.");
+    		lblErrorMessage.setText("No active trading session.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
+    	
+    	lblErrorMessage.setVisible(false);
     	 Stage stage = new Stage();
          Parent root = FXMLLoader.load(
                                  MainController.class.getResource("Transactions.fxml")

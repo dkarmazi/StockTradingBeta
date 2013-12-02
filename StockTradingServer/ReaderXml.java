@@ -39,7 +39,10 @@ public class  ReaderXml
             }
                     
             // normalize text representation
-            doc.getDocumentElement().normalize();
+            if (doc != null)
+            {
+            	doc.getDocumentElement().normalize();
+            }
 
         }
         catch (SAXParseException ex)

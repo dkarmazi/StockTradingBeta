@@ -5,15 +5,9 @@ package StockTradingClient;
 
 import java.net.URL;
 import java.rmi.RemoteException;
-import java.security.KeyPair;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.Vector;
-
-import javax.swing.JOptionPane;
-
 import StockTradingServer.ServerAuthRes;
 import StockTradingServer.TradingSession;
 import javafx.collections.ObservableList;
@@ -29,12 +23,14 @@ public class TradingSessionController implements Initializable {
 	@FXML private TextField limitUp;
 	@FXML private TextField limitDown;
 	
+	
 	@FXML private Button selectStock;
 	@FXML private Button unselectStock;
 	@FXML private Button selectFirm;
 	@FXML private Button unselectFirm;
 	@FXML private Button startTradingSession;
 	@FXML private Button endTradingSession;
+	@FXML private Label lblErrorMessage;
 	
 	
 	@FXML private ListView<KeyValuePair> allStocksListView = new ListView<KeyValuePair>();
@@ -108,9 +104,14 @@ public class TradingSessionController implements Initializable {
     	boolean result = true;
     	
     	try{
-    		Integer.valueOf(limitUp.getText());
-    		Integer.valueOf(limitDown.getText());
     		
+    		String rLimitUp = limitUp.getText();
+    		String rLimitDown = limitDown.getText();
+
+    		if(!isNumeric(rLimitDown) || !isNumeric(rLimitUp)) {
+    			return false;
+    		}
+
     		if (availableStocksListView.getItems().size() == 0){ 
     			return false;
     		}
@@ -121,8 +122,25 @@ public class TradingSessionController implements Initializable {
     		return false;
     	}
     	
-    	return true;
+    	return result;
     }
+
+    
+	public static boolean isNumeric(String str) {
+		try {
+			int d = Integer.parseInt(str);
+			if (d > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+	}
+
+    
+    
     
     @FXML
     private void handleSelectStockButton(ActionEvent event){
@@ -161,10 +179,12 @@ public class TradingSessionController implements Initializable {
     private void handlestartTradingSessionButton(ActionEvent event) throws RemoteException{
     	
     	if (!validInput()){
-    		JOptionPane.showMessageDialog(null, "Not valid input.");
+    		lblErrorMessage.setText("Not valid input.");
+    		lblErrorMessage.setVisible(true);
     		return;
     	}
     	
+    	lblErrorMessage.setVisible(false);
     	
     	TradingSession TS = new TradingSession();
     	java.util.Date date = new java.util.Date();
