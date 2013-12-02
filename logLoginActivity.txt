@@ -2182,3 +2182,171 @@
 2013-12-01 14:20:06.942 | Reference Model | UserID: 45, Session ID: d5b97e05-f03f-42d7-b4ca-8b86bef01192 is allowed to invoke: logOut | 33b27db2ffea76ba6fe549eccbddc5c5e614e61a8516c8abee05ad82299556ed66bfff71f4df375e438afa1576f6bc19f568272f226b2adbc30654f83834d359
 
 
+2013-12-01 19:28:42.939 | dkarmazi@gwmail.gwu.edu | Login Successful | 9a15c40e19fa3a0d5ac3068a27fa50b7eaa5bbdaa5c38a39ec1575ba342d7732926008d1242b7ee9c7b4455cee96838e0a5eb1157e533e5671e127b7b9cbb614
+
+
+2013-12-01 19:28:45.468 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: insertNewCustomerInfo | fb5980d30398567627f6ede1eebce15e709edb62507b46715330cfe16a11b72a53967ea83fbfaeea6b24e77c7202d0a65e042d42f759e9b245904e309c51ab45
+
+
+2013-12-01 19:28:45.964 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfoAll | e5465ac8a2069b266f5c2e98230077ae6a31715993d6fcc55c14935bffe470ac9c2767e1c87746ff43ce628cfa06d9936ad95c0b8c940f2f8e19fbd302092565
+
+
+2013-12-01 19:28:46.459 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: updateCustomerInfo | 6e99b2f1a7b532ddca15c3fb4e456c3a39e0db4ae38fa134f038cab654a6408730cecb138197733ad87251cc4f06dfca88d2c4fdd9691ffeb8861e1cfb8cc311
+
+
+2013-12-01 19:28:46.906 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectAllStatuses | 6d38eb66a64c6d4e8e992ae8f983a82cd2a6fe6ba4350c8cfd029cafa28818b7e43449c1200b10e1dfca04499970b23fdd16e2fa45543e1bdfd79a786d2c69c0
+
+
+2013-12-01 19:28:47.35 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfo | 1c9be57d8ff0b3f4cfd5fc6d5dc3f9fa2652822f964dcf09166ef360cc2917e15150c78a5ad4f357bbdd3b6fb5c8585d021f35491736d3e00b6a95869919ffc8
+
+
+2013-12-01 19:28:48.156 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectAllStatuses | a9ac3c10ce944baba5f536db0e194356f679b88614c67ee8ac7007cd77dcab2faa736738ce2eec23ecf57532f1762b5132d78f57a49f9af41a8c7db029c7a5ef
+
+
+2013-12-01 19:28:48.643 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomersByFirm | e0c36aca5c7dc67a9338ff75a356af9b24a5350e1264975522aaf98970d8d6708ac9891c53ef277221bb52b5b3bd8c3ea2e015833313a029097232cc35e35f18
+
+
+2013-12-01 19:28:50.521 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfo | 7f440a2c4b9dd3833751eb05c0bd5db53bd073b91b46f7ae0ea501e669afaeb6fb1f474134ca9d9cd86efb8dbae57bdc92b57ab16f4ed940900d0a56e85ae3ae
+
+
+2013-12-01 19:28:51.015 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfo | 123cfbc5135b0424bf9cc2cb90bf717eeabc8143c4d6035b1d4118eabf07101ebdf372e1cef169b3e108f15ce7d7e39fce560c0b4334a52683ac6ea75e00d3a8
+
+
+2013-12-01 19:28:51.567 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfo | e51b77271c2dd7887b89047b561822541fbfb3cd545393ef5cb08a8397f8f4ad4828b5e4574c3d6997a787d2e2184460ead76ef7788abc3347c02f44c01cac78
+
+
+2013-12-01 19:28:53.197 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectAllStatuses | ea2c3019261c008f2100f549e7f6422bd1dde9c7898ca3cc94117043b9bbe7176f4adcbd5d0499c73f3990903c17f41093885bb899d04fbfe78c4c493050fbaa
+
+
+2013-12-01 19:29:01.166 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: insertNewOrder | 65bdc89f4f577797d6484c6daed9cac0c803e07b6e0bcc6cae8b0f3593f6f6f7ccc668e84b5ed50c18ae8f3567cc27e2b4f35dea02887523f670bfc5ee3a2881
+
+
+2013-12-01 19:29:01.659 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: updateOrder | 2ea982dd5048df64ffbf04fe12192d0ac51f4953db19700eca3691696ed78fc9d15834ae62babaef21c4cf8a6cd5a4e361f74f25a0404fa7436cafb6c05e471f
+
+
+2013-12-01 19:29:02.105 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfo | 3f7684fae3c6bc2c2b5ef1b012f26257d2b053e26e83da9969dcfc36eca9b2ef975fbd6d343828438df722637609b3c2460a0781e10007daf9fd360d5b120c18
+
+
+2013-12-01 19:29:02.537 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectStock | 4ecd71137189b430e33471a91cd3ad46d0ddbe7001f2f84a2e1a3969fdb4d3885febbf887c98a0fb2e8036981e4ffecac094415ae5efcf06bcbf6cd1ff7412ac
+
+
+2013-12-01 19:29:02.973 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectOrder | 89f08caa6ba599884524e67ebb08e6f63a3d62ed8b0768071caaefc8ce710a175cbc540318bbdae3b5074e5df9c69feef33de9f85f6f278f6b877b301e0d88c5
+
+
+2013-12-01 19:29:03.457 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectAllStatuses | a1eeff33ead7c45c9d1eb2dd9f26aba8af1e610aea491d713ed8e3981bd3495baf36931ca5a2a585becc47f5d6037671c2f81c1ad4bba20a8fa73fe81f03177b
+
+
+2013-12-01 19:29:03.953 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomersByFirm | 040b9731ce9d2b763fd4f49ec145407557479e883fd702e485c14b683033b2d8785eab7db3a534f25258a668b96a4e678bb07f1c309cde793131d6a5c0e9da3c
+
+
+2013-12-01 19:29:04.386 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectStockAll | b00451771a062548f44755146f79b0aecb55bf3688c5932bbc714afe407b2bcfabe74cf9317d791339ac8c981d3d27ea171351009d41297e3016a99d50a664b5
+
+
+2013-12-01 19:29:04.884 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectOrdersByFirmByType | 57cb1080429fba45e0518cba7237fd13e9a525fd0a73fe4e4c0428a07e28dd35dfb3bf6beb9f7538cdcfe021298bd07afdb0feab568b68a7225fdf450a854fab
+
+
+2013-12-01 19:29:05.369 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: isThereActiveTradingSession | 47a74b3937e4a063de7864e696a5187d99c9660db888795d2e87678569f72baf129855ff2dfc8a98e95267bcae359f314c90143a5ea8ee563e4dd482cdc30473
+
+
+2013-12-01 19:29:08.59 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: insertNewOrder | f3499a3e410dee3b7945dd18daef4cc222617f2b125dd81806f65cbf521e19c75d6cec06f168c127fc60295c3fbf763deebe42508c1449f54c25e78c98ed6de9
+
+
+2013-12-01 19:29:09.076 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: updateOrder | c2e14cc573cda97b2cac50ecd73a21cf030bd651c9c0a4fc7a9878cc06053b34891107ce3d85b17a8d737777f73ab6b0bb17be7c8744283b057cb343b5b92ab4
+
+
+2013-12-01 19:29:09.563 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfo | 969f12960ce236d63c7f87f22846bfc8385b10992438d5906f3129cf2693f013dd6bf98072cdbdc6f96511d99207d1fd2ddab584a5dc2b6a4127dd8ce30b15cb
+
+
+2013-12-01 19:29:09.998 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectStock | 0e8f58a305479e5cc74a257f7583fe1209efb63f24ecb0afc1f95d9904a16412317beddf03f6b408b89c63c16f2ea20cd76c1a4741f7b2e12832b091aa95f8a1
+
+
+2013-12-01 19:29:10.432 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectOrder | c42655fea5c9c75c0e2eda85c0691a66af5ce7bfd61a0bbe8b6809be753d3acb01537428384fa393128202d9be9a1481b273512d6b94adea28ea6e5dc270d45b
+
+
+2013-12-01 19:29:10.865 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomerInfo | 0284b955bd823059e279846b85a9d246e8887f7fdb38d126c565406801308e8116609c079a4b2c30fa23586d05cde01195e2b8fa04351b797d49a3ce294da76d
+
+
+2013-12-01 19:29:11.302 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectAllStatuses | ada46851c1204fce6030903b1aac07b41d533ac230be2fe6ef5725fabfa540c98a543bab4c11c139d039f1fbb05558cfb73889b092bd99b4327faf1547b0a491
+
+
+2013-12-01 19:29:11.737 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectCustomersByFirm | 492b9dc34fd6de9d35e98bb66370622fc3c3ade8f7d00dace682eaf8920d5087e8f83ab733f06c93e9cedc58a556fb71aaf67175a3d77fe2bb5beec37a17d16d
+
+
+2013-12-01 19:29:12.226 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectStockAll | 9abaf26ae50af7844b3001774868d07ae7b94bd90b7c9606aa91c3a8a158b4064eb6d9d6bc4c1aab99925db37e55f542284778da9d7397580ee8ff17787bb350
+
+
+2013-12-01 19:29:12.662 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: selectOrdersByFirmByType | dfa4dac071c5aebce11bd57fabb0c09dde2f6b2dd949731c7d7afc4a56a3f40d1e6f220b6b90e115190ad0974162429fb663fd34bd495f5602ec38a66ebd8fd1
+
+
+2013-12-01 19:29:13.093 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: isThereActiveTradingSession | c2d3f17093120ba61c439264eadece519dbdf385ca4ff104ef14b3d499cc6ea24d98b9fb685b28f01f0c3d4c83aa9d5d58767148fa34efec556d2582e0ab2c13
+
+
+2013-12-01 19:29:23.022 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: startTradingSession | 3607caaad780c41857145129e5f586cd4e8550615892a8cea8e1f3728e0fede857cc9d8bb04d41edd418b9ea9c95f475e369844cfe8ca706ba7c2109e599224f
+
+
+2013-12-01 19:29:31.343 | Reference Model | UserID: 2, Session ID: 765b4439-8d88-4cd5-a319-ca379c923959 is allowed to invoke: logOut | 224d7ee2f3263dbba1559724fbbcc16267dca37f2c39246e083f380b1a7d08a100c0643b6a077dc1dcad54212a54f0d7e4eddd930ceb7dcea987fc74d8f8039b
+
+
+2013-12-01 19:29:36.977 | dkarmazi@gwmail.gwu.edu | Login Successful | 95c5ec519e1ac679bc2efb1c2fddb19ad0a03fc9c9e32c0799017bf34f3c97ca0e506059c4fc72e137c4691b9f26617b8f542556ee977fc4ad3040ffc574d6e7
+
+
+2013-12-01 19:29:43.094 | Reference Model | UserID: 2, Session ID: 1ee0e698-7fd6-40fe-a655-53d3af7a526c is allowed to invoke: logOut | f2077e0e9f176a2c75300f3fff652e91d4441c65b9bbed65aea55356b43fc1b08d77e496deb3605a632df9bb378ef4af23687c4597583a15ad4a3778d4dd38e5
+
+
+2013-12-01 19:29:56.812 | dkarmazi@gwu.edu | Login Successful | faf31ff1039d4e3c8955263368e1069bd4505f58317c8464dce6dae1f900ef0be3f304b89c90a08d04f99a72e4e833b61f37b4c9072a9f1f3bb956a59deee28b
+
+
+2013-12-01 19:29:59.442 | Reference Model | UserID: 1, Session ID: cf41ad77-b036-4da2-be4f-e865e8e69db2 is allowed to invoke: startTradingSession | a32f55a915dacd06ab80977ec5f48a0593b35779e5dffbdc2ab6efd278ffc3f363fca43f3eb92e188df807a157d83ed69304db9f0eaecf7acc63d2eb76ed545d
+
+
+2013-12-01 19:29:59.876 | Reference Model | UserID: 1, Session ID: cf41ad77-b036-4da2-be4f-e865e8e69db2 is allowed to invoke: endTradingSession | b51182c783cd9279761f728bd87ba223d91807c1145552e87398f2952b7789af070d36fbcdda9d9a2ebc6e02d4a56b78cef342092c69e549fa5965924418e6c3
+
+
+2013-12-01 19:30:00.393 | Reference Model | UserID: 1, Session ID: cf41ad77-b036-4da2-be4f-e865e8e69db2 is allowed to invoke: isThereActiveTradingSession | 8cab5005ac54a60fcdc74bd5526e6189193a14b14b70232b87422ceac43a89b95a5281f822f1cb2aba27eba28f46a3a0db97cca7291e45f02cec50aed9a7c190
+
+
+2013-12-01 19:30:00.851 | Reference Model | UserID: 1, Session ID: cf41ad77-b036-4da2-be4f-e865e8e69db2 is allowed to invoke: selectStockAll | 39c07d0093ffe7167dab85d4e0474bb1c7e02713fdefa287db0569dd21d1c119f015d9c76a44b39027d402edae4d224a2b647f4cc4610475dbd6eed07d193efc
+
+
+2013-12-01 19:30:01.32 | Reference Model | UserID: 1, Session ID: cf41ad77-b036-4da2-be4f-e865e8e69db2 is allowed to invoke: selectBrokerageFirmsByStatus | 89bf4d36f642d4f3f074c95deb0920e4abcd4311ca8b1bbc363ade5416573ba7eba40e10a46c539eb855e3a9f2e5d508e4fedddf90eff2d9c54e96e4706fad0d
+
+
+2013-12-01 19:30:18.519 | Reference Model | UserID: 1, Session ID: cf41ad77-b036-4da2-be4f-e865e8e69db2 is allowed to invoke: startTradingSession | c74dea1d169f68fdd1edccc49f7909a1f2ea3c8b8add9b4e8dead4dfd9476cf2f054088c5e656110ca5e420625c278b1e5169f454c27e02cd5330dd454ae8c02
+
+
+2013-12-01 19:30:24.458 | Reference Model | UserID: 1, Session ID: cf41ad77-b036-4da2-be4f-e865e8e69db2 is allowed to invoke: logOut | 189665389ba7a4e3bf0877e4d134ce764f94e582dcab261109a7aa0f12d7d37cc9c9b936059607e19bd42cb7547ceb26672c737637c5ac717e38e62730f649d0
+
+
+2013-12-01 19:30:35.04 | dkarmazi@gwmail.gwu.edu | Login Successful | 2e53a2f1d55d4a2439affe09c4b6694db359cf27c4e7a500cf3a2f0c457dc8387caa3d7d4a4577e15fafb39d8e98e59b82af3687324f1476f5270bc587f93a1a
+
+
+2013-12-01 19:30:41.582 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: insertNewOrder | bb600e07b8e8d612ca485569cb98314609e91a88f25ca4d8e48da4089d19470ff085906f879a5eee8b7546e9e4635d0f88c043a02a3c441b714442ecce766c24
+
+
+2013-12-01 19:30:42.071 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: updateOrder | 5a4376a17924973eb09199db557800356afc308597591ca243c07ac6f480f8c9729408d370ab0ec20f8aea2c273e374335261f31acd8f98976dc885953d084f6
+
+
+2013-12-01 19:30:42.5 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: selectCustomerInfo | 452b279cdc982b80b1fcdfe9c7e193a38b6a421557db738b1bf3cb0a61d957ebc54162dcb9cfe78f53bc815e9e9f737b446c72404b96574d9cab957f857e492d
+
+
+2013-12-01 19:30:42.928 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: selectStock | bfd6b0e7f615d9288ffa5edd1cb6bfc894e7012c8c621b8dacc96685de35cf6f01a1f1f6aff0a3755b8e471b437628148c0364144b235bb79067517b5e0e92ed
+
+
+2013-12-01 19:30:43.358 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: selectOrder | 4cdaa93599a5cf05b37cab7689b70b200953e765b13d2887eeb96abf4581eb8b8b9d3aa4a03c39be9a9b9dfd59d70164bfca1fb5e32f3096527cfa71031afe58
+
+
+2013-12-01 19:30:43.8 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: selectAllStatuses | 463ed72a07b094ea80818a6756b57a3152f3484571271936df7506db1eff21c921609d1bfc67233da2107f3c02b442e8264b17b4cb6566763d00b6b2bb4167e7
+
+
+2013-12-01 19:30:44.292 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: selectCustomersByFirm | 959582d19e618d2581778a6fabd7b3761403b3f28f338bbc4c3ac7611429304001b69634fa1d8f389466f5f17b10191b6233dfad87e9028477e40ac2d2da54bb
+
+
+2013-12-01 19:30:44.719 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: selectStockAll | 1de4eec3967583ea50836d61c9476ed44383469a56330e941a597d38feae4f3e3d7850bcb51b04b1c51171388e2c7f921dbbd3f6ec0b9345773092892f92fc71
+
+
+2013-12-01 19:30:45.206 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: selectOrdersByFirmByType | f3fc607801776d0f8b83f1c030d188a8be6c61e0bc552ecb6d32653cc5f161325e6d10dde05c31e219eef0b56c927be1d02bf12d36e24302c8f274a0f33f3821
+
+
+2013-12-01 19:30:45.315 | Reference Model | UserID: 2, Session ID: 9eecb7dd-7cd9-4fae-a768-a4da99796a06 is allowed to invoke: isThereActiveTradingSession | e3a799c811febe76b421e7ac0f17d54983d14cf10924eb48310927949dab5ad0b7a3837bf7a8db4124a0fb15d11dc4b4f45a2b1c5d7a0f6c83e397298f487062
+
+
