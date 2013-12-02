@@ -71,8 +71,13 @@ public class LoginController implements Initializable {
                 }
             }
         );
-        UserEmail.setText("dkarmazi@gwu.edu");
-        Password.setText("StocksTradingPassword");
+        
+        // Admin
+        //        UserEmail.setText("dkarmazi@gwu.edu");
+        //        Password.setText("StocksTradingPassword");
+        // Broker
+        UserEmail.setText("dkarmazi@gwmail.gwu.edu");
+        Password.setText("StocksTradingPassword12");
     }
     
     private void ResetScreenAppearance()

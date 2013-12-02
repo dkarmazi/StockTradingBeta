@@ -40,7 +40,7 @@ public class CustomerStocksController implements Initializable {
 	private ServerInterface si = (ServerInterface) Utility.serverInterface;
 	private String clientSessionID = Utility.getCurrentSessionId();
 	private int brokerageFirmId = Utility.getCurrentUser_BrokerageFirmID();
-	private int customerId = 19;
+	private int customerId;
 
 	@FXML
 	private Button btnAdd;
@@ -58,6 +58,8 @@ public class CustomerStocksController implements Initializable {
 	private ChoiceBox<KeyValuePair> CustomerStocksStatusChoiceBox = new ChoiceBox<>();
 	@FXML
 	private TextField CustomerStockAmount;
+	@FXML
+	private Label screenTitleBar;
 
 	@FXML
 	private void handleSaveButtonAction(ActionEvent event) {
@@ -69,7 +71,7 @@ public class CustomerStocksController implements Initializable {
 
 		// initial input validation
 		if (!isNumeric(rStockId) || !isNumeric(rAmount) || !isNumeric(rStatus)) {
-			Message.setText("Your input has to be integer only");
+			Message.setText("Form fields cannot be empty or non-numeric");
 			return;
 		}
 
@@ -93,6 +95,7 @@ public class CustomerStocksController implements Initializable {
 			} else {
 				Message.setText("Error, authorization failed");
 			}
+			SetScreenModeAddNew();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -102,13 +105,13 @@ public class CustomerStocksController implements Initializable {
 	private void handleAddButtonAction(ActionEvent event) {
 		String rStockId, rAmount, rStatus;
 
-		rStockId = CustomerStocksChoiceBox.getValue().getKey();
+		rStockId = getChoiceBoxSelection(CustomerStocksChoiceBox);
 		rAmount = CustomerStockAmount.getText();
-		rStatus = CustomerStocksStatusChoiceBox.getValue().getKey();
+		rStatus = getChoiceBoxSelection(CustomerStocksStatusChoiceBox);
 
 		// initial input validation
 		if (!isNumeric(rStockId) || !isNumeric(rAmount) || !isNumeric(rStatus)) {
-			Message.setText("Your input has to be integer only");
+			Message.setText("Form fields cannot be empty or non-numeric");
 			return;
 		}
 
@@ -135,8 +138,25 @@ public class CustomerStocksController implements Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		SetScreenModeAddNew();
 	}
 
+	
+	
+	private String getChoiceBoxSelection(ChoiceBox<KeyValuePair> cbx) {
+		String out = "";
+		
+		if(cbx == null || cbx.getValue() == null || cbx.getValue().getKey() == null) {
+			return out;
+		} else {
+			out = cbx.getValue().getKey();
+			return out;			
+		}
+	}
+	
+	
+	
+	
 	@FXML
 	private void handleClearButtonAction(ActionEvent event) {
 		ClearScreen();
@@ -183,48 +203,34 @@ public class CustomerStocksController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
+		// get data from previous screen
+		customerId = CustomerController.getCustomerId();
+		screenTitleBar.setText("Customer stocks for "
+				+ CustomerController.getsCustomerInfo());
 
-
-		
-		
-
-		
-		// GET ALL EXISTING STOCKS
-		try {
-			
-
-			
-			ServerAuthRes sar = si.selectCustomerStocks(this.customerId,
-					clientSessionID);
-
-			if (sar.isHasAccess()) {
-				ArrayList<Stock> stocks = (ArrayList<Stock>) sar.getObject();
-				CustomerStocksListView.getItems().clear();
-
-				for (Stock stock : stocks) {
-					CustomerStocksListView.getItems().add(
-							new KeyValuePair(Integer.toString(stock.getId()),
-									stock.getName()));
-				}
-			} else {
-				Message.setText("No access");
-			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-		
-		
-		populateAllStocks();
-		populateAllStatuses();
 		SetScreenModeAddNew();
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * Populate all stocks
 	 */
 	public void populateAllStocks() {
+
+		CustomerStocksChoiceBox.getItems().clear();
 
 		try {
 			ServerAuthRes sar = si.selectAllStocks(clientSessionID);
@@ -238,9 +244,7 @@ public class CustomerStocksController implements Initializable {
 									.getName()));
 				}
 
-				CustomerStocksChoiceBox.getSelectionModel().selectFirst();
 			} else {
-				// sosnite hujcov
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -252,7 +256,10 @@ public class CustomerStocksController implements Initializable {
 	 */
 	public void populateAllStatuses() {
 
+		CustomerStocksStatusChoiceBox.getItems().clear();
+
 		try {
+
 			ArrayList<StatusesOptions> allStatuses = (ArrayList<StatusesOptions>) si
 					.selectAllStatuses(clientSessionID).getObject();
 
@@ -261,9 +268,32 @@ public class CustomerStocksController implements Initializable {
 						new KeyValuePair(Integer.toString(s.getId()), s
 								.getName()));
 			}
-
-			CustomerStocksStatusChoiceBox.getSelectionModel().selectFirst();
 		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void populateAllExistingStocks() {
+		CustomerStocksListView.getItems().clear();
+
+		try {
+			ServerAuthRes sar = si.selectCustomerStocks(this.customerId,
+					clientSessionID);
+
+			if (sar.isHasAccess()) {
+				ArrayList<Stock> stocks = (ArrayList<Stock>) sar.getObject();
+
+				for (Stock stock : stocks) {
+					CustomerStocksListView.getItems().add(
+							new KeyValuePair(Integer.toString(stock.getId()),
+									stock.getName()));
+				}
+
+			} else {
+				Message.setText("Authentication failed");
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -279,7 +309,6 @@ public class CustomerStocksController implements Initializable {
 		}
 	}
 
-	
 	/**
 	 * This method clears entered UI values
 	 */
@@ -287,10 +316,10 @@ public class CustomerStocksController implements Initializable {
 		btnAdd.setDisable(false);
 		btnSave.setDisable(true);
 		CustomerStocksListView.getSelectionModel().clearSelection();
-		CustomerStocksChoiceBox.getSelectionModel().select(null);
+		CustomerStocksChoiceBox.getSelectionModel().clearSelection();
 		CustomerStocksChoiceBox.setDisable(false);
+		CustomerStocksStatusChoiceBox.getSelectionModel().clearSelection();
 		CustomerStockAmount.clear();
-		CustomerStocksStatusChoiceBox.getSelectionModel().select(null);
 		Message.setText(null);
 	}
 
@@ -300,10 +329,10 @@ public class CustomerStocksController implements Initializable {
 	private void SetScreenModeAddNew() {
 		btnAdd.setDisable(false);
 		btnSave.setDisable(true);
-		CustomerStocksListView.getSelectionModel().clearSelection();
-		CustomerStocksChoiceBox.getSelectionModel().select(null);
-		CustomerStockAmount.clear();
-		CustomerStocksStatusChoiceBox.getSelectionModel().select(null);
+		populateAllExistingStocks();
+		populateAllStocks();
+		populateAllStatuses();
+		CustomerStockAmount.clear();		
 	}
 
 	/**
@@ -315,16 +344,23 @@ public class CustomerStocksController implements Initializable {
 		Message.setText(null);
 		CustomerStocksChoiceBox.setDisable(true);
 	}
+
+	
 	
 	/**
 	 * SERVICE FUNCTIONS
 	 */
-	public static boolean isNumeric(String str) {
+	public static boolean isNumeric(String str) {		
 		try {
 			int d = Integer.parseInt(str);
+			if(d > 0) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (NumberFormatException nfe) {
 			return false;
 		}
-		return true;
+		
 	}
 }
